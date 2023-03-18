@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/lighter_blue"
+    android:backgroundTint="@color/lighter_blue"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -12,8 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:background="@drawable/rounded_appbar_bg"
-        android:backgroundTint="@color/baby_blue"
-        android:elevation="0dp"
         android:gravity="center"
         android:theme="@style/Theme.Weather.AppBarOverlay">
 
@@ -22,8 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="center"
-            android:background="@drawable/rounded_appbar_bg"
-            android:elevation="0dp"
             android:gravity="center"
             android:textAlignment="center"
             app:layout_scrollFlags="scroll|enterAlways"
