@@ -1,4 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.db;
 
-public interface LocalSourceInterface {
+interface LocalSourceInterface {
+//    suspend fun updateDay(day:DayDBModel):Boolean
+//    suspend fun getDay():DayDBModel
+
 }
