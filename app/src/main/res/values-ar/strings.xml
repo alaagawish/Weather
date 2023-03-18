@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Weather</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -11,7 +10,6 @@
     <string name="action_favourites">المفضل</string>
     <string name="action_alerts">التنبيهات</string>
     <string name="action_home">الصفحة الرئيسية</string>
-
     <string name="menu_home">الصفحة الرئيسية</string>
     <string name="menu_favourite">المفصل</string>
     <string name="menu_alert">التنبيهات</string>
@@ -20,7 +18,7 @@
     <string name="weather">الطقس</string>
     <string name="city">البلد</string>
     <string name="temperature">16℉</string>
-    <string name="description">Mostly Clear</string>
+    <string name="description">غائم كثيرا</string>
     <string name="date">10/02/2023</string>
     <string name="time">22:09</string>
     <string name="hour">10AM</string>
@@ -35,7 +33,7 @@
     <string name="range_temperature">H:26℉ L:16℉</string>
     <string name="visibility">الرئية</string>
     <string name="visibility_value">1000m</string>
-    <string name="uv">الاشعة فوق البنفسجية</string>
+    <string name="uv">فوق البنفسجية</string>
     <string name="uv_value">0.0</string>
     <string name="temperature_txt">درجة الحرارة</string>
     <string name="wind_speed">سرعة الرياح</string>
@@ -44,8 +42,8 @@
     <string name="notifications">الاشعارات</string>
     <string name="map">Map</string>
     <string name="gps">GPS</string>
-    <string name="m_sec">Meter/Sec</string>
-    <string name="m_hour">Mile/Hour</string>
+    <string name="m_sec">متر/ثانية</string>
+    <string name="m_hour">ميل/ساعة</string>
     <string name="celsius">℃</string>
     <string name="fahrenheit">℉</string>
     <string name="kelvin">K</string>
@@ -53,4 +51,16 @@
     <string name="disable">غير مفعل</string>
     <string name="english">انجليزية</string>
     <string name="arabic">عربية</string>
+    <string name="no_alert">لا يوجد تنبيهات</string>
+    <string name="no_place">لا يوجد</string>
+    <string name="country">البلد</string>
+    <string name="from">من</string>
+    <string name="to">الي</string>
+    <string name="alarm">منبه</string>
+    <string name="notification">اشعار</string>
+    <string name="save">حفظ</string>
+    <string name="are_you_sure_to_delete">متأكد تريد الحذف؟</string>
+    <string name="cancel">اغلق</string>
+    <string name="sure">متأكد</string>
+    <string name="start">2:50 AM\n26 Feb</string>
 </resources>

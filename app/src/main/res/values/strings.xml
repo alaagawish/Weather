@@ -51,5 +51,17 @@
     <string name="disable">Disable</string>
     <string name="english">English</string>
     <string name="arabic">Arabic</string>
+    <string name="no_alert">No Alerts</string>
+    <string name="no_place">No Places</string>
+    <string name="country">Country</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="alarm">Alarm</string>
+    <string name="notification">Notification</string>
+    <string name="save">Save</string>
+    <string name="are_you_sure_to_delete">Are you sure to delete?</string>
+    <string name="cancel">Cancel</string>
+    <string name="sure">Sure</string>
+    <string name="start">2:50 AM\n26 Feb</string>
     <!--         //////////////    ///////////////        -->
 </resources>
