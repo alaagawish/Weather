@@ -1,4 +1,3 @@
 package eg.gov.iti.jets.kotlin.weather.model
 
-class MyResponse {
-}
+//data class MyResponse (val cod:String,val message:Int,val cnt:Int,val list:Listt,val city:City)

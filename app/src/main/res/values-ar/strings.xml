@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Weather</string>
+        <string name="navigation_drawer_open">Open navigation drawer</string>
+        <string name="navigation_drawer_close">Close navigation drawer</string>
+        <string name="nav_header_title">Android Studio</string>
+        <string name="nav_header_subtitle">android.studio@android.com</string>
+        <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">الاعدادات</string>
+    <string name="action_favourites">المفضل</string>
+    <string name="action_alerts">التنبيهات</string>
+    <string name="action_home">الصفحة الرئيسية</string>
+
+    <string name="menu_home">الصفحة الرئيسية</string>
+    <string name="menu_favourite">المفصل</string>
+    <string name="menu_alert">التنبيهات</string>
+    <string name="menu_settings">الاعدادات</string>
+    <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
+    <string name="weather">الطقس</string>
+    <string name="city">البلد</string>
+    <string name="temperature">16℉</string>
+    <string name="description">Mostly Clear</string>
+    <string name="date">10/02/2023</string>
+    <string name="time">22:09</string>
+    <string name="hour">10AM</string>
+    <string name="wind_value">2.06m/s</string>
+    <string name="tomorrow">غدا</string>
+    <string name="wind">الرياح</string>
+    <string name="humidity_value">77%</string>
+    <string name="pressure">الضغط</string>
+    <string name="cloud">الرياح</string>
+    <string name="cloud_value">0%</string>
+    <string name="pressure_value">1020hpa</string>
+    <string name="range_temperature">H:26℉ L:16℉</string>
+    <string name="visibility">الرئية</string>
+    <string name="visibility_value">1000m</string>
+    <string name="uv">الاشعة فوق البنفسجية</string>
+    <string name="uv_value">0.0</string>
+</resources>
