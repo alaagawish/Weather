@@ -2,11 +2,11 @@
 <resources>
 
     <string name="app_name">Weather</string>
-        <string name="navigation_drawer_open">Open navigation drawer</string>
-        <string name="navigation_drawer_close">Close navigation drawer</string>
-        <string name="nav_header_title">Android Studio</string>
-        <string name="nav_header_subtitle">android.studio@android.com</string>
-        <string name="nav_header_desc">Navigation header</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">الاعدادات</string>
     <string name="action_favourites">المفضل</string>
     <string name="action_alerts">التنبيهات</string>
@@ -37,4 +37,20 @@
     <string name="visibility_value">1000m</string>
     <string name="uv">الاشعة فوق البنفسجية</string>
     <string name="uv_value">0.0</string>
+    <string name="temperature_txt">درجة الحرارة</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="location">الموقع</string>
+    <string name="language">اللغة</string>
+    <string name="notifications">الاشعارات</string>
+    <string name="map">Map</string>
+    <string name="gps">GPS</string>
+    <string name="m_sec">Meter/Sec</string>
+    <string name="m_hour">Mile/Hour</string>
+    <string name="celsius">℃</string>
+    <string name="fahrenheit">℉</string>
+    <string name="kelvin">K</string>
+    <string name="enable">مفعل</string>
+    <string name="disable">غير مفعل</string>
+    <string name="english">انجليزية</string>
+    <string name="arabic">عربية</string>
 </resources>
