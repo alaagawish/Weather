@@ -1,5 +1,8 @@
 package eg.gov.iti.jets.kotlin.weather
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import com.google.android.material.snackbar.Snackbar
@@ -12,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,19 +31,18 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
 
 //
-//        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-//        val isOnboardingShown = sharedPref.getBoolean("isOnboardingShown", false)
-//
-//        if (!isOnboardingShown) {
-//            val intent = Intent(this, OnboardingActivity::class.java)
-//            startActivity(intent)
-//
-//            // Set the flag to true to indicate that the onboarding activity has been shown
-//            with(sharedPref.edit()) {
-//                putBoolean("isOnboardingShown", true)
-//                apply()
-//            }
-//        }
+        val sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
+
+        val isOnboardingShown = sharedPreferences.getBoolean("isOnboardingShown", false)
+
+        if (!isOnboardingShown) {
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+            with(sharedPreferences.edit()) {
+                putBoolean("isOnboardingShown", true)
+                apply()
+            }
+        }
 //        binding.appBarMain.addCityFloatingActionButton.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()
