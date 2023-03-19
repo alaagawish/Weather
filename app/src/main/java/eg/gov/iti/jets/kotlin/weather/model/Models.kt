@@ -1,10 +1,17 @@
 package eg.gov.iti.jets.kotlin.weather.model
 
+data class Forecast(
+    val cod: String,
+    val message: Int,
+    val cnt: Int,
+    val list: List<Listt>,
+    val city: City
+)
 
 data class Listt(
     val dt: Int,
     val main: Main,
-    val weather: Weather,
+    val weather: List<Weather>,
     val clouds: Clouds,
     val wind: Wind,
     val visibility: Long,
@@ -65,14 +72,32 @@ data class OneCall(
     val timezone: String,
     val timezone_offset: Double,
     val current: Current,
+    val hourly: List<Hourly>,
     val daily: List<Daily>
+)
+
+data class Hourly(
+    val dt: Long,
+    val temp: Double,
+    val feels_like: Double,
+    val pressure: Int,
+    val humidity: Int,
+    val dew_point: Double,
+    val uvi: Double,
+    val clouds: Int,
+    val visibility: Long,
+    val wind_speed: Double,
+    val wind_deg: Int,
+    val wind_gust: Double,
+    val weather: List<WeatherObject>,
+    val pop: Int
 )
 
 data class Current(
     val dt: Long,
     val sunrise: Long,
     val sunset: Long,
-    val temp: Int,
+    val temp: Double,
     val feels_like: Double,
     val pressure: Int,
     val humidity: Int,

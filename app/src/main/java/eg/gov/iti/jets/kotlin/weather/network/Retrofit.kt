@@ -5,7 +5,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object Retrofit {
 
-    private const val TAG = "Retrofit"
     fun getInstance(): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
