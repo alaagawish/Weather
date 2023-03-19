@@ -9,426 +9,450 @@
     tools:context=".home.view.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lighter_blue">
 
-        <TextView
-            android:id="@+id/cityNameTextView"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:gravity="center"
-            android:text="@string/city"
-            android:textColor="@color/blue"
-            android:textSize="35sp"
+            android:layout_weight="1"
+            android:minWidth="40dp"
+            android:minHeight="40dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <TextView
-            android:id="@+id/temperatureTextView"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:gravity="center"
-            android:text="@string/temperature"
-            android:textColor="@color/blue"
-            android:textSize="70sp"
+            android:background="@color/lighter_blue"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityNameTextView" />
+            app:layout_constraintTop_toTopOf="parent">
 
-
-        <TextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:gravity="center"
-            android:text="@string/description"
-            android:textColor="@color/blue"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
-
-        <TextView
-            android:id="@+id/highLowTemperatureTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:gravity="center"
-            android:text="@string/range_temperature"
-            android:textColor="@color/blue"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
-
-        <ImageView
-            android:id="@+id/dayIconImageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@drawable/weather"
-            app:layout_constraintBottom_toBottomOf="@+id/detailsCardView"
-            app:layout_constraintEnd_toStartOf="@+id/detailsCardView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/highLowTemperatureTextView" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/detailsCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/light_blue"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="8dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/dayIconImageView"
-            app:layout_constraintTop_toBottomOf="@+id/highLowTemperatureTextView">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/cityNameTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp">
+                android:layout_marginVertical="8dp"
+                android:gravity="center"
+                android:text="@string/city"
+                android:textColor="@color/blue"
+                android:textSize="35sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/dateTextView"
+
+            <TextView
+                android:id="@+id/temperatureTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:gravity="center"
+                android:text="@string/temperature"
+                android:textColor="@color/blue"
+                android:textSize="70sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cityNameTextView" />
+
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:gravity="center"
+                android:text="@string/description"
+                android:textColor="@color/blue"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
+
+            <TextView
+                android:id="@+id/highLowTemperatureTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:gravity="center"
+                android:text="@string/range_temperature"
+                android:textColor="@color/blue"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+
+            <ImageView
+                android:id="@+id/dayIconImageView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/weather"
+                app:layout_constraintBottom_toBottomOf="@+id/detailsCardView"
+                app:layout_constraintEnd_toStartOf="@+id/detailsCardView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/highLowTemperatureTextView" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/detailsCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/light_blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="8dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/dayIconImageView"
+                app:layout_constraintTop_toBottomOf="@+id/highLowTemperatureTextView">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp">
+
+                    <TextView
+                        android:id="@+id/dateTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:gravity="center"
+                        android:text="@string/date"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timeTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:gravity="center"
+                        android:text="@string/time"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/hoursCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="8dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detailsCardView">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hoursDetailsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
-                    android:gravity="center"
-                    android:text="@string/date"
-                    android:textColor="@color/white"
-                    android:textSize="25sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_margin="8dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="24"
+                    tools:listitem="@layout/hour_item" />
 
-                <TextView
-                    android:id="@+id/timeTextView"
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/daysCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="10dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hoursCardView">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/daysDetailsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/day_item" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/windCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                android:orientation="vertical"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toStartOf="@+id/humidityCardView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/daysCardView">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@string/time"
-                    android:textColor="@color/white"
-                    android:textSize="25sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
 
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/wind" />
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wind"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/hoursCardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="8dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detailsCardView">
+                    <TextView
+                        android:id="@+id/windValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wind_value"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/hoursDetailsRecyclerView"
-                android:layout_width="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/humidityCardView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="24"
-                tools:listitem="@layout/hour_item" />
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/windCardView"
+                app:layout_constraintTop_toBottomOf="@+id/daysCardView">
 
-        </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/daysCardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="10dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hoursCardView">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/daysDetailsRecyclerView"
-                android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/humidity" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wind"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/humidityValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/humidity_value"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cloudCardView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
+                android:backgroundTint="@color/blue"
                 android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="5"
-                tools:listitem="@layout/day_item" />
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toStartOf="@+id/humidityCardView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/windCardView">
 
-        </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/windCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            android:orientation="vertical"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toStartOf="@+id/humidityCardView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/daysCardView">
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/cloud" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cloud"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/cloudValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cloud_value"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/pressureCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/windCardView"
+                app:layout_constraintTop_toBottomOf="@+id/humidityCardView">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/pressure" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pressure"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/pressureValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pressure_value"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/uvCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
                 android:orientation="vertical"
-                android:paddingVertical="10dp">
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toStartOf="@+id/visibilityCardView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cloudCardView">
 
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/wind" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/wind"
-                    android:textColor="@color/white"
-                    android:textSize="25sp" />
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/uv" />
 
-                <TextView
-                    android:id="@+id/windValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/wind_value"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/uv"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/humidityCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/windCardView"
-            app:layout_constraintTop_toBottomOf="@+id/daysCardView">
+                    <TextView
+                        android:id="@+id/uvValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/uv_value"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="10dp">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/humidity" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/wind"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/humidityValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/humidity_value"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cloudCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            android:orientation="vertical"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toStartOf="@+id/humidityCardView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/windCardView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="10dp">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/cloud" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cloud"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/cloudValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cloud_value"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/pressureCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/windCardView"
-            app:layout_constraintTop_toBottomOf="@+id/humidityCardView">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/visibilityCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/uvCardView"
+                app:layout_constraintTop_toBottomOf="@+id/pressureCardView">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
 
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/pressure" />
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/visibility" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pressure"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/visibility"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/pressureValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pressure_value"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/uvCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            android:orientation="vertical"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toStartOf="@+id/visibilityCardView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cloudCardView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="10dp">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/uv" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/uv"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/uvValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/uv_value"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/visibilityCardView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="5dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/uvCardView"
-            app:layout_constraintTop_toBottomOf="@+id/pressureCardView">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="10dp">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/visibility" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/visibility"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/visibilityValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/visibility_value"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/visibilityValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/visibility_value"
+                        android:textColor="@color/white"
+                        android:textSize="30sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

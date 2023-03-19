@@ -18,7 +18,7 @@
     <string name="weather">الطقس</string>
     <string name="city">البلد</string>
     <string name="temperature">16℉</string>
-    <string name="description">غائم كثيرا</string>
+    <string name="description">غائم غالبا</string>
     <string name="date">10/02/2023</string>
     <string name="time">22:09</string>
     <string name="hour">10AM</string>
@@ -63,4 +63,6 @@
     <string name="cancel">اغلق</string>
     <string name="sure">متأكد</string>
     <string name="start">2:50 AM\n26 Feb</string>
+    <string name="done">تأكيد</string>
+
 </resources>

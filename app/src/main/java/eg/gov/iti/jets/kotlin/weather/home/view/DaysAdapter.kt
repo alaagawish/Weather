@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Daily
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DaysAdapter() :
     ListAdapter<Daily, DaysAdapter.ViewHolder>(DayDiffUtil()) {
@@ -24,12 +26,17 @@ class DaysAdapter() :
         val item = getItem(position)
         Picasso
             .get()
-            .load(item.weather.get(0).icon)
+            .load("https://openweathermap.org/img/wn/${item.weather.get(0).icon}@2x.png")
             .into(holder.binding.dayWeatherIconImageView);
-        holder.binding.dayHighLowTempTextView.text = "H:${item.temp.max} L:${item.temp.min}"
+        holder.binding.dayHighLowTempTextView.text = "H:${item.temp.max}\nL:${item.temp.min}"
         holder.binding.dayDescriptionTextView.text = item.weather.get(0).description
         //Day name
-        holder.binding.dayNameTextView.text = item.weather.get(0).description
+        holder.binding.dayNameTextView.text =
+            if (position > 0)
+                SimpleDateFormat("EEEE", Locale.getDefault()).format(
+                Date(item.dt * 1000)
+            ).substring(0, 3)
+            else "Today"
 
 
     }

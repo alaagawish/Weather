@@ -26,6 +26,20 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
+//
+//        val sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+//        val isOnboardingShown = sharedPref.getBoolean("isOnboardingShown", false)
+//
+//        if (!isOnboardingShown) {
+//            val intent = Intent(this, OnboardingActivity::class.java)
+//            startActivity(intent)
+//
+//            // Set the flag to true to indicate that the onboarding activity has been shown
+//            with(sharedPref.edit()) {
+//                putBoolean("isOnboardingShown", true)
+//                apply()
+//            }
+//        }
 //        binding.appBarMain.addCityFloatingActionButton.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()

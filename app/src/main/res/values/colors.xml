@@ -11,5 +11,6 @@
     <color name="baby_blue">#437ab3</color>
     <color name="light_blue">#7bc2f0</color>
     <color name="lighter_blue">#E2EFF8</color>
+    <color name="gray">#BBBDBF</color>
     <color name="transparent">#00000000</color>
 </resources>

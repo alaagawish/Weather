@@ -8,8 +8,8 @@ import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
 class HomeViewModelFactory(private val repositoryInterface: RepositoryInterface) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(HomeViewModelFactory::class.java)) {
-            HomeViewModelFactory(repositoryInterface) as T
+        return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            HomeViewModel(repositoryInterface) as T
         } else {
             throw IllegalArgumentException("HomeViewModelFactory, NO FOUND")
         }
