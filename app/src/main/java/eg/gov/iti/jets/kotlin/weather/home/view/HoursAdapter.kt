@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.databinding.HourItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Hourly
+import java.lang.Math.ceil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,16 +26,15 @@ class HoursAdapter() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-//        Log.d("TAG", "onBindViewHolder: ${SimpleDateFormat("EEEE").format( Date(1679594400000))}")
         Picasso
             .get()
             .load("https://openweathermap.org/img/wn/${item.weather.get(0).icon}@2x.png")
             .into(holder.binding.weatherDescriptionImageView)
-        holder.binding.hourlyTemperatureTextView.text = item.temp.toString()
+        holder.binding.hourlyTemperatureTextView.text = ceil(item.temp).toInt().toString()
 
         holder.binding.hourTextView.text = "${
-            SimpleDateFormat("HH").format(
-                Date(item.dt*1000)
+            SimpleDateFormat("HH:mm").format(
+                Date(item.dt * 1000)
             )
         }"
 

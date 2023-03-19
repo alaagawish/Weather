@@ -13,68 +13,6 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/wind"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@color/lighter_blue"
-            android:elevation="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="19dp"
-                android:background="@color/light_blue"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <RadioGroup
-                    android:id="@+id/windSpeedMeasureRadioGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center">
-
-                    <RadioButton
-                        android:id="@+id/milePerHourRadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:checked="false"
-                        android:text="@string/m_hour"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-                    <RadioButton
-                        android:id="@+id/meterPerSecRadioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:checked="false"
-                        android:text="@string/m_sec"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-
-                </RadioGroup>
-
-            </RelativeLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="19dp"
-                android:backgroundTint="@color/transparent"
-                android:text="@string/wind_speed"
-                android:textColor="@color/blue"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/language"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +21,7 @@
             android:elevation="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wind">
+            app:layout_constraintTop_toTopOf="parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -105,7 +43,7 @@
                         android:id="@+id/englishRadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:checked="false"
+                        android:checked="true"
                         android:text="@string/english"
                         android:textColor="@color/white"
                         android:textSize="20sp" />

@@ -1,10 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.home.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import eg.gov.iti.jets.kotlin.weather.model.Forecast
 import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +13,12 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     val forecastStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
 
     init {
-        getForecastData(30.0, 30.0)
+        getForecastData(30.0, 30.0, lang = "ar", unit = "metric")
     }
 
-    fun getForecastData(lat: Double, lon: Double) {
+    fun getForecastData(lat: Double, lon: Double,unit:String="standard",lang:String="en") {
         viewModelScope.launch {
-            repositoryInterface.getOneCallRemote(lat, lon)
+            repositoryInterface.getOneCallRemote(lat, lon,unit,lang)
                 .catch { e -> forecastStateFlow.value = APIState.Failure(e) }
                 .collect { data -> forecastStateFlow.value = APIState.Success(data) }
         }

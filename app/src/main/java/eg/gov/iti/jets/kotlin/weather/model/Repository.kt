@@ -23,11 +23,11 @@ class Repository private constructor(
         }
     }
 
-    override suspend fun getForecastRemote(lat: Double, lon: Double) =
-        flowOf(remoteSource.getDayForecastByNetwork(lat, lon))
+//    override suspend fun getForecastRemote(lat: Double, lon: Double) =
+//        flowOf(remoteSource.getDayForecastByNetwork(lat, lon))
 
-    override suspend fun getOneCallRemote(lat: Double, lon: Double) =
-        flowOf(remoteSource.getOneCallByNetwork(lat, lon))
+    override suspend fun getOneCallRemote(lat: Double, lon: Double,unit:String,lang:String) =
+        flowOf(remoteSource.getOneCallByNetwork(lat, lon,unit,lang))
 
 
 }

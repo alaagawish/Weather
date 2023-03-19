@@ -173,41 +173,17 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/daysCardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/blue"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hoursCardView">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/daysDetailsRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/day_item" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
                 android:id="@+id/windCardView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="190dp"
                 android:backgroundTint="@color/blue"
                 android:orientation="vertical"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="5dp"
+                app:cardElevation="8dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toStartOf="@+id/humidityCardView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/daysCardView">
+                app:layout_constraintTop_toBottomOf="@+id/hoursCardView">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -242,14 +218,14 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/humidityCardView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="190dp"
                 android:backgroundTint="@color/blue"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="5dp"
+                app:cardElevation="8dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/windCardView"
-                app:layout_constraintTop_toBottomOf="@+id/daysCardView">
+                app:layout_constraintTop_toBottomOf="@+id/hoursCardView">
 
 
                 <LinearLayout
@@ -285,11 +261,11 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cloudCardView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="190dp"
                 android:backgroundTint="@color/blue"
                 android:orientation="vertical"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="5dp"
+                app:cardElevation="8dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toStartOf="@+id/humidityCardView"
                 app:layout_constraintStart_toStartOf="parent"
@@ -328,10 +304,10 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/pressureCardView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="190dp"
                 android:backgroundTint="@color/blue"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="5dp"
+                app:cardElevation="8dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/windCardView"
@@ -371,11 +347,11 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/uvCardView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="190dp"
                 android:backgroundTint="@color/blue"
                 android:orientation="vertical"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="5dp"
+                app:cardElevation="8dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toStartOf="@+id/visibilityCardView"
                 app:layout_constraintStart_toStartOf="parent"
@@ -414,10 +390,10 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/visibilityCardView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="190dp"
                 android:backgroundTint="@color/blue"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="5dp"
+                app:cardElevation="8dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/uvCardView"
@@ -452,6 +428,30 @@
                         android:textColor="@color/white"
                         android:textSize="30sp" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/daysCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="10dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/visibilityCardView">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/daysDetailsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/day_item" />
+
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

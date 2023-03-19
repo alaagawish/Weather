@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.SimpleFormatter
+import kotlin.math.ceil
 
 class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
@@ -73,7 +74,8 @@ class HomeFragment : Fragment() {
                         binding.progressBar.visibility = View.GONE
                         binding.homeConstraintLayout.visibility = View.VISIBLE
                         binding.cityNameTextView.text = result.oneCall.timezone
-                        binding.temperatureTextView.text = result.oneCall.current.temp.toString()
+                        binding.temperatureTextView.text =
+                            ceil(result.oneCall.current.temp).toInt().toString()
                         binding.descriptionTextView.text =
                             result.oneCall.current.weather.get(0).description
                         binding.highLowTemperatureTextView.text = "Sunrise: ${
@@ -103,7 +105,7 @@ class HomeFragment : Fragment() {
                         ).toString()
                         daysAdapter.submitList(result.oneCall.daily)
                         hoursAdapter.submitList(result.oneCall.hourly)
-                        binding.cloudValueTextView.text ="${result.oneCall.current.clouds}%"
+                        binding.cloudValueTextView.text = "${result.oneCall.current.clouds}%"
                         binding.windValueTextView.text =
                             result.oneCall.current.wind_speed.toString()
                         binding.pressureValueTextView.text =
