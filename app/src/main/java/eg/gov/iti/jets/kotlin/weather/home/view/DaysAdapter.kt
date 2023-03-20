@@ -11,6 +11,7 @@ import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Daily
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
 
 class DaysAdapter() :
     ListAdapter<Daily, DaysAdapter.ViewHolder>(DayDiffUtil()) {
@@ -28,14 +29,15 @@ class DaysAdapter() :
             .get()
             .load("https://openweathermap.org/img/wn/${item.weather.get(0).icon}@2x.png")
             .into(holder.binding.dayWeatherIconImageView);
-        holder.binding.dayHighLowTempTextView.text = "H:${item.temp.max}\nL:${item.temp.min}"
+        holder.binding.dayHighLowTempTextView.text =
+            "H:${ceil(item.temp.max).toInt()}\nL:${ceil(item.temp.min).toInt()}"
         holder.binding.dayDescriptionTextView.text = item.weather.get(0).description
         //Day name
         holder.binding.dayNameTextView.text =
             if (position > 0)
                 SimpleDateFormat("EEEE", Locale.getDefault()).format(
-                Date(item.dt * 1000)
-            ).substring(0, 3)
+                    Date(item.dt * 1000)
+                ).substring(0, 3)
             else "Today"
 
 

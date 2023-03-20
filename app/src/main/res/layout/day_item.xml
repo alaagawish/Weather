@@ -22,6 +22,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
+            android:padding="4dp"
             android:text="@string/tomorrow"
             android:textColor="@color/white"
             android:textSize="20sp" />
@@ -29,7 +30,7 @@
         <ImageView
             android:id="@+id/dayWeatherIconImageView"
             android:layout_width="70dp"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:src="@drawable/weather" />
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:padding="4dp"
             android:text="@string/description"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -50,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:padding="4dp"
             android:text="@string/range_temperature"
             android:textColor="@color/white"
             android:textSize="16sp" />

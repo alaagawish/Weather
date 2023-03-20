@@ -35,7 +35,7 @@
     <string name="visibility_value">1000m</string>
     <string name="uv">Ultra-Violet</string>
     <string name="uv_value">0.0</string>
-    <string name="temperature_txt">Temperature</string>
+    <string name="temperature_txt">Units of Measurement</string>
     <string name="wind_speed">Wind Speed</string>
     <string name="location">Location</string>
     <string name="language">Language</string>
@@ -44,9 +44,9 @@
     <string name="gps">GPS</string>
     <string name="m_sec">Meter/Sec</string>
     <string name="m_hour">Mile/Hour</string>
-    <string name="celsius">℃</string>
-    <string name="fahrenheit">℉</string>
-    <string name="kelvin">K</string>
+    <string name="celsius">℃ - Meter/Sec</string>
+    <string name="fahrenheit">℉ - Mile/Hour</string>
+    <string name="kelvin">K - Meter/Sec</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
     <string name="english">English</string>
