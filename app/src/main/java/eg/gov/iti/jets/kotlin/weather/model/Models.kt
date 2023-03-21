@@ -1,5 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.model
 
+import androidx.room.Entity
+
 //data class Forecast(
 //    val cod: String,
 //    val message: Int,
@@ -19,15 +21,18 @@ package eg.gov.iti.jets.kotlin.weather.model
 //    val sys: Sys,
 //    val dt_txt: String
 //)
+@Entity
 
 data class Temp(
     val day: Double,
     val min: Double,
     val max: Double,
-    val night: Double,
-    val eve: Double,
-    val morn: Double
+//    val night: Double,
+//    val eve: Double,
+//    val morn: Double
 )
+
+@Entity
 
 data class Daily(
     val dt: Long,
@@ -65,6 +70,7 @@ data class Daily(
 //    val humidity: Double,
 //    val temp_kf: Double
 //)
+@Entity
 
 data class OneCall(
     val lat: Double,
@@ -75,6 +81,8 @@ data class OneCall(
     val hourly: List<Hourly>,
     val daily: List<Daily>
 )
+
+@Entity
 
 data class Hourly(
     val dt: Long,
@@ -92,6 +100,8 @@ data class Hourly(
     val weather: List<WeatherObject>,
 //    val pop: Int
 )
+
+@Entity
 
 data class Current(
     val dt: Long,
@@ -111,6 +121,7 @@ data class Current(
 )
 
 //data class Weather(val list: List<WeatherObject>)
+@Entity
 data class WeatherObject(val id: Int, val main: String, val description: String, val icon: String)
 //data class Clouds(val all: Int)
 //data class Wind(val speed: Double, val deg: Int, val gust: Double)

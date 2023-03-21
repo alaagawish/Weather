@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import eg.gov.iti.jets.kotlin.weather.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
@@ -19,6 +20,7 @@ import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.Repository
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
+import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -59,6 +61,9 @@ class HomeFragment : Fragment() {
         hoursAdapter = HoursAdapter()
         binding.daysDetailsRecyclerView.adapter = daysAdapter
         binding.hoursDetailsRecyclerView.adapter = hoursAdapter
+//        if (sharedPreferences.getString(LATITUDE, "1.0")?.toDouble() == 1.0)
+//            Snackbar.make(requireContext(),view, "Turn on GPS", Snackbar.LENGTH_LONG).show()
+
         lifecycleScope.launch {
 
             homeViewModel.forecastStateFlow.collectLatest { result ->
