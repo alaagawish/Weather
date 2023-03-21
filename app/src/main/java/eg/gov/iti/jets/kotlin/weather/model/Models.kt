@@ -21,7 +21,7 @@ import androidx.room.Entity
 //    val sys: Sys,
 //    val dt_txt: String
 //)
-@Entity
+//@Entity
 
 data class Temp(
     val day: Double,
@@ -32,7 +32,7 @@ data class Temp(
 //    val morn: Double
 )
 
-@Entity
+//@Entity
 
 data class Daily(
     val dt: Long,
@@ -70,7 +70,7 @@ data class Daily(
 //    val humidity: Double,
 //    val temp_kf: Double
 //)
-@Entity
+//@Entity
 
 data class OneCall(
     val lat: Double,
@@ -82,7 +82,7 @@ data class OneCall(
     val daily: List<Daily>
 )
 
-@Entity
+//@Entity
 
 data class Hourly(
     val dt: Long,
@@ -101,7 +101,7 @@ data class Hourly(
 //    val pop: Int
 )
 
-@Entity
+//@Entity
 
 data class Current(
     val dt: Long,
@@ -121,7 +121,7 @@ data class Current(
 )
 
 //data class Weather(val list: List<WeatherObject>)
-@Entity
+//@Entity
 data class WeatherObject(val id: Int, val main: String, val description: String, val icon: String)
 //data class Clouds(val all: Int)
 //data class Wind(val speed: Double, val deg: Int, val gust: Double)
