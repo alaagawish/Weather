@@ -64,5 +64,13 @@
     <string name="sure">Sure</string>
     <string name="start">2:50 AM\n26 Feb</string>
     <string name="done">Done</string>
+    <string name="Sunday">Sun</string>
+    <string name="Saturday">Sat</string>
+    <string name="Monday">Mon</string>
+    <string name="Wednesday">Wed</string>
+    <string name="Tuesday">Tues</string>
+    <string name="Thursday">Thur</string>
+    <string name="Friday">Fri</string>
+    <string name="Today">Today</string>
     <!--         //////////////    ///////////////        -->
 </resources>

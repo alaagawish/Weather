@@ -5,32 +5,34 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import eg.gov.iti.jets.kotlin.weather.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
-import eg.gov.iti.jets.kotlin.weather.model.Repository
+import eg.gov.iti.jets.kotlin.weather.model.*
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.SimpleFormatter
 import kotlin.math.ceil
 
+val units = when (sharedPreferences.getString(UNIT, "metric")) {
+    "metric" -> Triple("℃", "m/s", "Km")
+    "imperial" -> Triple("℉", "Mph", "Yard")
+    else -> Triple("K", "m/s", "Km")
+}
+
 class HomeFragment : Fragment() {
-    private val TAG = "HomeFragment"
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeViewModelFactory: HomeViewModelFactory
@@ -57,7 +59,7 @@ class HomeFragment : Fragment() {
             )
         )
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
-        daysAdapter = DaysAdapter()
+        daysAdapter = DaysAdapter(requireContext())
         hoursAdapter = HoursAdapter()
         binding.daysDetailsRecyclerView.adapter = daysAdapter
         binding.hoursDetailsRecyclerView.adapter = hoursAdapter
@@ -75,14 +77,59 @@ class HomeFragment : Fragment() {
 
                     }
                     is APIState.Success -> {
-                        Log.d(TAG, "onCreateView: done ${result.oneCall.current.weather.get(0)}")
+                        Log.d(TAG, "onCreateView: done ${result.oneCall.current.weather[0]}")
+                        val day = DayDBModel(
+                            result.oneCall.current.dt,
+                            result.oneCall.lat,
+                            result.oneCall.lon,
+                            result.oneCall.timezone,
+                            result.oneCall.current.sunrise,
+                            result.oneCall.current.sunset,
+                            result.oneCall.current.temp,
+                            result.oneCall.current.pressure,
+                            result.oneCall.current.humidity,
+                            result.oneCall.current.uvi,
+                            result.oneCall.current.clouds,
+                            result.oneCall.current.visibility,
+                            result.oneCall.current.wind_speed,
+                            result.oneCall.current.weather[0].main,
+                            result.oneCall.current.weather[0].description,
+                            result.oneCall.current.weather[0].icon
+                        )
+
+                        val days = mutableListOf<DailyDBModel>()
+                        for (i in result.oneCall.daily) {
+                            days.add(
+                                DailyDBModel(
+                                    i.dt,
+                                    i.temp.min,
+                                    i.temp.max,
+                                    i.weather[0].main,
+                                    i.weather[0].description,
+                                    i.weather[0].icon
+                                )
+                            )
+                        }
+                        val hours = mutableListOf<HourlyDBModel>()
+                        for (i in result.oneCall.hourly) {
+                            hours.add(
+                                HourlyDBModel(
+                                    i.dt,
+                                    i.temp,
+                                    i.weather[0].main,
+                                    i.weather[0].description,
+                                    i.weather[0].icon
+                                )
+                            )
+                        }
+                        homeViewModel.addDay(day, hours, days)
                         binding.progressBar.visibility = View.GONE
                         binding.homeConstraintLayout.visibility = View.VISIBLE
                         binding.cityNameTextView.text = result.oneCall.timezone
                         binding.temperatureTextView.text =
-                            ceil(result.oneCall.current.temp).toInt().toString()
+                            "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
                         binding.descriptionTextView.text =
-                            result.oneCall.current.weather.get(0).description
+                            result.oneCall.current.weather[0].description
                         binding.highLowTemperatureTextView.text = "Sunrise: ${
                             SimpleDateFormat("HH:MM").format(
                                 Date(result.oneCall.current.sunrise * 1000)
@@ -96,9 +143,7 @@ class HomeFragment : Fragment() {
                             .get()
                             .load(
                                 "https://openweathermap.org/img/wn/${
-                                    result.oneCall.current.weather.get(
-                                        0
-                                    ).icon
+                                    result.oneCall.current.weather[0].icon
                                 }@2x.png"
                             )
                             .into(binding.dayIconImageView)
@@ -109,16 +154,17 @@ class HomeFragment : Fragment() {
                             Date(result.oneCall.current.dt * 1000)
                         ).toString()
                         daysAdapter.submitList(result.oneCall.daily)
+
                         hoursAdapter.submitList(result.oneCall.hourly)
                         binding.cloudValueTextView.text = "${result.oneCall.current.clouds}%"
                         binding.windValueTextView.text =
-                            result.oneCall.current.wind_speed.toString()
+                            "${result.oneCall.current.wind_speed}${units.second}"
                         binding.pressureValueTextView.text =
-                            result.oneCall.current.pressure.toString()
+                            "${result.oneCall.current.pressure}hpa"
                         binding.humidityValueTextView.text =
-                            result.oneCall.current.humidity.toString()
+                            "${result.oneCall.current.humidity}%"
                         binding.visibilityValueTextView.text =
-                            result.oneCall.current.visibility.toString()
+                            "${result.oneCall.current.visibility / 1000}${units.third}"
 
 
                     }
