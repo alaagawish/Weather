@@ -11,4 +11,16 @@ interface RepositoryInterface {
         lang: String
     ): Flow<OneCall>
 
+    suspend fun addDay(day: DayDBModel)
+    suspend fun deleteAll()
+    val getDay: Flow<DayDBModel>
+
+    suspend fun addDayHours(hour: HourlyDBModel)
+    suspend fun deleteAllHours()
+    val getDayHours: Flow<List<HourlyDBModel>>
+
+    suspend fun addComingDay(day: DailyDBModel)
+    suspend fun deleteAllComingDays()
+    val getNextDays: Flow<List<DailyDBModel>>
+
 }

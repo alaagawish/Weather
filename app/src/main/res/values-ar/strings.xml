@@ -64,5 +64,13 @@
     <string name="sure">متأكد</string>
     <string name="start">2:50 AM\n26 Feb</string>
     <string name="done">تأكيد</string>
+    <string name="Sunday">الأحد</string>
+    <string name="Saturday">السبت</string>
+    <string name="Monday">الاثنين</string>
+    <string name="Wednesday">الاربعاء</string>
+    <string name="Tuesday">الثلاثاء</string>
+    <string name="Thursday">الخميس</string>
+    <string name="Friday">الجمعة</string>
+    <string name="Today">اليوم</string>
 
 </resources>
