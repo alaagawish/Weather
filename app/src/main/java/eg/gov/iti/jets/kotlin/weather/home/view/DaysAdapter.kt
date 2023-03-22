@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Daily
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
 
-class DaysAdapter() :
+class DaysAdapter(val context: Context) :
     ListAdapter<Daily, DaysAdapter.ViewHolder>(DayDiffUtil()) {
     lateinit var binding: DayItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,20 +26,32 @@ class DaysAdapter() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
+
         Picasso
             .get()
-            .load("https://openweathermap.org/img/wn/${item.weather.get(0).icon}@2x.png")
+            .load("https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png")
             .into(holder.binding.dayWeatherIconImageView);
         holder.binding.dayHighLowTempTextView.text =
-            "H:${ceil(item.temp.max).toInt()}\nL:${ceil(item.temp.min).toInt()}"
-        holder.binding.dayDescriptionTextView.text = item.weather.get(0).description
+            "L: ${ceil(item.temp.min).toInt()}${units.first}\nH: ${ceil(item.temp.max).toInt()}${units.first}"
+        holder.binding.dayDescriptionTextView.text = item.weather[0].description
+
+
         //Day name
+        val dayName = SimpleDateFormat("EEEE", Locale.getDefault()).format(
+            Date(item.dt * 1000)
+        )
         holder.binding.dayNameTextView.text =
             if (position > 0)
-                SimpleDateFormat("EEEE", Locale.getDefault()).format(
-                    Date(item.dt * 1000)
-                ).substring(0, 3)
-            else "Today"
+                when (dayName) {
+                    "Saturday" -> context.getString(R.string.Saturday)
+                    "Sunday" -> context.getString(R.string.Sunday)
+                    "Monday" -> context.getString(R.string.Monday)
+                    "Tuesday" -> context.getString(R.string.Tuesday)
+                    "Wednesday" -> context.getString(R.string.Wednesday)
+                    "Thursday" -> context.getString(R.string.Thursday)
+                    else -> context.getString(R.string.Friday)
+                }
+            else context.getString(R.string.Today)
 
 
     }

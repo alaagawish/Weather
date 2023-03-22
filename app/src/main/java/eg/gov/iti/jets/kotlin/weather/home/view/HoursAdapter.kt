@@ -30,7 +30,7 @@ class HoursAdapter() :
             .get()
             .load("https://openweathermap.org/img/wn/${item.weather.get(0).icon}@2x.png")
             .into(holder.binding.weatherDescriptionImageView)
-        holder.binding.hourlyTemperatureTextView.text = ceil(item.temp).toInt().toString()
+        holder.binding.hourlyTemperatureTextView.text = "${ceil(item.temp).toInt()}${units.first}"
 
         holder.binding.hourTextView.text = "${
             SimpleDateFormat("HH:mm").format(

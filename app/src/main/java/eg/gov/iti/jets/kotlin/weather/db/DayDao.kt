@@ -2,17 +2,16 @@ package eg.gov.iti.jets.kotlin.weather.db
 
 import androidx.room.*
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DayDao {
+    @get:Query("SELECT * FROM day")
+    val getDay: Flow<DayDBModel>
 
-//    @Query("SELECT * FROM day")
-//    suspend fun getDay(): DayDBModel
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addDay(day: DayDBModel)
 
-//    @Update
-//    suspend fun updateDay(day: DayDBModel): Boolean
-
-//    @Delete
-//    suspend fun deleteDay(day: DayDBModel): Int
-
+    @Query("DELETE FROM day")
+    suspend fun deleteAll()
 }

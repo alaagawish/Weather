@@ -4,14 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
+import eg.gov.iti.jets.kotlin.weather.model.HourlyDBModel
 
 
-@Database(entities = arrayOf(DayDBModel::class), version = 1)
+@Database(entities = [DayDBModel::class, HourlyDBModel::class, DailyDBModel::class], version = 1)
 
 abstract class DayDatabase : RoomDatabase() {
 
     abstract fun getDayDao(): DayDao
+    abstract fun getDailyDao(): DailyDao
+    abstract fun getHourDao(): HourDao
 
     companion object {
         @Volatile
@@ -22,7 +26,7 @@ abstract class DayDatabase : RoomDatabase() {
                     Room.databaseBuilder(
                         context.applicationContext,
                         DayDatabase::class.java,
-                        "day"
+                        "my_database"
                     )
                         .build()
                 INSTANCE = i
