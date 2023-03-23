@@ -47,3 +47,13 @@ data class DailyDBModel(
     val description: String,
     val icon: String
 )
+
+@Entity(tableName = "fav")
+
+data class FavouritePlace(
+    @PrimaryKey
+    val dt: Long,
+    val lat: Double,
+    val lon: Double,
+    val timezone: String,
+    )

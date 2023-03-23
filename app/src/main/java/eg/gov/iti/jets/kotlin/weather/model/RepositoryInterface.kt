@@ -23,4 +23,8 @@ interface RepositoryInterface {
     suspend fun deleteAllComingDays()
     val getNextDays: Flow<List<DailyDBModel>>
 
+    suspend fun addPlaceToFav(favouritePlace: FavouritePlace)
+    suspend fun deleteFavPlace(favouritePlace: FavouritePlace)
+    val getAllFav: Flow<List<FavouritePlace>>
+
 }

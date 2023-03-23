@@ -4,6 +4,7 @@ import android.content.Context
 import eg.gov.iti.jets.kotlin.weather.home.view.HomeFragment
 import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
+import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.HourlyDBModel
 import kotlinx.coroutines.flow.Flow
 
@@ -19,9 +20,13 @@ class LocalSource(context: Context) : LocalSourceInterface {
     private val hourDao: HourDao by lazy {
         dayDatabase.getHourDao()
     }
+    private val favDao: FavDao by lazy {
+        dayDatabase.getFavDao()
+    }
     private val dayFromDB: Flow<DayDBModel> = dayDao.getDay
     private val dailyFromDB: Flow<List<DailyDBModel>> = dailyDao.getNextDays
     private val hourFromDB: Flow<List<HourlyDBModel>> = hourDao.getDayHours
+    private val favFromDB: Flow<List<FavouritePlace>> = favDao.getAllFavPlaces
     override suspend fun addDay(day: DayDBModel) {
         println("localsource: $day")
         dayDao.addDay(day)
@@ -55,5 +60,17 @@ class LocalSource(context: Context) : LocalSourceInterface {
 
     override val getNextDays: Flow<List<DailyDBModel>>
         get() = dailyFromDB
+
+
+    override val getAllFavPlaces: Flow<List<FavouritePlace>>
+        get() = favFromDB
+
+    override suspend fun addPlaceToFav(favouritePlace: FavouritePlace) {
+        favDao.addFavPlace(favouritePlace)
+    }
+
+    override suspend fun deletePlaceFromFav(favouritePlace: FavouritePlace) {
+        favDao.deletePlaceFromFav(favouritePlace)
+    }
 
 }

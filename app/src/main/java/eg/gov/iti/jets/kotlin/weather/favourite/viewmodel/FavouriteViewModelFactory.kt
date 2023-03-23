@@ -8,8 +8,8 @@ import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
 class FavouriteViewModelFactory(private val repositoryInterface: RepositoryInterface) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(FavouriteViewModelFactory::class.java)) {
-            FavouriteViewModelFactory(repositoryInterface) as T
+        return if (modelClass.isAssignableFrom(FavouriteViewModel::class.java)) {
+            FavouriteViewModel(repositoryInterface) as T
         } else {
             throw IllegalArgumentException(" FavouriteViewModelFactory , NO FOUND")
         }

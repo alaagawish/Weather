@@ -26,12 +26,10 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     val comingDaysLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
 
     init {
-
-        Log.d("TAG", ":  ${sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()} ")
-        Log.d("TAG", ": ${sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()} ")
+//        Log.d("TAG", ":  ${sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()} ")
+//        Log.d("TAG", ": ${sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()} ")
 
         if (sharedPreferences.getBoolean("isSavedLocal", false)) {
-            println("ddfjfjgjg")
             getNextDaysStored()
             getDayStored()
             getHoursStored()
@@ -40,11 +38,11 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
 
     }
 
-     fun getForecastData(
+    fun getForecastData(
         lat: Double,
         lon: Double,
-        unit: String = "standard",
-        lang: String = "en"
+        unit: String = sharedPreferences.getString(UNIT, "standard")!!,
+        lang: String = sharedPreferences.getString(LANGUAGE, "en")!!
     ) {
         viewModelScope.launch {
             repositoryInterface.getOneCallRemote(lat, lon, unit, lang)
@@ -68,13 +66,12 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         }
     }
 
-    //    fun getDayStored() = repositoryInterface.getDay.asLiveData()
     private fun getDayStored() {
         println("getDayStored")
 
         viewModelScope.launch {
             repositoryInterface.getDay.catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
-                .collect { data -> dayLocalStateFlow.value = APIState.SuccessRoomDay(data) }
+                .collect { data -> if(data!=null)dayLocalStateFlow.value = APIState.SuccessRoomDay(data) }
         }
     }
 
@@ -85,7 +82,9 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
             repositoryInterface.getNextDays.catch { e ->
                 comingDaysLocalStateFlow.value = APIState.Failure(e)
             }
-                .collect { data -> comingDaysLocalStateFlow.value = APIState.SuccessRoomDaily(data) }
+                .collect { data ->
+                    comingDaysLocalStateFlow.value = APIState.SuccessRoomDaily(data)
+                }
         }
     }
 

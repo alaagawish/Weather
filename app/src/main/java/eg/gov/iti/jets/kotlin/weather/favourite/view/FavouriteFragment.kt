@@ -1,51 +1,191 @@
 package eg.gov.iti.jets.kotlin.weather.favourite.view
 
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import eg.gov.iti.jets.kotlin.weather.LANGUAGE
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentFavouriteBinding
+import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
-import eg.gov.iti.jets.kotlin.weather.sharedPreferences
-import java.util.*
+import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.model.*
+import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.network.DayClient
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class FavouriteFragment : Fragment() {
+class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
-    private var _binding: FragmentFavouriteBinding? = null
-
-    private val binding get() = _binding!!
-
+    private lateinit var binding: FragmentFavouriteBinding
+    private lateinit var favouriteViewModel: FavouriteViewModel
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var favouriteViewModelFactory: FavouriteViewModelFactory
+    private lateinit var homeViewModelFactory: HomeViewModelFactory
+    private lateinit var placesAdapter: PlacesAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val favouriteViewModel =
-            ViewModelProvider(this)[FavouriteViewModel::class.java]
+        binding = FragmentFavouriteBinding.inflate(inflater, container, false)
 
-        _binding = FragmentFavouriteBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-//        val locale = Locale("en")
-//        Locale.setDefault(locale)
-//        val res: Resources = context?.resources!!
-//        val configuration = Configuration(res.configuration)
-//        configuration.locale = locale
-//        res.updateConfiguration(configuration, res.displayMetrics)
-//        val textView: TextView = binding.textGallery
-//        favouriteViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
-        return root
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        favouriteViewModelFactory = FavouriteViewModelFactory(
+            Repository.getInstance(
+                DayClient.getInstance(),
+                LocalSource(requireContext())
+            )
+        )
+
+        homeViewModelFactory = HomeViewModelFactory(
+            Repository.getInstance(
+                DayClient.getInstance(),
+                LocalSource(requireContext())
+            )
+        )
+        favouriteViewModel =
+            ViewModelProvider(this, favouriteViewModelFactory)[FavouriteViewModel::class.java]
+
+        homeViewModel =
+            ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
+        placesAdapter = PlacesAdapter(this)
+
+        binding.addCityFloatingActionButton.setOnClickListener {
+
+
+            // TODO: openmap return lat log,
+
+
+//            homeViewModel.getForecastData(lat, lon)
+
+            lifecycleScope.launch {
+                homeViewModel.forecastStateFlow.collectLatest { result ->
+                    when (result) {
+                        is APIState.Waiting -> {
+                            binding.favProgressBar.visibility = View.VISIBLE
+                            binding.favouritesRecyclerView.visibility = View.GONE
+                            binding.noPlacesImageView.visibility = View.GONE
+                            binding.noPlacesTextView.visibility = View.GONE
+                            Log.d(TAG, "onCreateView: waiting")
+
+                        }
+                        is APIState.Success -> {
+                            var favouritePlace = FavouritePlace(
+                                result.oneCall.current.dt,
+                                result.oneCall.lat,
+                                result.oneCall.lon,
+                                result.oneCall.timezone
+                            )
+                            favouriteViewModel.addPlaceToFav(favouritePlace)
+                            binding.favProgressBar.visibility = View.GONE
+                            binding.favouritesRecyclerView.visibility = View.VISIBLE
+                            binding.noPlacesImageView.visibility = View.GONE
+                            binding.noPlacesTextView.visibility = View.GONE
+
+                            favouriteViewModel.getAllFavPlaces()
+
+                        }
+                        else -> {
+                            binding.favProgressBar.visibility = View.GONE
+                            Snackbar.make(
+                                requireActivity().findViewById(android.R.id.content),
+                                "Cant retrieve this place, cant add to fav",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                            favouriteViewModel.getAllFavPlaces()
+                            binding.favProgressBar.visibility = View.GONE
+                            binding.favouritesRecyclerView.visibility = View.VISIBLE
+                            binding.noPlacesImageView.visibility = View.GONE
+                            binding.noPlacesTextView.visibility = View.GONE
+
+
+                        }
+                    }
+
+                }
+
+            }
+
+
+        }
+        binding.favouritesRecyclerView.adapter = placesAdapter
+
+        lifecycleScope.launch {
+            favouriteViewModel.favLocalPlacesStateFlow.collectLatest { result ->
+                when (result) {
+                    is APIState.Failure -> {
+                        binding.favProgressBar.visibility = View.GONE
+                        binding.favouritesRecyclerView.visibility = View.GONE
+                        binding.noPlacesImageView.visibility = View.GONE
+                        binding.noPlacesTextView.visibility = View.GONE
+                        Snackbar.make(
+                            requireActivity().findViewById(android.R.id.content),
+                            "Something went wrong, check again later",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                        Log.d(
+                            "TAG",
+                            "onViewCreated: error in retrieving list of fav from local source $result"
+                        )
+                    }
+                    is APIState.SuccessFavPlaces -> {
+                        if (result.list.isNotEmpty()) {
+                            placesAdapter.submitList(result.list)
+                            binding.favProgressBar.visibility = View.GONE
+                            binding.favouritesRecyclerView.visibility = View.VISIBLE
+                            binding.noPlacesImageView.visibility = View.GONE
+                            binding.noPlacesTextView.visibility = View.GONE
+                        } else {
+                            binding.noPlacesImageView.visibility = View.VISIBLE
+                            binding.noPlacesTextView.visibility = View.VISIBLE
+                            binding.favProgressBar.visibility = View.GONE
+
+                        }
+                    }
+                    else -> {
+                        binding.favProgressBar.visibility = View.VISIBLE
+                        binding.favouritesRecyclerView.visibility = View.GONE
+                        binding.noPlacesImageView.visibility = View.GONE
+                        binding.noPlacesTextView.visibility = View.GONE
+
+                    }
+                }
+            }
+        }
+
+    }
+
+    override fun displayPlace(favouritePlace: FavouritePlace) {
+
+// TODO:
+    }
+
+    override fun deletePlace(favouritePlace: FavouritePlace) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Delete place from favourite list")
+        builder.setMessage("Are you sure to delete this place from favourite?")
+
+        val dialog = builder.create()
+        dialog.show()
+        builder.setPositiveButton("Yes") { dialog, which ->
+            favouriteViewModel.deletePlaceFromFav(favouritePlace)
+        }
+
+        builder.setNegativeButton("No") { dialog, which ->
+            dialog.dismiss()
+        }
+
     }
 }
