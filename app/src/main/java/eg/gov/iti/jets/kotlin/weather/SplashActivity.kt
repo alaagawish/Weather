@@ -10,7 +10,7 @@ import android.os.Handler
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivitySplashBinding
 
-lateinit var sharedPreferences: SharedPreferences
+//lateinit var sharedPreferences: SharedPreferences
 
 class SplashActivity : AppCompatActivity() {
     lateinit var binding: ActivitySplashBinding
@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
+//        sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
         binding.splash.playAnimation()
 

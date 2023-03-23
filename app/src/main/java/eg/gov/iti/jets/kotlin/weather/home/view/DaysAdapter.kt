@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.R
+import eg.gov.iti.jets.kotlin.weather.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Daily
+import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
@@ -26,7 +28,23 @@ class DaysAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-
+        val units = when (sharedPreferences.getString(UNIT, "metric")) {
+            "metric" -> Triple(
+                "℃",
+                context?.getString(R.string.m_sec),
+                context?.getString(R.string.kilo_meter)
+            )
+            "imperial" -> Triple(
+                "℉",
+                context?.getString(R.string.m_hour),
+                context?.getString(R.string.yard)
+            )
+            else -> Triple(
+                "K",
+                context?.getString(R.string.m_sec),
+                context?.getString(R.string.kilo_meter)
+            )
+        }
         Picasso
             .get()
             .load("https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png")
@@ -40,23 +58,26 @@ class DaysAdapter(val context: Context) :
         val dayName = SimpleDateFormat("EEEE", Locale.getDefault()).format(
             Date(item.dt * 1000)
         )
+
         holder.binding.dayNameTextView.text =
             if (position > 0)
-                when (dayName) {
-                    "Saturday" -> context.getString(R.string.Saturday)
-                    "Sunday" -> context.getString(R.string.Sunday)
-                    "Monday" -> context.getString(R.string.Monday)
-                    "Tuesday" -> context.getString(R.string.Tuesday)
-                    "Wednesday" -> context.getString(R.string.Wednesday)
-                    "Thursday" -> context.getString(R.string.Thursday)
-                    else -> context.getString(R.string.Friday)
-                }
-            else context.getString(R.string.Today)
+                dayName
+//                when (dayName) {
+//                    "Saturday" -> context.getString(R.string.Saturday)
+//                    "Sunday" -> context.getString(R.string.Sunday)
+//                    "Monday" -> context.getString(R.string.Monday)
+//                    "Tuesday" -> context.getString(R.string.Tuesday)
+//                    "Wednesday" -> context.getString(R.string.Wednesday)
+//                    "Thursday" -> context.getString(R.string.Thursday)
+//                    else -> context.getString(R.string.Friday)
+//    }
+    else
+        context.getString(R.string.Today)
 
 
-    }
+}
 
-    class ViewHolder(var binding: DayItemBinding) : RecyclerView.ViewHolder(binding.root)
+class ViewHolder(var binding: DayItemBinding) : RecyclerView.ViewHolder(binding.root)
 }
 
 class DayDiffUtil : DiffUtil.ItemCallback<Daily>() {

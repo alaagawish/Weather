@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/dayNameTextView"
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -29,7 +29,7 @@
 
         <ImageView
             android:id="@+id/dayWeatherIconImageView"
-            android:layout_width="70dp"
+            android:layout_width="60dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -37,10 +37,11 @@
 
         <TextView
             android:id="@+id/dayDescriptionTextView"
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:layout_marginHorizontal="5dp"
             android:padding="4dp"
             android:text="@string/description"
             android:textColor="@color/white"
@@ -48,7 +49,7 @@
 
         <TextView
             android:id="@+id/dayHighLowTempTextView"
-            android:layout_width="100dp"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"

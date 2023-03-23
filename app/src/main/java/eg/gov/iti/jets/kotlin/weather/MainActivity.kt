@@ -3,6 +3,8 @@ package eg.gov.iti.jets.kotlin.weather
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -16,8 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
-// var rootView: View= findViewById<View>(android.R.id.content)
-
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,12 +26,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val locale = Locale(sharedPreferences.getString(LANGUAGE, "en"))
+        Locale.setDefault(locale)
+        val res: Resources = this.resources
+        val configuration = Configuration(res.configuration)
+        configuration.locale = locale
+        res.updateConfiguration(configuration, res.displayMetrics)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-//        rootView = findViewById<View>(android.R.id.content)
 
         val sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 

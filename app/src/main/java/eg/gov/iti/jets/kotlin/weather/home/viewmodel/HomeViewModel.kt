@@ -21,31 +21,43 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val repositoryInterface: RepositoryInterface) : ViewModel() {
 
     val forecastStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
+    val dayLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
+    val hoursLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
+    val comingDaysLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
 
     init {
 
         Log.d("TAG", ":  ${sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()} ")
         Log.d("TAG", ": ${sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()} ")
-//        if (sharedPreferences.getString(LATITUDE, "1.0")?.toDouble() != 1.0)
 
-        getForecastData(
-            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!,
-            sharedPreferences.getString(UNIT, "metric")!!,
-            sharedPreferences.getString(
-                LANGUAGE, "en"
-            )!!
-        )
+        if (sharedPreferences.getBoolean("isSavedLocal", false)) {
+            println("ddfjfjgjg")
+            getNextDaysStored()
+            getDayStored()
+            getHoursStored()
+        }
+
 
     }
 
-    fun getForecastData(lat: Double, lon: Double, unit: String = "standard", lang: String = "en") {
+     fun getForecastData(
+        lat: Double,
+        lon: Double,
+        unit: String = "standard",
+        lang: String = "en"
+    ) {
         viewModelScope.launch {
             repositoryInterface.getOneCallRemote(lat, lon, unit, lang)
                 .catch { e -> forecastStateFlow.value = APIState.Failure(e) }
                 .collect { data -> forecastStateFlow.value = APIState.Success(data) }
 
         }
+
+        with(sharedPreferences.edit()) {
+            putBoolean("isSavedLocal", true)
+            apply()
+        }
+
     }
 
     private fun resetLocalSource() {
@@ -56,17 +68,48 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         }
     }
 
-    fun getDayStored() = repositoryInterface.getDay.asLiveData()
-    fun getNextDaysStored() = repositoryInterface.getNextDays.asLiveData()
-    fun getHoursStored() = repositoryInterface.getDayHours.asLiveData()
+    //    fun getDayStored() = repositoryInterface.getDay.asLiveData()
+    private fun getDayStored() {
+        println("getDayStored")
+
+        viewModelScope.launch {
+            repositoryInterface.getDay.catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
+                .collect { data -> dayLocalStateFlow.value = APIState.SuccessRoomDay(data) }
+        }
+    }
+
+    private fun getNextDaysStored() {
+        println("getNextDaysStored")
+
+        viewModelScope.launch {
+            repositoryInterface.getNextDays.catch { e ->
+                comingDaysLocalStateFlow.value = APIState.Failure(e)
+            }
+                .collect { data -> comingDaysLocalStateFlow.value = APIState.SuccessRoomDaily(data) }
+        }
+    }
+
+    private fun getHoursStored() {
+        println("getHoursStored")
+        viewModelScope.launch {
+            repositoryInterface.getDayHours.catch { e ->
+                hoursLocalStateFlow.value = APIState.Failure(e)
+            }
+                .collect { data ->
+                    hoursLocalStateFlow.value = APIState.SuccessRoomHours(data)
+                }
+        }
+    }
+
     fun addDay(dayDBModel: DayDBModel, list: List<HourlyDBModel>, daysList: List<DailyDBModel>) {
         resetLocalSource()
         viewModelScope.launch(Dispatchers.IO) {
-            repositoryInterface.addDay(dayDBModel)
             for (i in list)
                 repositoryInterface.addDayHours(i)
             for (i in daysList)
                 repositoryInterface.addComingDay(i)
+            repositoryInterface.addDay(dayDBModel)
+
 
         }
     }

@@ -23,6 +23,7 @@ class LocalSource(context: Context) : LocalSourceInterface {
     private val dailyFromDB: Flow<List<DailyDBModel>> = dailyDao.getNextDays
     private val hourFromDB: Flow<List<HourlyDBModel>> = hourDao.getDayHours
     override suspend fun addDay(day: DayDBModel) {
+        println("localsource: $day")
         dayDao.addDay(day)
     }
 

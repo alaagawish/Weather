@@ -9,10 +9,22 @@
     tools:context=".home.view.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/homeConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lighter_blue">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/connectionAnimation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/connection" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -28,6 +40,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homeConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/lighter_blue"
