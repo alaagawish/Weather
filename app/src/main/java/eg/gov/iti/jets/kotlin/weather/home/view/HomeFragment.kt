@@ -1,5 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.home.view
 
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import eg.gov.iti.jets.kotlin.weather.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
@@ -26,11 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
 
-val units = when (sharedPreferences.getString(UNIT, "metric")) {
-    "metric" -> Triple("℃", "m/s", "Km")
-    "imperial" -> Triple("℉", "Mph", "Yard")
-    else -> Triple("K", "m/s", "Km")
-}
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -46,7 +45,12 @@ class HomeFragment : Fragment() {
     ): View {
         binding =
             FragmentHomeBinding.inflate(inflater, container, false)
-
+        val locale = Locale(sharedPreferences.getString(LANGUAGE, "en"))
+        Locale.setDefault(locale)
+        val res: Resources = context?.resources!!
+        val configuration = Configuration(res.configuration)
+        configuration.locale = locale
+        res.updateConfiguration(configuration, res.displayMetrics)
         return binding.root
     }
 
@@ -58,9 +62,26 @@ class HomeFragment : Fragment() {
                 LocalSource(requireContext())
             )
         )
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        val units = when (sharedPreferences.getString(UNIT, "metric")) {
+            "metric" -> Triple(
+                "℃",
+                context?.getString(R.string.m_sec),
+                context?.getString(R.string.kilo_meter)
+            )
+            "imperial" -> Triple(
+                "℉",
+                context?.getString(R.string.m_hour),
+                context?.getString(R.string.yard)
+            )
+            else -> Triple(
+                "K",
+                context?.getString(R.string.m_sec),
+                context?.getString(R.string.kilo_meter)
+            )
+        }
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
         daysAdapter = DaysAdapter(requireContext())
-        hoursAdapter = HoursAdapter()
+        hoursAdapter = HoursAdapter(requireContext())
         binding.daysDetailsRecyclerView.adapter = daysAdapter
         binding.hoursDetailsRecyclerView.adapter = hoursAdapter
 //        if (sharedPreferences.getString(LATITUDE, "1.0")?.toDouble() == 1.0)
@@ -147,7 +168,7 @@ class HomeFragment : Fragment() {
                                 }@2x.png"
                             )
                             .into(binding.dayIconImageView)
-                        binding.dateTextView.text = SimpleDateFormat("yyyy-MM-dd").format(
+                        binding.dateTextView.text = SimpleDateFormat("dd-MM-yyyy").format(
                             Date(result.oneCall.current.dt * 1000)
                         ).toString()
                         binding.timeTextView.text = SimpleDateFormat("HH:MM").format(

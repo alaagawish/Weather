@@ -22,7 +22,7 @@
     <string name="date">10/02/2023</string>
     <string name="time">22:09</string>
     <string name="hour">10AM</string>
-    <string name="tomorrow">Tomorrow</string>
+    <string name="tomorrow">Wednesday</string>
     <string name="wind">Wind</string>
     <string name="wind_value">2.06m/s</string>
     <string name="humidity_value">77%</string>
@@ -42,8 +42,10 @@
     <string name="notifications">Notifications</string>
     <string name="map">Map</string>
     <string name="gps">GPS</string>
-    <string name="m_sec">Meter/Sec</string>
-    <string name="m_hour">Mile/Hour</string>
+    <string name="m_sec">m/s</string>
+    <string name="m_hour">Mph</string>
+    <string name="kilo_meter">Km</string>
+    <string name="yard">Yard</string>
     <string name="celsius">℃ - Meter/Sec</string>
     <string name="fahrenheit">℉ - Mile/Hour</string>
     <string name="kelvin">K - Meter/Sec</string>
@@ -72,5 +74,4 @@
     <string name="Thursday">Thur</string>
     <string name="Friday">Fri</string>
     <string name="Today">Today</string>
-    <!--         //////////////    ///////////////        -->
 </resources>
