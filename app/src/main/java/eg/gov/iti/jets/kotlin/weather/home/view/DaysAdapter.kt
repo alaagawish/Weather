@@ -59,9 +59,9 @@ class DaysAdapter(val context: Context) :
             Date(item.dt * 1000)
         )
 
-        holder.binding.dayNameTextView.text = dayName
-//            if (position > 0)
-
+        holder.binding.dayNameTextView.text =
+            if (position > 0)
+                dayName
 //                when (dayName) {
 //                    "Saturday" -> context.getString(R.string.Saturday)
 //                    "Sunday" -> context.getString(R.string.Sunday)
@@ -70,13 +70,14 @@ class DaysAdapter(val context: Context) :
 //                    "Wednesday" -> context.getString(R.string.Wednesday)
 //                    "Thursday" -> context.getString(R.string.Thursday)
 //                    else -> context.getString(R.string.Friday)
-//                }
-//            else context.getString(R.string.Today)
+//    }
+    else
+        context.getString(R.string.Today)
 
 
-    }
+}
 
-    class ViewHolder(var binding: DayItemBinding) : RecyclerView.ViewHolder(binding.root)
+class ViewHolder(var binding: DayItemBinding) : RecyclerView.ViewHolder(binding.root)
 }
 
 class DayDiffUtil : DiffUtil.ItemCallback<Daily>() {
