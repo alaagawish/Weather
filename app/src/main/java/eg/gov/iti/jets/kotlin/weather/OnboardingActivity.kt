@@ -4,9 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,17 +12,16 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.widget.RadioButton
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
-import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import java.util.*
 
 const val LANGUAGE = "LANGUAGE"
 const val NAME = "WEATHER"
 const val UNIT = "UNIT"
+const val NOTIFICATION = "NOTIFICATION"
+
 //const val LOCATION = "LOCATION"
 const val LONGITUDE = "LONGITUDE"
 const val LATITUDE = "LATITUDE"
@@ -33,7 +30,6 @@ const val PERMISSION_ID = 2
 class OnboardingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOnboardingBinding
     lateinit var fusedLocationClient: FusedLocationProviderClient
-    lateinit var editor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
@@ -46,7 +42,6 @@ class OnboardingActivity : AppCompatActivity() {
             finish()
         }
         binding.animation.playAnimation()
-        editor = sharedPreferences.edit()
 
         editor.putString(LANGUAGE, "en")
 //        editor.putString(LOCATION, "gps")

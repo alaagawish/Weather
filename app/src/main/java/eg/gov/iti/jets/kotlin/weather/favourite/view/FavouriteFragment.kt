@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.MainActivity
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentFavouriteBinding
-import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
@@ -79,8 +78,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
         binding.addCityFloatingActionButton.setOnClickListener {
             val intent = Intent(requireContext(), MapsActivity::class.java)
             startActivity(intent)
-            while (sharedPreferences.getBoolean(FLAG, true)) {
-            }
+            while (sharedPreferences.getBoolean(FLAG, true)) { }
             val lat = sharedPreferences.getString(LAT, "0.0")!!.toDouble()
             val lon = sharedPreferences.getString(LON, "0.0")!!.toDouble()
             if (lat != 0.0 && lon != 0.0) {
@@ -97,7 +95,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
                             }
                             is APIState.Success -> {
-                                var favouritePlace = FavouritePlace(
+                                val favouritePlace = FavouritePlace(
                                     result.oneCall.current.dt,
                                     result.oneCall.lat,
                                     result.oneCall.lon,
@@ -203,8 +201,8 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
                     }
                     is APIState.Success -> {
-                        var daysAdapter: DaysAdapter = DaysAdapter(requireContext())
-                        var hoursAdapter: HoursAdapter = HoursAdapter(requireContext())
+                        val daysAdapter = DaysAdapter(requireContext())
+                        val hoursAdapter = HoursAdapter(requireContext())
                         binding.daysDetailsRecyclerView.adapter = daysAdapter
                         binding.hoursDetailsRecyclerView.adapter = hoursAdapter
                         Log.d(TAG, "onCreateView: done ${result.oneCall.current.weather[0]}")
@@ -274,14 +272,15 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
     override fun deletePlace(favouritePlace: FavouritePlace) {
         val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builder.setTitle("Delete place from favourite list")
-        builder.setMessage("Are you sure to delete this place from favourite?")
+//        builder.setTitle("Delete place from favourite list")
+        builder.setTitle(context?.getString(R.string.delete_question))
+        builder.setMessage(context?.getString(R.string.are_you_sure_to_delete))
         builder.setIcon(R.drawable.baseline_delete_24)
-        builder.setPositiveButton("Yes") { _, _ ->
+        builder.setPositiveButton(context?.getString(R.string.yes)) { _, _ ->
             favouriteViewModel.deletePlaceFromFav(favouritePlace)
         }
 
-        builder.setNegativeButton("No") { dialog, _ ->
+        builder.setNegativeButton(context?.getString(R.string.no)) { dialog, _ ->
             dialog.dismiss()
         }
         val dialog = builder.create()
