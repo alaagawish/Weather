@@ -1,11 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.home.viewmodel
 
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
@@ -71,7 +67,9 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
 
         viewModelScope.launch {
             repositoryInterface.getDay.catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
-                .collect { data -> if(data!=null)dayLocalStateFlow.value = APIState.SuccessRoomDay(data) }
+                .collect { data ->
+                    if (data != null) dayLocalStateFlow.value = APIState.SuccessRoomDay(data)
+                }
         }
     }
 

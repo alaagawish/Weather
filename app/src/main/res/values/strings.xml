@@ -74,4 +74,11 @@
     <string name="Thursday">Thur</string>
     <string name="Friday">Fri</string>
     <string name="Today">Today</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="back">Back to Favourites</string>
+    <string name="add_place">Add Place To Favourites</string>
 </resources>

@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
 
+var units: Triple<String, String?, String?> = Triple("℃", "m/s", "Km")
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -47,7 +48,6 @@ class HomeFragment : Fragment() {
         binding =
             FragmentHomeBinding.inflate(inflater, container, false)
         val locale = Locale(sharedPreferences.getString(LANGUAGE, "en"))
-//        val locale = Locale("ar")
         Locale.setDefault(locale)
         val res: Resources = context?.resources!!
         val configuration = Configuration(res.configuration)
@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
                 LocalSource(requireContext())
             )
         )
-        val units = when (sharedPreferences.getString(UNIT, "metric")) {
+        units = when (sharedPreferences.getString(UNIT, "metric")) {
             "metric" -> Triple(
                 "℃",
                 context?.getString(R.string.m_sec),
