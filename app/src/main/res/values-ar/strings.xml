@@ -44,9 +44,9 @@
     <string name="gps">GPS</string>
     <string name="m_sec">م/ث</string>
     <string name="m_hour">ميل/س</string>
-    <string name="celsius">℃</string>
-    <string name="fahrenheit">℉</string>
-    <string name="kelvin">K</string>
+    <string name="celsius">℃ - م/ث</string>
+    <string name="fahrenheit">℉ - ميل لكل ساعة</string>
+    <string name="kelvin">K - م/ث</string>
     <string name="enable">مفعل</string>
     <string name="disable">غير مفعل</string>
     <string name="english">انجليزية</string>
@@ -75,11 +75,13 @@
     <string name="Friday">الجمعة</string>
     <string name="Today">اليوم</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="next">التالي</string>
     <string name="previous">السابق</string>
 
     <string name="back">ارجع</string>
     <string name="add_place">ضيف مكان للمفضل</string>
+    <string name="delete_question">حذف مكان من المفضل</string>
+    <string name="no">لا</string>
+    <string name="yes">متأكد</string>
 
 </resources>

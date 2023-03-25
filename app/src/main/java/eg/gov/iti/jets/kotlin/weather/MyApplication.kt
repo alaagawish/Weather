@@ -9,12 +9,14 @@ import java.util.*
 
 lateinit var sharedPreferences: SharedPreferences
 
+lateinit var editor: SharedPreferences.Editor
 
 class MyApplication : Application() {
 
 
     override fun attachBaseContext(base: Context) {
         sharedPreferences = base.getSharedPreferences(NAME, Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
 
         super.attachBaseContext(updateBaseContextLocale(base))
 
@@ -22,9 +24,10 @@ class MyApplication : Application() {
 
     private fun updateBaseContextLocale(context: Context): Context {
 //        val language = "ar"
-        val language = sharedPreferences.getString(LANGUAGE, "en")
-        val locale = Locale(language)
-        Locale.setDefault(locale)
+        val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+        if (locale != null) {
+            Locale.setDefault(locale)
+        }
         val res: Resources = context.resources
         val configuration = Configuration(res.configuration)
         configuration.locale = locale
