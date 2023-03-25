@@ -2,7 +2,6 @@ package eg.gov.iti.jets.kotlin.weather.model
 
 
 data class Temp(
-//    val day: Double,
     val min: Double,
     val max: Double,
 )
@@ -11,7 +10,6 @@ data class Daily(
     val dt: Long,
     val temp: Temp,
     val weather: List<WeatherObject>,
-//    val uvi: Double
 )
 
 data class OneCall(

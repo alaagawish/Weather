@@ -17,6 +17,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
 import java.util.*
 
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val locale = Locale(sharedPreferences.getString(LANGUAGE, "en"))
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
       }*/
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.favouriteFragment, R.id.alertFragment, R.id.settingsFragment
@@ -68,5 +70,15 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    fun reloadMyFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag("MyFragmentTag")
+        if (fragment != null) {
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.detach(fragment)
+            fragmentTransaction.attach(fragment)
+            fragmentTransaction.commit()
+        }
     }
 }

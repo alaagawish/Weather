@@ -1,10 +1,8 @@
 package eg.gov.iti.jets.kotlin.weather.model
 
 import eg.gov.iti.jets.kotlin.weather.db.LocalSourceInterface
-import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.RemoteSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
 
 const val TAG = "TAG"
@@ -63,6 +61,16 @@ class Repository private constructor(
     }
 
     override val getNextDays = localSourceInterface.getNextDays
+    override suspend fun addPlaceToFav(favouritePlace: FavouritePlace) {
+       localSourceInterface.addPlaceToFav(favouritePlace)
+    }
+
+    override suspend fun deleteFavPlace(favouritePlace: FavouritePlace) {
+        localSourceInterface.deletePlaceFromFav(favouritePlace)
+    }
+
+    override val getAllFav: Flow<List<FavouritePlace>>
+        get() = localSourceInterface.getAllFavPlaces
 
 
 }

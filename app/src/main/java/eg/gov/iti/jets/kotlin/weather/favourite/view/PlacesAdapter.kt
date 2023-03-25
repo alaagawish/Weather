@@ -10,10 +10,11 @@ import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.PlaceItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Daily
+import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 
 
 class PlacesAdapter(var listener: PlaceOnClickListener) :
-    ListAdapter<Daily, PlacesAdapter.ViewHolder>(DayDiffUtil()) {
+    ListAdapter<FavouritePlace, PlacesAdapter.ViewHolder>(DayDiffUtil()) {
     lateinit var binding: PlaceItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater: LayoutInflater =
@@ -25,8 +26,7 @@ class PlacesAdapter(var listener: PlaceOnClickListener) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-
-        holder.binding.countryNameTextView
+        holder.binding.countryNameTextView.text = item.timezone
         holder.binding.countryCardView.setOnClickListener {
             listener.displayPlace(item)
         }
@@ -40,12 +40,12 @@ class PlacesAdapter(var listener: PlaceOnClickListener) :
     class ViewHolder(var binding: PlaceItemBinding) : RecyclerView.ViewHolder(binding.root)
 }
 
-class DayDiffUtil : DiffUtil.ItemCallback<Daily>() {
-    override fun areItemsTheSame(oldItem: Daily, newItem: Daily): Boolean {
+class DayDiffUtil : DiffUtil.ItemCallback<FavouritePlace>() {
+    override fun areItemsTheSame(oldItem: FavouritePlace, newItem: FavouritePlace): Boolean {
         return oldItem === newItem
     }
 
-    override fun areContentsTheSame(oldItem: Daily, newItem: Daily): Boolean {
+    override fun areContentsTheSame(oldItem: FavouritePlace, newItem: FavouritePlace): Boolean {
         return oldItem == newItem
     }
 }
