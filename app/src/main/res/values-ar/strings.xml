@@ -74,5 +74,12 @@
     <string name="Thursday">الخميس</string>
     <string name="Friday">الجمعة</string>
     <string name="Today">اليوم</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+
+    <string name="back">ارجع</string>
+    <string name="add_place">ضيف مكان للمفضل</string>
 
 </resources>
