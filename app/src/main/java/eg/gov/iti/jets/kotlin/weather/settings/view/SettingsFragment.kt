@@ -11,6 +11,9 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.lifecycle.ViewModelProvider
 import eg.gov.iti.jets.kotlin.weather.*
+import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.Constants.NOTIFICATION
+import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentSettingsBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.model.Repository
@@ -20,8 +23,6 @@ import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModelFactor
 import java.util.*
 
 class SettingsFragment : Fragment() {
-
-
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var settingsViewModelFactory: SettingsViewModelFactory
@@ -30,7 +31,6 @@ class SettingsFragment : Fragment() {
     ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-//
         return binding.root
     }
 
@@ -75,8 +75,10 @@ class SettingsFragment : Fragment() {
             }
             editor.apply()
 
-            val locale = Locale(sharedPreferences.getString(LANGUAGE, "en"))
-            Locale.setDefault(locale)
+            val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+            if (locale != null) {
+                Locale.setDefault(locale)
+            }
             val res: Resources = context?.resources!!
             val configuration = Configuration(res.configuration)
             configuration.locale = locale

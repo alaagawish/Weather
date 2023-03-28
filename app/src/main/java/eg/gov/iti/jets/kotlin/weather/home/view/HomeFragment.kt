@@ -10,13 +10,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.*
+import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
+import eg.gov.iti.jets.kotlin.weather.Constants.TAG
+import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
@@ -25,7 +29,6 @@ import eg.gov.iti.jets.kotlin.weather.model.*
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,8 +50,10 @@ class HomeFragment : Fragment() {
     ): View {
         binding =
             FragmentHomeBinding.inflate(inflater, container, false)
-        val locale = Locale(sharedPreferences.getString(LANGUAGE, "en"))
-        Locale.setDefault(locale)
+        val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+        if (locale != null) {
+            Locale.setDefault(locale)
+        }
         val res: Resources = context?.resources!!
         val configuration = Configuration(res.configuration)
         configuration.locale = locale
@@ -162,12 +167,13 @@ class HomeFragment : Fragment() {
                             binding.descriptionTextView.text =
                                 result.oneCall.current.weather[0].description
                             binding.highLowTemperatureTextView.text = "Sunrise: ${
-                                SimpleDateFormat("HH:MM").format(
-                                    Date(result.oneCall.current.sunrise * 1000)
+                                getDateFormat(
+                                    "HH:MM",
+                                    result.oneCall.current.sunrise
                                 )
                             }\nSunset: ${
-                                SimpleDateFormat("HH:MM").format(
-                                    Date(result.oneCall.current.sunset * 1000)
+                                getDateFormat(
+                                    "HH:MM", result.oneCall.current.sunset
                                 )
                             }"
                             Picasso
@@ -178,12 +184,11 @@ class HomeFragment : Fragment() {
                                     }@2x.png"
                                 )
                                 .into(binding.dayIconImageView)
-                            binding.dateTextView.text = SimpleDateFormat("dd-MM-yyyy").format(
-                                Date(result.oneCall.current.dt * 1000)
-                            ).toString()
-                            binding.timeTextView.text = SimpleDateFormat("HH:MM").format(
-                                Date(result.oneCall.current.dt * 1000)
-                            ).toString()
+                            binding.dateTextView.text =
+                                getDateFormat("dd-MM-yyyy", result.oneCall.current.dt).toString()
+                            binding.timeTextView.text =
+                                getDateFormat("HH:MM", result.oneCall.current.dt)
+                                    .toString()
                             daysAdapter.submitList(result.oneCall.daily)
 
                             hoursAdapter.submitList(result.oneCall.hourly)
@@ -269,12 +274,14 @@ class HomeFragment : Fragment() {
                                                         result.day.description
                                                     binding.highLowTemperatureTextView.text =
                                                         "Sunrise: ${
-                                                            SimpleDateFormat("HH:MM").format(
-                                                                Date(result.day.sunrise * 1000)
+                                                            getDateFormat(
+                                                                "HH:MM",
+                                                                result.day.sunrise
                                                             )
                                                         }\nSunset: ${
-                                                            SimpleDateFormat("HH:MM").format(
-                                                                Date(result.day.sunset * 1000)
+                                                            getDateFormat(
+                                                                "HH:MM",
+                                                                result.day.sunset
                                                             )
                                                         }"
                                                     Picasso
@@ -285,14 +292,14 @@ class HomeFragment : Fragment() {
                                                             }@2x.png"
                                                         )
                                                         .into(binding.dayIconImageView)
-                                                    binding.dateTextView.text =
-                                                        SimpleDateFormat("dd-MM-yyyy").format(
-                                                            Date(result.day.dt * 1000)
-                                                        ).toString()
-                                                    binding.timeTextView.text =
-                                                        SimpleDateFormat("HH:MM").format(
-                                                            Date(result.day.dt * 1000)
-                                                        ).toString()
+                                                    binding.dateTextView.text = getDateFormat(
+                                                        "dd-MM-yyyy",
+                                                        result.day.dt
+                                                    ).toString()
+                                                    binding.timeTextView.text = getDateFormat(
+                                                        "HH:MM",
+                                                        result.day.dt
+                                                    ).toString()
                                                     binding.cloudValueTextView.text =
                                                         "${result.day.clouds}%"
                                                     binding.windValueTextView.text =
@@ -390,13 +397,12 @@ class HomeFragment : Fragment() {
                 } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                     Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
                     return true
-//                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-//                    return true
                 }
             }
         }
         return false
     }
 
+    private fun getDateFormat(pattern: String, date: Long) =
+        SimpleDateFormat(pattern).format(Date(date * 1000))
 }

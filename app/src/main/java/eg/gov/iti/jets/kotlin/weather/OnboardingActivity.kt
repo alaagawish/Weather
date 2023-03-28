@@ -14,18 +14,14 @@ import android.util.Log
 import android.widget.RadioButton
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
+import eg.gov.iti.jets.kotlin.weather.Constants.PERMISSION_ID
+import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import java.util.*
 
-const val LANGUAGE = "LANGUAGE"
-const val NAME = "WEATHER"
-const val UNIT = "UNIT"
-const val NOTIFICATION = "NOTIFICATION"
-
-//const val LOCATION = "LOCATION"
-const val LONGITUDE = "LONGITUDE"
-const val LATITUDE = "LATITUDE"
-const val PERMISSION_ID = 2
 
 class OnboardingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOnboardingBinding

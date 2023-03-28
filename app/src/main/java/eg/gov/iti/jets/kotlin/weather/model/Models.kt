@@ -6,6 +6,16 @@ data class Temp(
     val max: Double,
 )
 
+
+data class Alert(
+    val sender_name: String,
+    val event: String,
+    val start: Long,
+    val end: Long,
+    val description: String,
+    val tags: List<String>
+)
+
 data class Daily(
     val dt: Long,
     val temp: Temp,
@@ -18,7 +28,8 @@ data class OneCall(
     val timezone: String,
     val current: Current,
     val hourly: List<Hourly>,
-    val daily: List<Daily>
+    val daily: List<Daily>,
+    val alerts: List<Alert>
 )
 
 data class Hourly(

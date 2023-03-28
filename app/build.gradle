@@ -4,6 +4,13 @@ plugins {
     id 'kotlin-kapt'
 
 }
+//allprojects {
+//    repositories {
+////        google()
+////        mavenCentral()
+//        maven { url 'https://jitpack.io' }
+//    }
+//}
 
 android {
     namespace 'eg.gov.iti.jets.kotlin.weather'
@@ -76,5 +83,16 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:3.0.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    //Notification Library
+//    implementation "io.karn:notify:1.3.0"
+
+    //Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //Notify
+//    implementation 'com.github.marcoscgdev:Notify:1.1.8'
+
+    def core_version = "1.6.0"
+    implementation "androidx.core:core:$core_version"
 
 }

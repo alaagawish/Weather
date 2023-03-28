@@ -6,13 +6,11 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
-import eg.gov.iti.jets.kotlin.weather.R
+import eg.gov.iti.jets.kotlin.weather.*
+import eg.gov.iti.jets.kotlin.weather.Constants.FLAG
+import eg.gov.iti.jets.kotlin.weather.Constants.LAT
+import eg.gov.iti.jets.kotlin.weather.Constants.LON
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMapsBinding
-import eg.gov.iti.jets.kotlin.weather.favourite.view.FLAG
-import eg.gov.iti.jets.kotlin.weather.sharedPreferences
-
-const val LAT = "LAT"
-const val LON = "LON"
 
 class MapsActivity : AppCompatActivity() {
 

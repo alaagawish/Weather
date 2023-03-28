@@ -83,5 +83,10 @@
     <string name="delete_question">حذف مكان من المفضل</string>
     <string name="no">لا</string>
     <string name="yes">متأكد</string>
+    <string name="delete_alert">احذف المنبه</string>
+    <string name="channel_description">Channel Description</string>
+    <string name="channel_name">"Channel Name "</string>
+    <string name="snooze">Snooze</string>
+    <string name="notification_title">titleee</string>
 
 </resources>

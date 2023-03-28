@@ -1,7 +1,6 @@
 package eg.gov.iti.jets.kotlin.weather.model
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "day")
@@ -56,4 +55,17 @@ data class FavouritePlace(
     val lat: Double,
     val lon: Double,
     val timezone: String,
-    )
+)
+
+@Entity(tableName = "alert")
+
+data class AlertsDB(
+    @PrimaryKey
+    val sender_name: String,
+    val event: String,
+    val start: Long,
+    val end: Long,
+    val description: String,
+    val tag: String
+)
+

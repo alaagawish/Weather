@@ -5,8 +5,6 @@ import eg.gov.iti.jets.kotlin.weather.network.RemoteSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-const val TAG = "TAG"
-
 class Repository private constructor(
     var remoteSource: RemoteSource,
     var localSourceInterface: LocalSourceInterface
@@ -62,7 +60,7 @@ class Repository private constructor(
 
     override val getNextDays = localSourceInterface.getNextDays
     override suspend fun addPlaceToFav(favouritePlace: FavouritePlace) {
-       localSourceInterface.addPlaceToFav(favouritePlace)
+        localSourceInterface.addPlaceToFav(favouritePlace)
     }
 
     override suspend fun deleteFavPlace(favouritePlace: FavouritePlace) {

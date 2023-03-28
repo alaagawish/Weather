@@ -7,7 +7,6 @@ import eg.gov.iti.jets.kotlin.weather.network.APIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(private val repositoryInterface: RepositoryInterface) : ViewModel() {
@@ -16,7 +15,6 @@ class FavouriteViewModel(private val repositoryInterface: RepositoryInterface) :
 
     init {
         getAllFavPlaces()
-
     }
 
     fun deletePlaceFromFav(favouritePlace: FavouritePlace) {

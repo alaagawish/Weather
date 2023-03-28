@@ -3,6 +3,8 @@ package eg.gov.iti.jets.kotlin.weather.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eg.gov.iti.jets.kotlin.weather.*
+import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
 import eg.gov.iti.jets.kotlin.weather.model.HourlyDBModel
@@ -22,8 +24,6 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     val comingDaysLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
 
     init {
-//        Log.d("TAG", ":  ${sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()} ")
-//        Log.d("TAG", ": ${sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()} ")
 
         if (sharedPreferences.getBoolean("isSavedLocal", false)) {
             getNextDaysStored()

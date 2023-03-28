@@ -1,15 +1,14 @@
 package eg.gov.iti.jets.kotlin.weather.home.view
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.R
-import eg.gov.iti.jets.kotlin.weather.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.HourItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Hourly
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences

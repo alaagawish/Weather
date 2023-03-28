@@ -83,4 +83,9 @@
     <string name="delete_question">Delete place from favourite list</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="delete_alert">Delete alarm</string>
+    <string name="channel_description">Channel Description</string>
+    <string name="channel_name">"Channel Name "</string>
+    <string name="snooze">Snooze</string>
+    <string name="notification_title">titleee</string>
 </resources>
