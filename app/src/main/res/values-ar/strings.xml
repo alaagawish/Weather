@@ -91,5 +91,7 @@
     <string name="alert_type">Choose type of Alert you want..</string>
     <string name="start_time">00:00</string>
     <string name="start_date" />
+    <string name="dismiss">ايقاف</string>
+    <string name="repeat">كرر</string>
 
 </resources>

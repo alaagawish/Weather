@@ -24,5 +24,7 @@ object Constants {
     const val STRLOCATION = "STRLOCATION"
     const val CHANNEL_NAME = "channelName"
     const val NOTIFICATION_ID = 0
+    const val ALARM_ACTION = "INTENT_ACTION"
+
 }
 

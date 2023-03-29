@@ -1,48 +1,61 @@
 package eg.gov.iti.jets.kotlin.weather.alert.receiver
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.text.format.DateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import eg.gov.iti.jets.kotlin.weather.Constants
-import eg.gov.iti.jets.kotlin.weather.alert.utils.createNotificationChannel
+import eg.gov.iti.jets.kotlin.weather.Constants.ALARM_ACTION
+import eg.gov.iti.jets.kotlin.weather.R
+import eg.gov.iti.jets.kotlin.weather.alert.utils.createAlarmChannel
 import eg.gov.iti.jets.kotlin.weather.alert.view.AlarmService
 import timber.log.Timber
+
+var mediaPlayer: MediaPlayer? = null
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val timeInMillis = intent.getLongExtra(Constants.EXTRA_EXACT_ALARM_TIME, 0L)
-
+        mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
         when (intent.action) {
+            ALARM_ACTION -> {
+                println("ALARM_ACTION")
+                mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
+                mediaPlayer?.start()
+                buildNotification(context, "Alarm mode", convertDate(timeInMillis))
+
+            }
             Constants.ACTION_SET_EXACT -> {
+                println("ACTION_SET_EXACT")
                 buildNotification(context, "Set Exact Time", convertDate(timeInMillis))
+            }
+            context.getString(R.string.dismiss) -> {
+                println("Dismiss: cancel audio")
+
+                mediaPlayer?.release()
+                mediaPlayer?.stop()
+                mediaPlayer = null
+
             }
 
             Constants.ACTION_SET_REPETITIVE_EXACT -> {
+                println("ACTION_SET_REPETITIVE_EXACT")
+
                 setRepetitiveAlarm(AlarmService(context))
                 buildNotification(context, "Set Repetitive Exact Time", convertDate(timeInMillis))
             }
+
+
         }
     }
 
     private fun buildNotification(context: Context, title: String, message: String) {
-//        Notify
-//            .with(context)
-//            .content {
-//                this.title = title
-//                text = "I got triggered at - $message"
-//            }
-//            .show()
-//        createNotificationChannel(context).build()
 
-        createNotificationChannel(context)
-
-        println("hello send notification")
-//        setAlarm(context)
+        createAlarmChannel(context, title, message)
+        println("Sending notification")
 
     }
 
@@ -57,17 +70,4 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun convertDate(timeInMillis: Long): String =
         DateFormat.format("dd/MM/yyyy hh:mm:ss", timeInMillis).toString()
 
-//    fun setAlarm(context: Context) {
-//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        val intent = Intent(context, AlarmReceiver::class.java)
-//        val pendingIntent =
-//            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//
-//        val calendar = Calendar.getInstance()
-//        calendar.set(Calendar.HOUR_OF_DAY, 3)
-//        calendar.set(Calendar.MINUTE, 34)
-//        calendar.set(Calendar.SECOND, 0)
-//
-//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-//    }
 }

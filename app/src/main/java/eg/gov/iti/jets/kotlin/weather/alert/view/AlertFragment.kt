@@ -20,11 +20,7 @@ import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.databinding.AlertDialogBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentAlertBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
-import eg.gov.iti.jets.kotlin.weather.editor
-import eg.gov.iti.jets.kotlin.weather.favourite.view.PlacesAdapter
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
-import eg.gov.iti.jets.kotlin.weather.model.Daily
-import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.Repository
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
@@ -122,7 +118,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             var end = 0L
             fromDate.setOnClickListener {
                 setAlarm {
-
+                    alarmService.setExactAlarm(it)
                     start = it
                     dialog.findViewById<TextView>(R.id.fromDateTextView).text =
                         getDateFormat("dd-MM", it).toString()
@@ -239,42 +235,6 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         return Pair(date, time)
     }
 
-    private fun setAlarm(): Pair<String, String> {
-        var date = ""
-        var time = ""
-        Calendar.getInstance().apply {
-            this.set(Calendar.SECOND, 0)
-            this.set(Calendar.MILLISECOND, 0)
-            DatePickerDialog(
-                requireContext(),
-                0,
-                { _, year, month, day ->
-                    this.set(Calendar.YEAR, year)
-                    this.set(Calendar.MONTH, month)
-                    this.set(Calendar.DAY_OF_MONTH, day)
-                    date = "$year/$month/$day"
-                    TimePickerDialog(
-                        requireContext(),
-                        0,
-                        { _, hour, minute ->
-                            this.set(Calendar.HOUR_OF_DAY, hour)
-                            this.set(Calendar.MINUTE, minute)
-                            time = "$hour:$minute"
-
-                        },
-                        this.get(Calendar.HOUR_OF_DAY),
-                        this.get(Calendar.MINUTE),
-                        false
-                    ).show()
-                },
-
-                this.get(Calendar.YEAR),
-                this.get(Calendar.MONTH),
-                this.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-        return Pair(date, time)
-    }
 
     private fun getDateFormat(pattern: String, date: Long) =
         SimpleDateFormat(pattern).format(Date(date))

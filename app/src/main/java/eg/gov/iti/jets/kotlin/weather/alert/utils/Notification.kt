@@ -25,7 +25,7 @@ fun createNotificationChannel(context: Context) {
         getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
     }
     val bigImage = BitmapFactory.decodeResource(
-        context?.resources, R.drawable.weather
+        context.resources, R.drawable.weather
     )
     val bigPicStyle =
         NotificationCompat.BigPictureStyle().bigPicture(bigImage).bigLargeIcon(null)
@@ -38,19 +38,18 @@ fun createNotificationChannel(context: Context) {
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
         .setStyle(bigPicStyle).setLargeIcon(bigImage)
+        .setCategory(NotificationCompat.CATEGORY_ALARM)
         .build()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
-        ).apply {
-            lightColor = Color.BLUE
-            enableLights(true)
-        }
-        val manager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.createNotificationChannel(channel)
+    val channel = NotificationChannel(
+        CHANNEL_ID,
+        CHANNEL_NAME,
+        NotificationManager.IMPORTANCE_DEFAULT
+    ).apply {
+        lightColor = Color.BLUE
+        enableLights(true)
     }
+    val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    manager.createNotificationChannel(channel)
     val notificationManager = NotificationManagerCompat.from(context)
 
     if (ActivityCompat.checkSelfPermission(
@@ -63,3 +62,4 @@ fun createNotificationChannel(context: Context) {
     }
     notificationManager.notify(Constants.NOTIFICATION_ID, notification)
 }
+

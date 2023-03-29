@@ -47,7 +47,7 @@ class OnboardingActivity : AppCompatActivity() {
         editor.apply()
 //        val value = sharedPreferences.getString(UNIT, "metric")
 
-        binding.languagesIntroRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.languagesIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val radioButton = findViewById<RadioButton>(checkedId)
             when (radioButton.text) {
                 "English" -> editor.putString(LANGUAGE, "en")
@@ -55,7 +55,7 @@ class OnboardingActivity : AppCompatActivity() {
             }
             editor.apply()
         }
-        binding.standardIntroRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.standardIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val radioButton = findViewById<RadioButton>(checkedId)
             when (radioButton.text) {
                 "℃ - Meter/Sec" -> editor.putString(UNIT, "metric")
@@ -64,7 +64,7 @@ class OnboardingActivity : AppCompatActivity() {
             }
             editor.apply()
         }
-//        binding.locationIntroRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+//        binding.locationIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
 //            val radioButton = findViewById<RadioButton>(checkedId)
 //            when (radioButton.text) {
 //                "Map" -> editor.putString(LOCATION, "map")
@@ -163,7 +163,7 @@ class OnboardingActivity : AppCompatActivity() {
 
                 if (addressList != null && addressList.isNotEmpty()) {
                     val address = addressList[0]
-                    var sb = StringBuilder()
+                    val sb = StringBuilder()
                     for (i in 0 until address.maxAddressLineIndex) {
                         sb.append(address.getAddressLine(i)).append("\n")
                     }
