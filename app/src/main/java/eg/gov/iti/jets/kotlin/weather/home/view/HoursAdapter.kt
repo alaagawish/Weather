@@ -40,7 +40,7 @@ class HoursAdapter(val context: Context) :
         holder.binding.hourlyTemperatureTextView.text = "${ceil(item.temp).toInt()}${units.first}"
 
         holder.binding.hourTextView.text = "${
-            SimpleDateFormat("HH:mm").format(
+            SimpleDateFormat("HH:mm aa").format(
                 Date(item.dt * 1000)
             )
         }"

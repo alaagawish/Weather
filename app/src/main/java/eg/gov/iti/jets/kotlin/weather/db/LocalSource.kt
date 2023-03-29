@@ -80,8 +80,8 @@ class LocalSource(context: Context) : LocalSourceInterface {
         alertDao.addAlert(alertsDB)
     }
 
-    override suspend fun deleteAllAlerts() {
-        alertDao.deleteAllAlerts()
+    override suspend fun deleteAlert(alert: AlertsDB) {
+        alertDao.deleteAlert(alert)
     }
 
 }

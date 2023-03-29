@@ -1,9 +1,6 @@
 package eg.gov.iti.jets.kotlin.weather.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +12,6 @@ interface AlertDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addAlert(alert: AlertsDB)
 
-    @Query("DELETE FROM alert")
-    suspend fun deleteAllAlerts()
+    @Delete
+    suspend fun deleteAlert(alert: AlertsDB)
 }

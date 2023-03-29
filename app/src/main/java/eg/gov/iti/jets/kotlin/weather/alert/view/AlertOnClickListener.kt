@@ -1,7 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.alert.view
 
-import eg.gov.iti.jets.kotlin.weather.model.Daily
+import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
 
 interface AlertOnClickListener {
-    fun deleteAlert(daily: Daily)
+    fun deleteAlert(alertsDB: AlertsDB)
 }

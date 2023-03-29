@@ -18,14 +18,15 @@ class MapsActivity : AppCompatActivity() {
     lateinit var editor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+println("jjjjjjjjjdjdkkdkdkdkdkdkdk")
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val mapView = findViewById<MapView>(R.id.mapView)
+        println("hhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjmaps")
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync { googleMap ->
             googleMap.uiSettings.isZoomControlsEnabled = true
-            googleMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
+            googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
             googleMap.setOnMapClickListener { latLng ->
                 Log.d("MainActivity", "Picked location: $latLng")
                 editor = sharedPreferences.edit()

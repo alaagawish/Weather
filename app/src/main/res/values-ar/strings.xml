@@ -85,8 +85,11 @@
     <string name="yes">متأكد</string>
     <string name="delete_alert">احذف المنبه</string>
     <string name="channel_description">Channel Description</string>
-    <string name="channel_name">"Channel Name "</string>
-    <string name="snooze">Snooze</string>
+    <string name="channel_name">"Channel Name"</string>
+    <string name="snooze">غفوة</string>
     <string name="notification_title">titleee</string>
+    <string name="alert_type">Choose type of Alert you want..</string>
+    <string name="start_time">00:00</string>
+    <string name="start_date" />
 
 </resources>

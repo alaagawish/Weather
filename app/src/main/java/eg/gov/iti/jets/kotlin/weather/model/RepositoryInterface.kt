@@ -26,4 +26,8 @@ interface RepositoryInterface {
     suspend fun deleteFavPlace(favouritePlace: FavouritePlace)
     val getAllFav: Flow<List<FavouritePlace>>
 
+    suspend fun addAlert(alertsDB: AlertsDB)
+    suspend fun deleteAlert(alertsDB: AlertsDB)
+    val getAllAlerts: Flow<List<AlertsDB>>
+
 }

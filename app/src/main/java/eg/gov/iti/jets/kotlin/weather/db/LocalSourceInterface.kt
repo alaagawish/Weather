@@ -23,6 +23,6 @@ interface LocalSourceInterface {
     val getAllAlerts: Flow<List<AlertsDB>>
 
     suspend fun addAlert(alertsDB: AlertsDB)
-    suspend fun deleteAllAlerts()
+    suspend fun deleteAlert(alert: AlertsDB)
 
 }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,6 +19,7 @@ import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
 import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.PERMISSION_ID
+import eg.gov.iti.jets.kotlin.weather.Constants.STRLOCATION
 import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import java.util.*
@@ -86,7 +88,6 @@ class OnboardingActivity : AppCompatActivity() {
             if (isLocationEnabled()) {
                 requestNewLocation()
             } else {
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             }
         } else {
@@ -156,25 +157,30 @@ class OnboardingActivity : AppCompatActivity() {
                 editor.putString(LATITUDE, latitude.toString())
                 editor.apply()
                 Log.d("TAG", "onLocationResult: ${lastLocation.latitude}")
-//                val myLocation = Geocoder(applicationContext, Locale.getDefault())
-//                val addressList =
-//                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)
+                val myLocation = Geocoder(applicationContext, Locale.getDefault())
+                val addressList =
+                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)
 
-//                if (addressList != null && addressList.isNotEmpty()) {
-//                    val address = addressList[0]
-//                    sb = StringBuilder()
-//                    for (i in 0 until address.maxAddressLineIndex) {
-//                        sb.append(address.getAddressLine(i)).append("\n")
-//                    }
-//                    if (address.premises != null)
-//                        sb.append(address.premises).append(",\n ")
-//                    sb.append(address.subAdminArea).append("\n")
-//                    sb.append(address.locality).append(",\n ")
-//                    sb.append(address.adminArea).append(",\n ")
-//                    sb.append(address.countryName).append(",\n ")
+                if (addressList != null && addressList.isNotEmpty()) {
+                    val address = addressList[0]
+                    var sb = StringBuilder()
+                    for (i in 0 until address.maxAddressLineIndex) {
+                        sb.append(address.getAddressLine(i)).append("\n")
+                    }
+                    sb.append(address.countryName).append(",")
+                    if (address.premises != null)
+                        sb.append(address.premises).append(", ")
+                    sb.append(address.adminArea).append(", ")
+                    sb.append(address.locality).append(", ")
+                    sb.append(address.subAdminArea)
 //                    sb.append(address.postalCode)
-//
-//                }
+
+                    editor.putString(STRLOCATION, sb.toString())
+
+                    editor.apply()
+
+
+                }
             }
         }
     }

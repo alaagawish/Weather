@@ -6,6 +6,20 @@
     android:layout_gravity="center"
     android:background="@drawable/dialog_bg">
 
+    <Spinner
+        android:id="@+id/alertTypeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/white"
+        android:entries="@array/alert_array"
+        android:padding="8dp"
+        android:prompt="@string/alert_type"
+        app:layout_constraintBottom_toTopOf="@+id/from"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/from"
         android:layout_width="0dp"
@@ -19,7 +33,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/to"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/alertTypeSpinner" />
 
     <TextView
         android:id="@+id/to"
@@ -34,39 +48,83 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/from"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/alertTypeSpinner" />
 
-    <TextView
+    <LinearLayout
         android:id="@+id/fromDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginVertical="8dp"
         android:background="@drawable/dialog_bg"
+        android:orientation="vertical"
         android:padding="8dp"
-        android:text="@string/from"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/to"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/from" />
+        app:layout_constraintTop_toBottomOf="@id/from">
 
-    <TextView
+        <TextView
+            android:id="@+id/fromTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/start_time"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/fromDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/start_date"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/toDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginVertical="8dp"
         android:background="@drawable/dialog_bg"
+        android:orientation="vertical"
         android:padding="8dp"
-        android:text="@string/to"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/from"
-        app:layout_constraintTop_toBottomOf="@id/to" />
+        app:layout_constraintTop_toBottomOf="@id/to">
+
+        <TextView
+            android:id="@+id/toTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/start_time"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/toDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/start_date"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
 
     <RadioGroup
         android:id="@+id/alertMethodRadioGroup"
@@ -74,25 +132,27 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginVertical="20dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fromDate">
 
         <RadioButton
-            android:id="@+id/alarmAlertRadioButton"
+            android:id="@+id/notificationAlertRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/alarm"
+            android:checked="true"
+            android:text="@string/notification"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
         <RadioButton
-            android:id="@+id/notificationAlertRadioButton"
+            android:id="@+id/alarmAlertRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
             android:checked="false"
-            android:text="@string/notification"
+            android:text="@string/alarm"
             android:textColor="@color/white"
             android:textSize="20sp" />
 

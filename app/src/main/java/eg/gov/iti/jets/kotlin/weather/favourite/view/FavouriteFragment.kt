@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.favourite.view
 
 
+import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -79,6 +81,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
             }
             val lat = sharedPreferences.getString(LAT, "0.0")!!.toDouble()
             val lon = sharedPreferences.getString(LON, "0.0")!!.toDouble()
+            println("kkkkkkkkk$lat   ::kkkkkkk$lon")
             if (lat != 0.0 && lon != 0.0) {
                 homeViewModel.getForecastData(lat, lon)
                 lifecycleScope.launch {

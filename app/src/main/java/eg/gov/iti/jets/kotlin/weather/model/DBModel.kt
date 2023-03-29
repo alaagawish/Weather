@@ -60,12 +60,13 @@ data class FavouritePlace(
 @Entity(tableName = "alert")
 
 data class AlertsDB(
-    @PrimaryKey
-    val sender_name: String,
-    val event: String,
-    val start: Long,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int=0,
+    val type: String,
+    var start: Long,
     val end: Long,
     val description: String,
-    val tag: String
+    val tag: String,
+    val repeated: Boolean
 )
 

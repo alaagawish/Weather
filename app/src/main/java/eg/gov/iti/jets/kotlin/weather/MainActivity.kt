@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
 import eg.gov.iti.jets.kotlin.weather.Constants.NAME
-import eg.gov.iti.jets.kotlin.weather.alert.createNotificationChannel
+//import eg.gov.iti.jets.kotlin.weather.alert.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
 import java.util.*
 
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
         val isOnboardingShown = sharedPreferences.getBoolean("isOnboardingShown", false)
-        createNotificationChannel(this@MainActivity)
+//        createNotificationChannel(this@MainActivity)
         if (!isOnboardingShown) {
             val intent = Intent(this, OnboardingActivity::class.java)
             startActivity(intent)

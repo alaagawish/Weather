@@ -19,6 +19,7 @@ import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
 import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
+import eg.gov.iti.jets.kotlin.weather.Constants.STRLOCATION
 import eg.gov.iti.jets.kotlin.weather.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
@@ -161,7 +162,9 @@ class HomeFragment : Fragment() {
                             binding.homeConstraintLayout.visibility = View.VISIBLE
                             binding.connectionAnimation.visibility = View.GONE
                             binding.homeConstraintLayout.visibility = View.VISIBLE
-                            binding.cityNameTextView.text = result.oneCall.timezone
+
+                            binding.cityNameTextView.text =
+                                sharedPreferences.getString(STRLOCATION, result.oneCall.timezone)
                             binding.temperatureTextView.text =
                                 "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
                             binding.descriptionTextView.text =

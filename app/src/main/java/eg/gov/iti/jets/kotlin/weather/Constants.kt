@@ -21,5 +21,8 @@ object Constants {
     const val ACTION_SET_REPETITIVE_EXACT = "ACTION_SET_REPETITIVE_EXACT"
 
     const val CHANNEL_ID = "CHANNEL_ID"
+    const val STRLOCATION = "STRLOCATION"
+    const val CHANNEL_NAME = "channelName"
+    const val NOTIFICATION_ID = 0
 }
 

@@ -70,5 +70,16 @@ class Repository private constructor(
     override val getAllFav: Flow<List<FavouritePlace>>
         get() = localSourceInterface.getAllFavPlaces
 
+    override suspend fun addAlert(alertsDB: AlertsDB) {
+        localSourceInterface.addAlert(alertsDB)
+    }
+
+    override suspend fun deleteAlert(alertsDB: AlertsDB) {
+        localSourceInterface.deleteAlert(alertsDB)
+    }
+
+    override val getAllAlerts: Flow<List<AlertsDB>>
+        get() = localSourceInterface.getAllAlerts
+
 
 }

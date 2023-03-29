@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -24,18 +23,34 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
+
             android:value="AIzaSyDyX88ZuZ6_KrI2SqFLnWFe5e0-3L4IKNM" />
-        <!--            AIzaSyDaYkuxCf532UtXSbIQ35uQjyZGbKFivEA-->
-        <receiver android:name=".alert.view.AlarmReceiver" />
+        <!--            AIzaSyDaYkuxCf532UtXSbIQ35uQjyZGbKFivEA--><!--            android:value="AIzaSyDaYkuxCf532UtXSbIQ35uQjyZGbKFivEA" />-->
+
+        <receiver
+            android:name=".alert.receiver.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+
+        </receiver>
 
         <activity
             android:name=".map.MapsActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_maps"
-            android:theme="@style/Theme.Weather.NoActionBar" />
+            android:theme="@style/Theme.Weather.NoActionBar">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
         <activity
             android:name=".SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/Theme.Weather.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,11 +72,11 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Weather.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+            <!---->
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
         </activity>
     </application>
 
