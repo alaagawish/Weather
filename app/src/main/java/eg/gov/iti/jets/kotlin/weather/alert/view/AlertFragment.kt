@@ -1,6 +1,10 @@
 package eg.gov.iti.jets.kotlin.weather.alert.view
 
+import android.Manifest
 import android.app.*
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.jets.kotlin.weather.Constants
+import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.R
 
 import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModel
@@ -20,30 +26,39 @@ import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.databinding.AlertDialogBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentAlertBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
+import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.model.Alert
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
 import eg.gov.iti.jets.kotlin.weather.model.Repository
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
+import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
 
 
 class AlertFragment : Fragment(), AlertOnClickListener {
     private lateinit var binding: FragmentAlertBinding
+
     private lateinit var dialogBinding: AlertDialogBinding
     private lateinit var alertViewModel: AlertViewModel
     private lateinit var alertViewModelFactory: AlertViewModelFactory
     private lateinit var alarmService: AlarmService
     private lateinit var alertsAdapter: AlertsAdapter
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var homeViewModelFactory: HomeViewModelFactory
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAlertBinding.inflate(inflater, container, false)
         dialogBinding = AlertDialogBinding.inflate(inflater, container, false)
-
+        dialogBinding.root
         return binding.root
     }
 
@@ -57,6 +72,14 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         )
         alertViewModel =
             ViewModelProvider(this, alertViewModelFactory)[AlertViewModel::class.java]
+
+        homeViewModelFactory = HomeViewModelFactory(
+            Repository.getInstance(
+                DayClient.getInstance(), LocalSource(requireContext())
+            )
+        )
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
+
 
         alarmService = AlarmService(requireContext())
         alertsAdapter = AlertsAdapter(this)
@@ -99,7 +122,6 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                         binding.alertsRecyclerView.visibility = View.GONE
                         binding.alertProgressBar.visibility = View.GONE
 
-
                     }
                 }
 
@@ -107,9 +129,43 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         }
 
         binding.addAlertFloatingActionButton.setOnClickListener {
+            homeViewModel.getForecastData(
+                sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences.getString(Constants.LONGITUDE, "1.0")?.toDouble()!!
+            )
+            var alerts: List<Alert> = mutableListOf()
+            lifecycleScope.launch {
+                homeViewModel.forecastStateFlow.collectLatest { result ->
+                    when (result) {
+                        is APIState.Waiting -> {
+                            Log.d(Constants.TAG, "AlertFragment: waiting")
+                        }
+                        is APIState.Success -> {
+                            if (!result.oneCall.alerts.isNullOrEmpty()) {
+                                println("alerts found ${result.oneCall.alerts[0]}")
+                                alerts = result.oneCall.alerts
+                            }
+                            Log.d(
+                                Constants.TAG,
+                                "AlertFragment: done ${result.oneCall.current.weather[0]}"
+                            )
 
+                        }
+                        else -> {
+                            Snackbar.make(
+                                requireActivity().findViewById(android.R.id.content),
+                                "Something went wrong, check again later",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+
+                        }
+                    }
+
+                }
+            }
             val dialog = Dialog(requireContext())
             dialog.setContentView(R.layout.alert_dialog)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
 
             val fromDate = dialog.findViewById<LinearLayout>(R.id.fromDate)
@@ -118,7 +174,6 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             var end = 0L
             fromDate.setOnClickListener {
                 setAlarm {
-                    alarmService.setExactAlarm(it)
                     start = it
                     dialog.findViewById<TextView>(R.id.fromDateTextView).text =
                         getDateFormat("dd-MM", it).toString()
@@ -130,14 +185,29 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             toDate.setOnClickListener {
                 setAlarm {
                     end = it
-                    dialog.findViewById<TextView>(R.id.toDateTextView).text =
-                        getDateFormat("dd-MM", it).toString()
-                    dialog.findViewById<TextView>(R.id.toTimeTextView).text =
-                        getDateFormat("hh:mm aa", it).toString()
+                    println("date ${Calendar.getInstance().timeInMillis}")
+                    if (it <= Calendar.getInstance().timeInMillis) {
+                        dialog.dismiss()
+                        Snackbar.make(
+                            requireActivity().findViewById(android.R.id.content),
+                            "Check date and time of alert",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+
+                    } else {
+                        dialog.findViewById<TextView>(R.id.toDateTextView).text =
+                            getDateFormat("dd-MM", it).toString()
+                        dialog.findViewById<TextView>(R.id.toTimeTextView).text =
+                            getDateFormat("hh:mm aa", it).toString()
+                    }
+
                 }
             }
+
             var type = "notification"
-            var tag = "any"
+            var tag = "any danger"
+            var description = "Weather is fine, no alerts found about $tag"
+            var repeated = false
 
             dialog.findViewById<Spinner>(R.id.alertTypeSpinner).onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
@@ -151,7 +221,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
-                        tag = "any"
+                        tag = "any danger"
                     }
                 }
             dialog.findViewById<RadioGroup>(R.id.alertMethodRadioGroup)
@@ -164,19 +234,55 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
                 }
             dialog.findViewById<Button>(R.id.saveAlertMaterialButton).setOnClickListener {
+                if (alerts.isNotEmpty()) {
+                    for (alert in alerts) {
+                        println("alerts found")
+                        if (alert.start * 1000 <= start && alert.end * 1000 >= end) {
+                            for (i in alert.tags) {
+                                if (i.contains(tag)) {
+                                    description = alert.description
+                                    tag = i
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    println(" notification permission is prohibited")
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        Constants.PERMISSION_REQUEST_CODE
+                    )
+                }
+
+                if (dialog.findViewById<Switch>(R.id.repeatedSwitch).isChecked)
+                    repeated = true
 
                 alertViewModel.addAlert(
                     AlertsDB(
                         type = type,
                         start = start,
                         end = end,
-                        description = "",
+                        description = description,
                         tag = tag,
-                        repeated = false
+                        repeated = repeated
                     )
                 )
-                //TODO set alarm to service alarm receiver
-//                alarmService.setExactAlarm( )
+                if (repeated) {
+                    alarmService.setRepetitiveAlarm(start, type, description, "Alert about $tag")
+
+                } else
+                    alarmService.setExactAlarm(start, type, description, "Alert about $tag")
+
+
                 alertViewModel.getAllAlerts()
                 dialog.dismiss()
             }
@@ -195,28 +301,25 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         }
 
     }
+//                    alarmService.setExactAlarm(it)
 
-    private fun setAlarm(callback: (Long) -> Unit): Pair<String, String> {
-        var date = ""
-        var time = ""
+    private fun setAlarm(callback: (Long) -> Unit) {
         Calendar.getInstance().apply {
             this.set(Calendar.SECOND, 0)
             this.set(Calendar.MILLISECOND, 0)
-            DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 0,
                 { _, year, month, day ->
                     this.set(Calendar.YEAR, year)
                     this.set(Calendar.MONTH, month)
                     this.set(Calendar.DAY_OF_MONTH, day)
-                    date = "$year/$month/$day"
                     TimePickerDialog(
                         requireContext(),
                         0,
                         { _, hour, minute ->
                             this.set(Calendar.HOUR_OF_DAY, hour)
                             this.set(Calendar.MINUTE, minute)
-                            time = "$hour:$minute"
                             callback(this.timeInMillis)
                         },
                         this.get(Calendar.HOUR_OF_DAY),
@@ -229,10 +332,10 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                 this.get(Calendar.MONTH),
                 this.get(Calendar.DAY_OF_MONTH)
 
-
-            ).show()
+            )
+            datePickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
+            datePickerDialog.show()
         }
-        return Pair(date, time)
     }
 
 
@@ -240,21 +343,25 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         SimpleDateFormat(pattern).format(Date(date))
 
     override fun deleteAlert(alertsDB: AlertsDB) {
-
-        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builder.setTitle(context?.getString(R.string.delete_alert))
-        builder.setMessage(context?.getString(R.string.are_you_sure_to_delete))
-        builder.setIcon(R.drawable.baseline_delete_24)
-        builder.setPositiveButton(context?.getString(R.string.yes)) { _, _ ->
+        if (!alertsDB.repeated && alertsDB.start < Calendar.getInstance().timeInMillis) {
             alertViewModel.deleteAlert(alertsDB)
-            //TODO delete from alert receiver
-        }
+        } else {
 
-        builder.setNegativeButton(context?.getString(R.string.no)) { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog = builder.create()
-        dialog.show()
 
+            val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+            builder.setTitle(context?.getString(R.string.delete_alert))
+            builder.setMessage(context?.getString(R.string.are_you_sure_to_delete))
+            builder.setIcon(R.drawable.baseline_delete_24)
+            builder.setPositiveButton(context?.getString(R.string.yes)) { _, _ ->
+                alertViewModel.deleteAlert(alertsDB)
+                //TODO delete from alert receiver
+            }
+
+            builder.setNegativeButton(context?.getString(R.string.no)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
+        }
     }
 }

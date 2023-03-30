@@ -28,7 +28,8 @@ class AlertsAdapter(var listener: AlertOnClickListener) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-
+        if (!item.repeated && item.start < Calendar.getInstance().timeInMillis)
+            listener.deleteAlert(item)
         holder.binding.deleteAlertIconImageView.setOnClickListener {
             listener.deleteAlert(item)
         }

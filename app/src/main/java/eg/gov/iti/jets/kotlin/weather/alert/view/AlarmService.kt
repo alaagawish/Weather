@@ -14,26 +14,42 @@ class AlarmService(private val context: Context) {
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
 
 
-    fun setExactAlarm(timeInMillis: Long) {
+    fun setExactAlarm(timeInMillis: Long, type: String, message: String, title: String) {
         setAlarm(
             timeInMillis,
             getPendingIntent(
                 getIntent().apply {
-                    action = Constants.ACTION_SET_EXACT
+                    action = if (type == "notification") {
+                        putExtra(Constants.TYPE, "notification")
+                        Constants.ACTION_SET_EXACT
+                    } else {
+                        putExtra(Constants.TYPE, "alarm")
+                        Constants.ALARM_ACTION
+                    }
                     putExtra(Constants.EXTRA_EXACT_ALARM_TIME, timeInMillis)
+                    putExtra(Constants.MESSAGE, message)
+                    putExtra(Constants.TITLE, title)
                 }
             )
         )
     }
 
     //1 Week
-    fun setRepetitiveAlarm(timeInMillis: Long) {
+    fun setRepetitiveAlarm(timeInMillis: Long, type: String, message: String, title: String) {
         setAlarm(
             timeInMillis,
             getPendingIntent(
                 getIntent().apply {
-                    action = Constants.ACTION_SET_REPETITIVE_EXACT
+                    action = if (type == "notification") {
+                        putExtra(Constants.TYPE, "notification")
+                        Constants.ACTION_SET_REPETITIVE_EXACT
+                    } else {
+                        putExtra(Constants.TYPE, "alarm")
+                        Constants.ACTION_SET_REPETITIVE_EXACT
+                    }
                     putExtra(Constants.EXTRA_EXACT_ALARM_TIME, timeInMillis)
+                    putExtra(Constants.MESSAGE, message)
+                    putExtra(Constants.TITLE, title)
                 }
             )
         )

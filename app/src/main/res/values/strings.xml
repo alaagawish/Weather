@@ -73,7 +73,7 @@
     <string name="Thursday">Thur</string>
     <string name="Friday">Fri</string>
     <string name="Today">Today</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps">Map</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -84,7 +84,7 @@
     <string name="yes">Yes</string>
     <string name="delete_alert">Delete alert</string>
     <string name="channel_description">Channel Description</string>
-    <string name="channel_name">"Channel Name "</string>
+    <string name="channel_name">Channel Name</string>
     <string name="snooze">Snooze</string>
     <string name="notification_title">titleee</string>
     <string name="alert_type">Choose type of Alert you want..</string>
@@ -92,4 +92,5 @@
     <string name="start_date" />
     <string name="dismiss">dismiss</string>
     <string name="repeat">repeat</string>
+    <string name="repeat_day">Repeat</string>
 </resources>

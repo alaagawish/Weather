@@ -12,10 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:textAlignment="center"
         android:background="@drawable/rounded_appbar_bg"
+        android:backgroundTint="@color/transparent"
         android:elevation="0dp"
         android:gravity="center"
         android:theme="@style/Theme.Weather.AppBarOverlay">
+
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

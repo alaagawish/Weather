@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -17,29 +16,29 @@ import eg.gov.iti.jets.kotlin.weather.Constants.CHANNEL_NAME
 import eg.gov.iti.jets.kotlin.weather.MainActivity
 import eg.gov.iti.jets.kotlin.weather.R
 
-fun createNotificationChannel(context: Context) {
+fun createNotificationChannel(context: Context, title: String, message: String) {
 
     val intent = Intent(context, MainActivity::class.java)
     val pendingIntent = TaskStackBuilder.create(context).run {
         addNextIntentWithParentStack(intent)
         getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
     }
+
     val bigImage = BitmapFactory.decodeResource(
         context.resources, R.drawable.weather
     )
-    val bigPicStyle =
-        NotificationCompat.BigPictureStyle().bigPicture(bigImage).bigLargeIcon(null)
-
     val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-        .setContentTitle("Sample Title")
-        .setContentText("This is sample body notification")
-        .setSmallIcon(R.drawable.baseline_notifications_24)
+        .setContentTitle(title)
+        .setContentText(message)
+        .setColor(context.getColor(R.color.light_blue))
+        .setLargeIcon(bigImage)
+        .setSmallIcon(R.drawable.weather)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
-        .setStyle(bigPicStyle).setLargeIcon(bigImage)
-        .setCategory(NotificationCompat.CATEGORY_ALARM)
+        .setCategory(NotificationCompat.CATEGORY_MESSAGE)
         .build()
+
     val channel = NotificationChannel(
         CHANNEL_ID,
         CHANNEL_NAME,
@@ -55,11 +54,12 @@ fun createNotificationChannel(context: Context) {
     if (ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED
+        ) == PackageManager.PERMISSION_GRANTED
     ) {
+        println("createNotificationChannel: permission is given")
+        notificationManager.notify(Constants.NOTIFICATION_ID, notification)
 
-        return
+
     }
-    notificationManager.notify(Constants.NOTIFICATION_ID, notification)
 }
 

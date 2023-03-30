@@ -1,6 +1,10 @@
 package eg.gov.iti.jets.kotlin.weather
 
 object Constants {
+    const val MESSAGE = "MESSAGE"
+    const val TITLE = "TITLE"
+    const val TYPE = "TYPE"
+
     const val FLAG = "FLAG"
     const val LAT = "LAT"
     const val LON = "LON"
@@ -24,6 +28,7 @@ object Constants {
     const val STRLOCATION = "STRLOCATION"
     const val CHANNEL_NAME = "channelName"
     const val NOTIFICATION_ID = 0
+    const val PERMISSION_REQUEST_CODE = 40
     const val ALARM_ACTION = "INTENT_ACTION"
 
 }

@@ -55,14 +55,7 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
     manager.createNotificationChannel(channel)
     val notificationManager = NotificationManagerCompat.from(context)
 
-    if (ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED
-    ) {
 
-        return
-    }
     val actionIntent = Intent(context, AlarmReceiver::class.java)
     actionIntent.action = context.getString(R.string.dismiss)
     val dismissIntent =
@@ -79,7 +72,7 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
         .setContentText(content)
         .setContentIntent(pendingPlayIntent)
         .setAutoCancel(true)
-        .setStyle(bigPicStyle).setLargeIcon(bigImage)
+        .setStyle(bigPicStyle)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         .addAction(
@@ -91,7 +84,15 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
             dismissIntent
         )
 
-    notificationManager.notify(NOTIFICATION_ID, notification.build())
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        println("createAlarmChannel: permission is given")
 
+        notificationManager.notify(NOTIFICATION_ID, notification.build())
+
+    }
 
 }
