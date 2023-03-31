@@ -29,9 +29,17 @@
                 android:layout_margin="20dp"
                 android:padding="10dp">
 
+                <ImageView
+                    android:id="@+id/i1"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/language"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/languagetxt"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/transparent"
                     android:fontFamily="@font/prata_regular"
@@ -39,8 +47,7 @@
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/i1"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <RadioGroup
@@ -95,13 +102,21 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:layout_margin="20dp"
                 android:padding="10dp">
 
+                <ImageView
+                    android:id="@+id/i2"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/notification"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
-                    android:id="@+id/notificationtxt"
-                    android:layout_width="match_parent"
+                    android:id="@+id/notificationTxt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/transparent"
                     android:fontFamily="@font/prata_regular"
@@ -109,44 +124,34 @@
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/i2"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <RadioGroup
-                    android:id="@+id/notificationsRadioGroup"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="19dp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/prata_regular"
+                    android:text="@string/enable"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/blue"
+                    android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/notificationtxt">
+                    app:layout_constraintTop_toBottomOf="@+id/notificationTxt" />
 
-                    <RadioButton
-                        android:id="@+id/enableNotificationsRadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:checked="true"
-                        android:fontFamily="@font/prata_regular"
-                        android:text="@string/enable"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/blue"
-                        android:textSize="20sp" />
+                <Switch
+                    android:id="@+id/enableNotificationsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="10dp"
+                    android:checked="false"
+                    app:layout_constraintStart_toEndOf="@+id/txt"
+                    app:layout_constraintTop_toBottomOf="@+id/notificationTxt"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-                    <RadioButton
-                        android:id="@+id/disableNotificationsRadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="5dp"
-                        android:checked="false"
-                        android:fontFamily="@font/prata_regular"
-                        android:text="@string/disable"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/blue"
-                        android:textSize="20sp" />
-
-
-                </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
@@ -167,9 +172,17 @@
                 android:layout_margin="20dp"
                 android:padding="10dp">
 
+                <ImageView
+                    android:id="@+id/i3"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/temp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/temperaturetxt"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/transparent"
                     android:fontFamily="@font/prata_regular"
@@ -177,8 +190,7 @@
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/i3"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <RadioGroup
@@ -247,9 +259,17 @@
                 android:layout_margin="20dp"
                 android:padding="10dp">
 
+                <ImageView
+                    android:id="@+id/i4"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/map"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
-                    android:id="@+id/locationtxt"
-                    android:layout_width="match_parent"
+                    android:id="@+id/locationTxt"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/transparent"
                     android:fontFamily="@font/prata_regular"
@@ -257,8 +277,7 @@
                     android:textColor="@color/black"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/i4"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <RadioGroup
@@ -270,7 +289,7 @@
                     android:layout_marginStart="19dp"
                     android:textAlignment="textStart"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/locationtxt">
+                    app:layout_constraintTop_toBottomOf="@+id/locationTxt">
 
                     <RadioButton
                         android:id="@+id/mapRadioButton"

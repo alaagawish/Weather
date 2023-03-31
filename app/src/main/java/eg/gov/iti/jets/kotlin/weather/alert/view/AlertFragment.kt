@@ -255,7 +255,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
 
-                    println(" notification permission is prohibited")
+                    println(" notification permission is prohibited,enable it")
                     ActivityCompat.requestPermissions(
                         requireActivity(),
                         arrayOf(Manifest.permission.POST_NOTIFICATIONS),

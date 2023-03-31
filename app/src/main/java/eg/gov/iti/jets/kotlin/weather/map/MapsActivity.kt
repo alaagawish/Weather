@@ -64,7 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         if (intent.getStringExtra(SOURCE) == "fav") {
             binding.addToFavButton.text = "Add to favourite"
-        } else if (intent.getStringExtra(SOURCE) == "settings") {
+        } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
             binding.addToFavButton.text = "Select location"
         }
         mapFragment.getMapAsync { googleMap ->
@@ -79,11 +79,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.addToFavButton.setOnClickListener {
             if (intent.getStringExtra(SOURCE) == "fav") {
                 addPlaceToFav(latLng.latitude, latLng.longitude)
-            } else if (intent.getStringExtra(SOURCE) == "settings") {
+            } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
                 editor.putString(LATITUDE, latLng.latitude.toString())
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.apply()
-
+                finish()
 
             }
         }

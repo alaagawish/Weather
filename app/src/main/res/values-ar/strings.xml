@@ -34,7 +34,7 @@
     <string name="visibility_value">1000m</string>
     <string name="uv">فوق البنفسجية</string>
     <string name="uv_value">0.0</string>
-    <string name="temperature_txt">درجة الحرارة</string>
+    <string name="temperature_txt">وحدات القياس</string>
     <string name="wind_speed">سرعة الرياح</string>
     <string name="location">الموقع</string>
     <string name="language">اللغة</string>
@@ -46,8 +46,7 @@
     <string name="celsius">℃ - م/ث</string>
     <string name="fahrenheit">℉ - ميل لكل ساعة</string>
     <string name="kelvin">K - م/ث</string>
-    <string name="enable">مفعل</string>
-    <string name="disable">غير مفعل</string>
+    <string name="enable">مفعل/غير مفعل </string>
     <string name="english">انجليزية</string>
     <string name="arabic">عربية</string>
     <string name="no_alert">لا يوجد تنبيهات</string>

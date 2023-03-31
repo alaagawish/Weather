@@ -19,6 +19,7 @@ import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
 import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.PERMISSION_ID
+import eg.gov.iti.jets.kotlin.weather.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import java.util.*
@@ -82,7 +83,7 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun getLocation() {
+    fun getLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {
                 requestNewLocation()
@@ -94,7 +95,7 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestPermissions() {
+    fun requestPermissions() {
         ActivityCompat.requestPermissions(
             this,
             arrayOf(
@@ -105,20 +106,21 @@ class OnboardingActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.d("TAG", "onRequestPermissionsResult: $requestCode")
+        Log.d(TAG, "onRequestPermissionsResult: $requestCode")
         if (requestCode == PERMISSION_ID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 getLocation()
         }
     }
 
-    private fun checkPermissions() = ActivityCompat.checkSelfPermission(
+    fun checkPermissions() = ActivityCompat.checkSelfPermission(
         this,
         Manifest.permission.ACCESS_COARSE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
