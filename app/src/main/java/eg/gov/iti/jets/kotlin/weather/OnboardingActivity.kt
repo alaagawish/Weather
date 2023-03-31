@@ -19,7 +19,6 @@ import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
 import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
 import eg.gov.iti.jets.kotlin.weather.Constants.PERMISSION_ID
-import eg.gov.iti.jets.kotlin.weather.Constants.STRLOCATION
 import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import java.util.*

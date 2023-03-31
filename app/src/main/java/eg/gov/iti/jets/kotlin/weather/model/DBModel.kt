@@ -55,13 +55,16 @@ data class FavouritePlace(
     val lat: Double,
     val lon: Double,
     val timezone: String,
+    val main: String,
+    val icon: String,
+    val temp: Double
 )
 
 @Entity(tableName = "alert")
 
 data class AlertsDB(
     @PrimaryKey(autoGenerate = true)
-    val id: Int=0,
+    val id: Int = 0,
     val type: String,
     var start: Long,
     val end: Long,

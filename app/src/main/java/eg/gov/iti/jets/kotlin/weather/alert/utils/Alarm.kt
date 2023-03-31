@@ -32,15 +32,15 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
     val bigPicStyle =
         NotificationCompat.BigPictureStyle().bigPicture(bigImage).bigLargeIcon(null)
 
-    val playIntent = Intent(context, AlarmReceiver::class.java)
-    playIntent.action = ACTION_SET_REPETITIVE_EXACT
-    val pendingPlayIntent =
-        PendingIntent.getBroadcast(
-            context,
-            NOTIFICATION_ID,
-            playIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+//    val playIntent = Intent(context, AlarmReceiver::class.java)
+//    playIntent.action = ACTION_SET_REPETITIVE_EXACT
+//    val pendingPlayIntent =
+//        PendingIntent.getBroadcast(
+//            context,
+//            NOTIFICATION_ID,
+//            playIntent,
+//            PendingIntent.FLAG_UPDATE_CURRENT
+//        )
 
 
     val channel = NotificationChannel(
@@ -70,15 +70,16 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
         .setSmallIcon(R.drawable.weather)
         .setContentTitle(title)
         .setContentText(content)
-        .setContentIntent(pendingPlayIntent)
+//        .setContentIntent(pendingPlayIntent)
+        .setContentIntent(dismissIntent)
         .setAutoCancel(true)
-        .setStyle(bigPicStyle)
+//        .setStyle(bigPicStyle)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-        .addAction(
-            R.drawable.baseline_repeat_24, context.getString(R.string.repeat),
-            pendingPlayIntent
-        )
+//        .addAction(
+//            R.drawable.baseline_repeat_24, context.getString(R.string.repeat),
+//            pendingPlayIntent
+//        )
         .addAction(
             R.drawable.baseline_cancel_presentation_24, context.getString(R.string.dismiss),
             dismissIntent

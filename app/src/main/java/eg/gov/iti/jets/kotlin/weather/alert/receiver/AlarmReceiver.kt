@@ -15,7 +15,6 @@ import eg.gov.iti.jets.kotlin.weather.alert.utils.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.alert.view.AlarmService
 import timber.log.Timber
 
-var mediaPlayer: MediaPlayer? = null
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -23,16 +22,20 @@ class AlarmReceiver : BroadcastReceiver() {
         val message = intent.getStringExtra(Constants.MESSAGE)
         var type = intent.getStringExtra(Constants.TYPE)
         var title = intent.getStringExtra(Constants.TITLE)
-        mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
+         val mediaPlayer: MediaPlayer by lazy{
+             MediaPlayer.create(context, R.raw.alarm)
+
+         }
+
 
         when (intent.action) {
             ALARM_ACTION -> {
                 println("ALARM_ACTION")
 //                mediaPlayer?.prepare()
 //                mediaPlayer?.start()
-                mediaPlayer?.stop()
-                mediaPlayer?.reset()
-                mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
+//                mediaPlayer?.stop()
+//                mediaPlayer?.reset()
+//                mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
 
 //                mediaPlayer?.prepare()
                 mediaPlayer?.start()
@@ -64,7 +67,7 @@ class AlarmReceiver : BroadcastReceiver() {
 //                } catch (e: java.lang.Exception) {
 //                    println("stop media player error ${e.message}")
 //                }
-                mediaPlayer = null
+//                mediaPlayer = null
 
 
 //                if (mediaPlayer?.isPlaying!!) {

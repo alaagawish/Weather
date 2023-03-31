@@ -1,25 +1,20 @@
 package eg.gov.iti.jets.kotlin.weather.favourite.view
 
 
-import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.*
-import eg.gov.iti.jets.kotlin.weather.Constants.FLAG
-import eg.gov.iti.jets.kotlin.weather.Constants.LAT
-import eg.gov.iti.jets.kotlin.weather.Constants.LON
+import eg.gov.iti.jets.kotlin.weather.Constants.SOURCE
 import eg.gov.iti.jets.kotlin.weather.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentFavouriteBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
@@ -76,67 +71,8 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
         binding.addCityFloatingActionButton.setOnClickListener {
             val intent = Intent(requireContext(), MapsActivity::class.java)
+            intent.putExtra(SOURCE,"fav")
             startActivity(intent)
-            while (sharedPreferences.getBoolean(FLAG, true)) {
-            }
-            val lat = sharedPreferences.getString(LAT, "0.0")!!.toDouble()
-            val lon = sharedPreferences.getString(LON, "0.0")!!.toDouble()
-            println("kkkkkkkkk$lat   ::kkkkkkk$lon")
-            if (lat != 0.0 && lon != 0.0) {
-                homeViewModel.getForecastData(lat, lon)
-                lifecycleScope.launch {
-                    homeViewModel.forecastStateFlow.collectLatest { result ->
-                        when (result) {
-                            is APIState.Waiting -> {
-                                binding.favProgressBar.visibility = View.VISIBLE
-                                binding.favouritesRecyclerView.visibility = View.GONE
-                                binding.noPlacesImageView.visibility = View.GONE
-                                binding.noPlacesTextView.visibility = View.GONE
-                                Log.d(TAG, "onCreateView: waiting")
-
-                            }
-                            is APIState.Success -> {
-                                val favouritePlace = FavouritePlace(
-                                    result.oneCall.current.dt,
-                                    result.oneCall.lat,
-                                    result.oneCall.lon,
-                                    result.oneCall.timezone
-                                )
-                                favouriteViewModel.addPlaceToFav(favouritePlace)
-                                binding.favProgressBar.visibility = View.GONE
-                                binding.favouritesRecyclerView.visibility = View.VISIBLE
-                                binding.noPlacesImageView.visibility = View.GONE
-                                binding.noPlacesTextView.visibility = View.GONE
-
-                                favouriteViewModel.getAllFavPlaces()
-
-                            }
-                            else -> {
-                                binding.favProgressBar.visibility = View.GONE
-                                Snackbar.make(
-                                    requireActivity().findViewById(android.R.id.content),
-                                    "Cant retrieve this place, cant add to fav",
-                                    Snackbar.LENGTH_LONG
-                                ).show()
-                                favouriteViewModel.getAllFavPlaces()
-                                binding.favProgressBar.visibility = View.GONE
-                                binding.favouritesRecyclerView.visibility = View.VISIBLE
-                                binding.noPlacesImageView.visibility = View.GONE
-                                binding.noPlacesTextView.visibility = View.GONE
-
-
-                            }
-                        }
-
-                    }
-
-                }
-            } else {
-                Toast.makeText(requireContext(), "error to save place to fav ", Toast.LENGTH_SHORT)
-                    .show()
-
-            }
-
         }
         binding.favouritesRecyclerView.adapter = placesAdapter
 

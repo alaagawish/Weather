@@ -31,5 +31,7 @@ object Constants {
     const val PERMISSION_REQUEST_CODE = 40
     const val ALARM_ACTION = "INTENT_ACTION"
 
+    const val SOURCE = "SOURCE"
+
 }
 

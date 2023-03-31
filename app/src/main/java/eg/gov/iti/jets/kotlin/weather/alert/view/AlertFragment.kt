@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.alert.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -36,9 +37,10 @@ import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.ceil
+
 
 
 class AlertFragment : Fragment(), AlertOnClickListener {
@@ -62,6 +64,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         return binding.root
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         alarmService = AlarmService(requireContext())
@@ -92,7 +95,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                         binding.noAlertTextView.visibility = View.GONE
                         binding.alertsRecyclerView.visibility = View.GONE
                         binding.alertProgressBar.visibility = View.VISIBLE
-                        Log.d(Constants.TAG, "onCreateView: waiting")
+                        Timber.tag(Constants.TAG).d("onCreateView: waiting")
 
                     }
                     is APIState.SuccessRoomAlerts -> {
@@ -138,7 +141,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                 homeViewModel.forecastStateFlow.collectLatest { result ->
                     when (result) {
                         is APIState.Waiting -> {
-                            Log.d(Constants.TAG, "AlertFragment: waiting")
+                            Timber.d("AlertFragment: waiting")
                         }
                         is APIState.Success -> {
                             if (!result.oneCall.alerts.isNullOrEmpty()) {
@@ -221,7 +224,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
-                        tag = "any danger"
+                        tag = "Any types"
                     }
                 }
             dialog.findViewById<RadioGroup>(R.id.alertMethodRadioGroup)
@@ -238,12 +241,9 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     for (alert in alerts) {
                         println("alerts found")
                         if (alert.start * 1000 <= start && alert.end * 1000 >= end) {
-                            for (i in alert.tags) {
-                                if (i.contains(tag)) {
-                                    description = alert.description
-                                    tag = i
-                                }
-                            }
+                            if (tag == alert.event)
+                                description = alert.description
+
 
                         }
                     }
