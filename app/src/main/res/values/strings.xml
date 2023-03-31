@@ -93,4 +93,5 @@
     <string name="dismiss">dismiss</string>
     <string name="repeat">repeat</string>
     <string name="repeat_day">Repeat</string>
+    <string name="temp">4&#176;</string>
 </resources>

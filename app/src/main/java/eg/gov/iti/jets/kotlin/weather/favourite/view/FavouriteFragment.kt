@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.favourite.view
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -50,6 +51,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
         return binding.root
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         favouriteViewModelFactory = FavouriteViewModelFactory(
@@ -71,7 +73,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
         binding.addCityFloatingActionButton.setOnClickListener {
             val intent = Intent(requireContext(), MapsActivity::class.java)
-            intent.putExtra(SOURCE,"fav")
+            intent.putExtra(SOURCE, "fav")
             startActivity(intent)
         }
         binding.favouritesRecyclerView.adapter = placesAdapter
@@ -90,7 +92,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
                             Snackbar.LENGTH_LONG
                         ).show()
                         Log.d(
-                            "TAG",
+                            TAG,
                             "onViewCreated: error in retrieving list of fav from local source $result"
                         )
                     }
@@ -105,6 +107,8 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
                             binding.noPlacesImageView.visibility = View.VISIBLE
                             binding.noPlacesTextView.visibility = View.VISIBLE
                             binding.favProgressBar.visibility = View.GONE
+                            binding.favouritesRecyclerView.visibility = View.GONE
+
 
                         }
                     }

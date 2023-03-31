@@ -20,8 +20,9 @@ class FavouriteViewModel(private val repositoryInterface: RepositoryInterface) :
     fun deletePlaceFromFav(favouritePlace: FavouritePlace) {
         viewModelScope.launch(Dispatchers.IO) {
             repositoryInterface.deleteFavPlace(favouritePlace)
-            getAllFavPlaces()
         }
+        getAllFavPlaces()
+
     }
 
     fun addPlaceToFav(favouritePlace: FavouritePlace) {

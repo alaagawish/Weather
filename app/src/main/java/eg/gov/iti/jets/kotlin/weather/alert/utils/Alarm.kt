@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import eg.gov.iti.jets.kotlin.weather.Constants
-import eg.gov.iti.jets.kotlin.weather.Constants.ACTION_SET_REPETITIVE_EXACT
 import eg.gov.iti.jets.kotlin.weather.Constants.NOTIFICATION_ID
 import eg.gov.iti.jets.kotlin.weather.MainActivity
 import eg.gov.iti.jets.kotlin.weather.R

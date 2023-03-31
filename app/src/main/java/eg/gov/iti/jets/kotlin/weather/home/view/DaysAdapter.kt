@@ -65,7 +65,6 @@ class DaysAdapter(val context: Context) :
             else
                 context.getString(R.string.Today)
 
-
     }
 
     class ViewHolder(var binding: DayItemBinding) : RecyclerView.ViewHolder(binding.root)

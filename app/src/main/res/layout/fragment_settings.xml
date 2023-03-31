@@ -61,6 +61,7 @@
                         android:checked="true"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/english"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -71,6 +72,7 @@
                         android:checked="false"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/arabic"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -123,10 +125,11 @@
                         android:id="@+id/enableNotificationsRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:layout_marginStart="5dp"
+                        android:checked="true"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/enable"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -134,10 +137,11 @@
                         android:id="@+id/disableNotificationsRadioButton"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:checked="false"
                         android:layout_marginStart="5dp"
+                        android:checked="false"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/disable"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -195,6 +199,7 @@
                         android:checked="true"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/celsius"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -205,6 +210,7 @@
                         android:checked="false"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/fahrenheit"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -215,6 +221,7 @@
                         android:checked="false"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/kelvin"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -260,8 +267,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
                     android:layout_marginStart="19dp"
+                    android:textAlignment="textStart"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/locationtxt">
 
@@ -272,6 +279,7 @@
                         android:checked="true"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/map"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 
@@ -282,6 +290,7 @@
                         android:checked="false"
                         android:fontFamily="@font/prata_regular"
                         android:text="@string/gps"
+                        android:textAlignment="textStart"
                         android:textColor="@color/blue"
                         android:textSize="20sp" />
 

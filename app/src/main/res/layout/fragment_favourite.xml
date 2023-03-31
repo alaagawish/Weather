@@ -557,10 +557,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="28dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="75dp"
         android:backgroundTint="@color/blue"
         android:contentDescription="@string/add_place"
-        android:elevation="10dp"
+        android:elevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_add_24" />

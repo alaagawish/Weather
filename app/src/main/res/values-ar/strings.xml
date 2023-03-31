@@ -11,10 +11,9 @@
     <string name="action_alerts">التنبيهات</string>
     <string name="action_home">الصفحة الرئيسية</string>
     <string name="menu_home">الصفحة الرئيسية</string>
-    <string name="menu_favourite">المفصل</string>
+    <string name="menu_favourite">المفضل</string>
     <string name="menu_alert">التنبيهات</string>
     <string name="menu_settings">الاعدادات</string>
-    <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
     <string name="weather">الطقس</string>
     <string name="city">البلد</string>
     <string name="temperature">16℉</string>
@@ -40,8 +39,8 @@
     <string name="location">الموقع</string>
     <string name="language">اللغة</string>
     <string name="notifications">الاشعارات</string>
-    <string name="map">Map</string>
-    <string name="gps">GPS</string>
+    <string name="map">الخريطة</string>
+    <string name="gps">نظام تحديد الموقع</string>
     <string name="m_sec">م/ث</string>
     <string name="m_hour">ميل/س</string>
     <string name="celsius">℃ - م/ث</string>
@@ -94,6 +93,7 @@
     <string name="dismiss">ايقاف</string>
     <string name="repeat">كرر</string>
     <string name="repeat_day">كرر</string>
+    <string name="temp">4&#176;</string>
 
 
 </resources>
