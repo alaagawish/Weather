@@ -18,12 +18,13 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION_ID
 import eg.gov.iti.jets.kotlin.weather.MainActivity
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.alert.receiver.AlarmReceiver
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.ACTION_SET_REPETITIVE_EXACT
 
 @SuppressLint("LaunchActivityFromNotification", "UnspecifiedImmutableFlag")
 fun createAlarmChannel(context: Context, title: String, content: String) {
 
-    val intent = Intent(context, MainActivity::class.java)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//    val intent = Intent(context, MainActivity::class.java)
+//    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
     val bigImage = BitmapFactory.decodeResource(
         context.resources, R.drawable.weather
@@ -31,15 +32,15 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
     val bigPicStyle =
         NotificationCompat.BigPictureStyle().bigPicture(bigImage).bigLargeIcon(null)
 
-//    val playIntent = Intent(context, AlarmReceiver::class.java)
-//    playIntent.action = ACTION_SET_REPETITIVE_EXACT
-//    val pendingPlayIntent =
-//        PendingIntent.getBroadcast(
-//            context,
-//            NOTIFICATION_ID,
-//            playIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
+    val playIntent = Intent(context, AlarmReceiver::class.java)
+    playIntent.action = ACTION_SET_REPETITIVE_EXACT
+    val pendingPlayIntent =
+        PendingIntent.getBroadcast(
+            context,
+            NOTIFICATION_ID,
+            playIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
     val channel = NotificationChannel(
@@ -56,7 +57,8 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
 
 
     val actionIntent = Intent(context, AlarmReceiver::class.java)
-    actionIntent.action = context.getString(R.string.dismiss)
+//    actionIntent.action = context.getString(R.string.dismiss)
+    actionIntent.action = Constants.ALARM_ACTION
     val dismissIntent =
         PendingIntent.getBroadcast(
             context,
@@ -75,10 +77,10 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
 //        .setStyle(bigPicStyle)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//        .addAction(
-//            R.drawable.baseline_repeat_24, context.getString(R.string.repeat),
-//            pendingPlayIntent
-//        )
+        .addAction(
+            R.drawable.baseline_repeat_24, context.getString(R.string.snooze),
+            pendingPlayIntent
+        )
         .addAction(
             R.drawable.baseline_cancel_presentation_24, context.getString(R.string.dismiss),
             dismissIntent

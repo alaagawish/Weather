@@ -13,26 +13,33 @@ import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createAlarmChannel
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.alert.view.AlarmService
+import eg.gov.iti.jets.kotlin.weather.editor
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
 import timber.log.Timber
 
+lateinit var mediaPlayer: MediaPlayer
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val timeInMillis = intent.getLongExtra(Constants.EXTRA_EXACT_ALARM_TIME, 0L)
-        val message = intent.getStringExtra(Constants.MESSAGE)
+        var message = intent.getStringExtra(Constants.MESSAGE)
         var type = intent.getStringExtra(Constants.TYPE)
         var title = intent.getStringExtra(Constants.TITLE)
-        val mediaPlayer: MediaPlayer by lazy {
-            MediaPlayer.create(context, R.raw.alarm)
+        mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
 
-        }
-
-
-        when (intent.action) {
-            ALARM_ACTION -> {
-                println("ALARM_ACTION")
+        if (sharedPreferences.getString(NOTIFICATION, null) == "enable") {
+            when (intent.action) {
+                ALARM_ACTION -> {
+                    println("ALARM_ACTION")
+                    println(
+                        "ALARM_ACTION  ${
+                            sharedPreferences.getBoolean(
+                                "isNotFirstTime",
+                                false
+                            )
+                        }"
+                    )
 //                mediaPlayer?.prepare()
 //                mediaPlayer?.start()
 //                mediaPlayer?.stop()
@@ -40,32 +47,53 @@ class AlarmReceiver : BroadcastReceiver() {
 //                mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
 
 //                mediaPlayer?.prepare()
-                mediaPlayer?.start()
-                buildNotification(
-                    context,
-                    title!!,
-                    "$message Alarm at ${convertDate(timeInMillis)}",
-                    type!!
-                )
+//                mediaPlayer.start()
+                    if (title.isNullOrEmpty())
+                        title = "Weather"
+                    if (type.isNullOrEmpty())
+                        type = "Alarm is stopped"
+                    if (message.isNullOrEmpty())
+                        message = ""
 
-            }
-            Constants.ACTION_SET_EXACT -> {
-                println("ACTION_SET_EXACT, Notification only")
-                buildNotification(
-                    context,
-                    title!!,
-                    "$message Alert at ${convertDate(timeInMillis)}",
-                    type!!
-                )
-            }
-            context.getString(R.string.dismiss) -> {
-                println("Dismiss: cancel audio")
+                    buildNotification(
+                        context,
+                        title,
+                        "$message Alarm at ${convertDate(timeInMillis)}",
+                        type
+                    )
+
+                }
+                Constants.ACTION_SET_EXACT -> {
+                    println("ACTION_SET_EXACT, Notification only")
+                    buildNotification(
+                        context,
+                        title!!,
+                        "$message Alert at ${convertDate(timeInMillis)}",
+                        type!!
+                    )
+                }
+                context.getString(R.string.dismiss) -> {
+                    println("ggggggggggggggggggggggggggggggggggggggg")
+//                if (sharedPreferences.getBoolean("isFirstTime", true)) {
+//                    editor.putBoolean("isFirstTime", false)
+//                    editor.commit()
+//
+//                    MediaPlayer.create(context, R.raw.alarm)
+//
+//                } else {
+//                    editor.putBoolean("isFirstTime",true)
+//                    editor.commit()
+//                    println("Dismiss: cancel audio")
+//                    mediaPlayer.stop()
+//                    mediaPlayer.release()
+//
+//                }
+
 
 //                try {
 
 //                    mediaPlayer?.pause()
-                mediaPlayer?.stop()
-                mediaPlayer?.release()
+
 //                } catch (e: java.lang.Exception) {
 //                    println("stop media player error ${e.message}")
 //                }
@@ -77,43 +105,59 @@ class AlarmReceiver : BroadcastReceiver() {
 //                    mediaPlayer?.stop()
 //                }
 
+                }
+
+                Constants.ACTION_SET_REPETITIVE_EXACT -> {
+                    if (title.isNullOrEmpty())
+                        title = "Weather"
+                    if (type.isNullOrEmpty())
+                        type = "alarm"
+                    println("ACTION_SET_REPETITIVE_EXACT")
+                    if (type == "alarm")
+                        mediaPlayer?.start()
+                    setRepetitiveAlarm(
+                        AlarmService(context),
+                        title,
+                        "Your repeated alarm\n$timeInMillis\n$message",
+                        type
+                    )
+                    buildNotification(
+                        context,
+                        title,
+                        "Your repeated alarm\n$timeInMillis\n$message",
+                        type
+                    )
+
+                }
+
+
             }
-
-            Constants.ACTION_SET_REPETITIVE_EXACT -> {
-                if (title.isNullOrEmpty())
-                    title = "Weather"
-                if (type.isNullOrEmpty())
-                    type = "alarm"
-                println("ACTION_SET_REPETITIVE_EXACT")
-                if (type == "alarm")
-                    mediaPlayer?.start()
-                setRepetitiveAlarm(
-                    AlarmService(context),
-                    title,
-                    "Your repeated alarm\n$timeInMillis\n$message",
-                    type
-                )
-                buildNotification(
-                    context,
-                    title,
-                    "Your repeated alarm\n$timeInMillis\n$message",
-                    type
-                )
-
-            }
-
-
         }
     }
 
     private fun buildNotification(context: Context, title: String, message: String, type: String) {
         println("Sending notification")
-        if (sharedPreferences.getString(NOTIFICATION, null) == "enable") {
-            if (type == "notification")
-                createNotificationChannel(context, title, message)
-            else
-                createAlarmChannel(context, title, message)
+
+        if (type == "notification")
+            createNotificationChannel(context, title, message)
+        else {
+            if (!sharedPreferences.getBoolean("isNotFirstTime", false)) {
+                editor.putBoolean("isNotFirstTime", true)
+                editor.commit()
+
+                mediaPlayer.start()
+
+            } else {
+                editor.putBoolean("isNotFirstTime", false)
+                editor.commit()
+                println("Dismiss: cancel audio")
+                mediaPlayer.stop()
+                mediaPlayer.release()
+
+            }
+            createAlarmChannel(context, title, message)
         }
+
 
     }
 
@@ -124,8 +168,8 @@ class AlarmReceiver : BroadcastReceiver() {
         title: String
     ) {
         val cal = Calendar.getInstance().apply {
-            this.timeInMillis = timeInMillis + TimeUnit.DAYS.toMillis(1)
-            Timber.d("Set alarm for next day same time - ${convertDate(this.timeInMillis)}")
+            this.timeInMillis = timeInMillis + TimeUnit.SECONDS.toMillis(60)
+            Timber.d("Set alarm for next 30 seconds same time - ${convertDate(this.timeInMillis)}")
         }
         alarmService.setRepetitiveAlarm(cal.timeInMillis, type, message, title)
     }

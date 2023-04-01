@@ -210,7 +210,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             var type = "notification"
             var tag = "Any types"
             var description = "Weather is fine, no alerts found about $tag"
-            var repeated = false
+//            var repeated = false
 
             dialog.findViewById<Spinner>(R.id.alertTypeSpinner).onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
@@ -277,8 +277,8 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     )
                 }
 
-                if (dialog.findViewById<Switch>(R.id.repeatedSwitch).isChecked)
-                    repeated = true
+//                if (dialog.findViewById<Switch>(R.id.repeatedSwitch).isChecked)
+//                    repeated = true
 
                 alertViewModel.addAlert(
                     AlertsDB(
@@ -287,13 +287,14 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                         end = end,
                         description = description,
                         tag = tag,
-                        repeated = repeated
+
+                        repeated = false
                     )
                 )
-                if (repeated) {
-                    alarmService.setRepetitiveAlarm(start, type, description, "Alert about $tag")
+//                if (repeated) {
+//                    alarmService.setRepetitiveAlarm(start, type, description, "Alert about $tag")
 
-                } else
+//                } else
                     alarmService.setExactAlarm(start, type, description, "Alert about $tag")
 
 

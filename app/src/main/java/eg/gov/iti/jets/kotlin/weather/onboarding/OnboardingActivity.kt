@@ -43,6 +43,25 @@ class OnboardingActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(binding.root)
         binding.saveSettingMaterialButton.setOnClickListener {
+            if (binding.arabicIntroRadioButton.isChecked)
+                editor.putString(LANGUAGE, "ar")
+            else if (binding.englishIntroRadioButton.isChecked)
+                editor.putString(LANGUAGE, "en")
+            if (binding.gpsIntroRadioButton.isChecked)
+                editor.putString(Constants.LOCATION, "gps")
+            else if (binding.mapIntroRadioButton.isChecked)
+                editor.putString(Constants.LOCATION, "map")
+            if (binding.metricIntroRadioButton.isChecked)
+                editor.putString(UNIT, "metric")
+            else if (binding.imperialIntroRadioButton.isChecked)
+                editor.putString(UNIT, "imperial")
+            else if (binding.kelvinIntroRadioButton.isChecked)
+                editor.putString(UNIT, "standard")
+            editor.apply()
+
+
+
+
             if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
                 if (checkLocationPermissions(this)) {
                     if (isLocationEnabled(this)) {
@@ -68,32 +87,32 @@ class OnboardingActivity : AppCompatActivity() {
         }
         binding.animation.playAnimation()
 
-        binding.languagesIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val radioButton = findViewById<RadioButton>(checkedId)
-            when (radioButton.text) {
-                this.getString(R.string.english) -> editor.putString(LANGUAGE, "en")
-                this.getString(R.string.arabic) -> editor.putString(LANGUAGE, "ar")
-            }
-            editor.apply()
-        }
-        binding.standardIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val radioButton = findViewById<RadioButton>(checkedId)
-            when (radioButton.text) {
-                this.getString(R.string.celsius) -> editor.putString(UNIT, "metric")
-                this.getString(R.string.fahrenheit) -> editor.putString(UNIT, "imperial")
-                this.getString(R.string.kelvin) -> editor.putString(UNIT, "standard")
-            }
-            editor.apply()
-        }
-        binding.locationIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val radioButton = findViewById<RadioButton>(checkedId)
-            when (radioButton.text) {
-                this.getString(R.string.map) -> editor.putString(Constants.LOCATION, "map")
-                this.getString(R.string.gps) -> editor.putString(Constants.LOCATION, "gps")
-
-            }
-            editor.apply()
-        }
+//        binding.languagesIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+//            val radioButton = findViewById<RadioButton>(checkedId)
+//            when (radioButton.text) {
+//                this.getString(R.string.english) -> editor.putString(LANGUAGE, "en")
+//                this.getString(R.string.arabic) -> editor.putString(LANGUAGE, "ar")
+//            }
+//            editor.apply()
+//        }
+//        binding.standardIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+//            val radioButton = findViewById<RadioButton>(checkedId)
+//            when (radioButton.text) {
+//                this.getString(R.string.celsius) -> editor.putString(UNIT, "metric")
+//                this.getString(R.string.fahrenheit) -> editor.putString(UNIT, "imperial")
+//                this.getString(R.string.kelvin) -> editor.putString(UNIT, "standard")
+//            }
+//            editor.apply()
+//        }
+//        binding.locationIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+//            val radioButton = findViewById<RadioButton>(checkedId)
+//            when (radioButton.text) {
+//                this.getString(R.string.map) -> editor.putString(Constants.LOCATION, "map")
+//                this.getString(R.string.gps) -> editor.putString(Constants.LOCATION, "gps")
+//
+//            }
+//            editor.apply()
+//        }
 
     }
 
