@@ -139,8 +139,7 @@ class SettingsFragment : Fragment() {
 
         binding.enableNotificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                editor.putString(NOTIFICATION, "enable")
-                editor.apply()
+
 
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
@@ -156,6 +155,10 @@ class SettingsFragment : Fragment() {
 
                     }
 
+                }
+                if (notificationManager.areNotificationsEnabled()) {
+                    editor.putString(NOTIFICATION, "enable")
+                    editor.apply()
                 }
 
             } else {

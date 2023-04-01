@@ -6,8 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class Repository private constructor(
-    var remoteSource: RemoteSource,
-    var localSourceInterface: LocalSourceInterface
+    var remoteSource: RemoteSource, var localSourceInterface: LocalSourceInterface
 ) : RepositoryInterface {
 
     companion object {
@@ -24,10 +23,7 @@ class Repository private constructor(
     }
 
     override suspend fun getOneCallRemote(
-        lat: Double,
-        lon: Double,
-        unit: String,
-        lang: String
+        lat: Double, lon: Double, unit: String, lang: String
     ) = flowOf(remoteSource.getOneCallByNetwork(lat, lon, unit, lang))
 
     override suspend fun addDay(day: DayDBModel) {
@@ -68,8 +64,7 @@ class Repository private constructor(
         localSourceInterface.deletePlaceFromFav(favouritePlace)
     }
 
-    override val getAllFav: Flow<List<FavouritePlace>>
-        get() = localSourceInterface.getAllFavPlaces
+    override val getAllFav: Flow<List<FavouritePlace>> = localSourceInterface.getAllFavPlaces
 
     override suspend fun addAlert(alertsDB: AlertsDB) {
         localSourceInterface.addAlert(alertsDB)
@@ -79,8 +74,7 @@ class Repository private constructor(
         localSourceInterface.deleteAlert(alertsDB)
     }
 
-    override val getAllAlerts: Flow<List<AlertsDB>>
-        get() = localSourceInterface.getAllAlerts
+    override val getAllAlerts: Flow<List<AlertsDB>> = localSourceInterface.getAllAlerts
 
 
 }

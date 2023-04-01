@@ -72,7 +72,8 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         println("getDayStored")
 
         viewModelScope.launch {
-            repositoryInterface.getDay.catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
+            repositoryInterface.getDay
+                .catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
                 .collect { data ->
                     if (data != null) dayLocalStateFlow.value = APIState.SuccessRoomDay(data)
                 }

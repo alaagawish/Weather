@@ -13,6 +13,8 @@ import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createAlarmChannel
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.alert.view.AlarmService
+import eg.gov.iti.jets.kotlin.weather.sharedPreferences
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
 import timber.log.Timber
 
 
@@ -22,10 +24,10 @@ class AlarmReceiver : BroadcastReceiver() {
         val message = intent.getStringExtra(Constants.MESSAGE)
         var type = intent.getStringExtra(Constants.TYPE)
         var title = intent.getStringExtra(Constants.TITLE)
-         val mediaPlayer: MediaPlayer by lazy{
-             MediaPlayer.create(context, R.raw.alarm)
+        val mediaPlayer: MediaPlayer by lazy {
+            MediaPlayer.create(context, R.raw.alarm)
 
-         }
+        }
 
 
         when (intent.action) {
@@ -106,12 +108,12 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun buildNotification(context: Context, title: String, message: String, type: String) {
         println("Sending notification")
-
-        if (type == "notification")
-            createNotificationChannel(context, title, message)
-        else
-            createAlarmChannel(context, title, message)
-
+        if (sharedPreferences.getString(NOTIFICATION, null) == "enable") {
+            if (type == "notification")
+                createNotificationChannel(context, title, message)
+            else
+                createAlarmChannel(context, title, message)
+        }
 
     }
 

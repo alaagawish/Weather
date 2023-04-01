@@ -28,8 +28,9 @@ class FavouriteViewModel(private val repositoryInterface: RepositoryInterface) :
     fun addPlaceToFav(favouritePlace: FavouritePlace) {
         viewModelScope.launch(Dispatchers.IO) {
             repositoryInterface.addPlaceToFav(favouritePlace)
-            getAllFavPlaces()
         }
+        getAllFavPlaces()
+
     }
 
     fun getAllFavPlaces() {

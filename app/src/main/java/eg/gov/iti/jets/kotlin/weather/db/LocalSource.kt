@@ -36,8 +36,7 @@ class LocalSource(context: Context) : LocalSourceInterface {
         dayDao.deleteAll()
     }
 
-    override val getDay: Flow<DayDBModel>
-        get() = dayFromDB
+    override val getDay: Flow<DayDBModel> = dayFromDB
 
     override suspend fun addDayHours(hour: HourlyDBModel) {
         hourDao.addDayHours(hour)
@@ -47,8 +46,7 @@ class LocalSource(context: Context) : LocalSourceInterface {
         hourDao.deleteAllHours()
     }
 
-    override val getDayHours: Flow<List<HourlyDBModel>>
-        get() = hourFromDB
+    override val getDayHours: Flow<List<HourlyDBModel>> = hourFromDB
 
     override suspend fun addComingDay(day: DailyDBModel) {
         dailyDao.addComingDay(day)
@@ -58,12 +56,10 @@ class LocalSource(context: Context) : LocalSourceInterface {
         dailyDao.deleteAllComingDays()
     }
 
-    override val getNextDays: Flow<List<DailyDBModel>>
-        get() = dailyFromDB
+    override val getNextDays: Flow<List<DailyDBModel>> = dailyFromDB
 
 
-    override val getAllFavPlaces: Flow<List<FavouritePlace>>
-        get() = favFromDB
+    override val getAllFavPlaces: Flow<List<FavouritePlace>> = favFromDB
 
     override suspend fun addPlaceToFav(favouritePlace: FavouritePlace) {
         favDao.addFavPlace(favouritePlace)
@@ -73,8 +69,7 @@ class LocalSource(context: Context) : LocalSourceInterface {
         favDao.deletePlaceFromFav(favouritePlace)
     }
 
-    override val getAllAlerts: Flow<List<AlertsDB>>
-        get() = alertsFromDB
+    override val getAllAlerts: Flow<List<AlertsDB>> = alertsFromDB
 
     override suspend fun addAlert(alertsDB: AlertsDB) {
         alertDao.addAlert(alertsDB)

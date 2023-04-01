@@ -85,6 +85,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         binding.addToFavButton.setOnClickListener {
             if (intent.getStringExtra(SOURCE) == "fav") {
+
                 addPlaceToFav(latLng.latitude, latLng.longitude)
             } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
                 println("Map Activity map settings ")
@@ -125,13 +126,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val sydney = LatLng(
-            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!
-        )
-        latLng = sydney
-        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+//        val sydney = LatLng(
+//            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
+//            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!
+//        )
+//        latLng = sydney
+//        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     private fun addPlaceToFav(lat: Double, lon: Double) {
@@ -140,9 +141,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             homeViewModel.forecastStateFlow.collectLatest { result ->
                 when (result) {
                     is APIState.Waiting -> {
-                        Timber.tag(TAG).d("onCreateView: waiting")
+                        Timber.tag(TAG).d("Maps onCreateView: waiting")
                     }
                     is APIState.Success -> {
+
                         val favouritePlace = FavouritePlace(
                             result.oneCall.current.dt,
                             result.oneCall.lat,
@@ -153,7 +155,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             result.oneCall.current.temp
                         )
                         favouriteViewModel.addPlaceToFav(favouritePlace)
-                        favouriteViewModel.getAllFavPlaces()
+//                        favouriteViewModel.getAllFavPlaces()
                         finish()
 
                     }
