@@ -3,11 +3,15 @@ package eg.gov.iti.jets.kotlin.weather.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eg.gov.iti.jets.kotlin.weather.*
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
 import eg.gov.iti.jets.kotlin.weather.model.HourlyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
 import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,21 +26,23 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     val comingDaysLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
 
     init {
-//        Log.d("TAG", ":  ${sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()} ")
-//        Log.d("TAG", ": ${sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()} ")
-
+        getForecastData(
+            sharedPreferences.getString(LATITUDE, "0.0")!!.toDouble(),
+            sharedPreferences.getString(LONGITUDE, "0.0")!!.toDouble(),
+            sharedPreferences.getString(UNIT, "standard")!!,
+            sharedPreferences.getString(LANGUAGE, "en")!!
+        )
         if (sharedPreferences.getBoolean("isSavedLocal", false)) {
             getNextDaysStored()
             getDayStored()
             getHoursStored()
         }
 
-
     }
 
     fun getForecastData(
-        lat: Double,
-        lon: Double,
+        lat: Double = sharedPreferences.getString(LATITUDE, "0.0")!!.toDouble(),
+        lon: Double = sharedPreferences.getString(LONGITUDE, "0.0")!!.toDouble(),
         unit: String = sharedPreferences.getString(UNIT, "standard")!!,
         lang: String = sharedPreferences.getString(LANGUAGE, "en")!!
     ) {
@@ -101,12 +107,14 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     fun addDay(dayDBModel: DayDBModel, list: List<HourlyDBModel>, daysList: List<DailyDBModel>) {
         resetLocalSource()
         viewModelScope.launch(Dispatchers.IO) {
+            repositoryInterface.deleteAllComingDays()
+            repositoryInterface.deleteAll()
+            repositoryInterface.deleteAllHours()
             for (i in list)
                 repositoryInterface.addDayHours(i)
             for (i in daysList)
                 repositoryInterface.addComingDay(i)
             repositoryInterface.addDay(dayDBModel)
-
 
         }
     }

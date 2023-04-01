@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.PlaceItemBinding
-import eg.gov.iti.jets.kotlin.weather.model.Daily
 import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PlacesAdapter(var listener: PlaceOnClickListener) :
     ListAdapter<FavouritePlace, PlacesAdapter.ViewHolder>(DayDiffUtil()) {
@@ -33,7 +32,16 @@ class PlacesAdapter(var listener: PlaceOnClickListener) :
         holder.binding.deleteCountryIconImageView.setOnClickListener {
             listener.deletePlace(item)
         }
-
+        Picasso
+            .get()
+            .load("https://openweathermap.org/img/wn/${item.icon}@2x.png")
+            .into(holder.binding.countryIconImageView);
+        holder.binding.timeCountryTextView.text =
+            SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(
+                Date(item.dt * 1000)
+            )
+        holder.binding.weatherCountryTextView.text = item.main
+        holder.binding.tempCountryTextView.text = "${item.temp}\u00B0K"
 
     }
 

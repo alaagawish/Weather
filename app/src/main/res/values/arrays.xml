@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!--Text values of alerts types -->
+    <string-array name="alert_array">
+        <item>Any types</item>
+        <item>Small Craft Advisory</item>
+        <item>Winter Weather Advisory</item>
+        <item>Heat Advisory</item>
+        <item>Earthquake</item>
+        <item>Volcano</item>
+        <item>Storms</item>
+        <item>Seoul</item>
+        <item>Other dangers</item>
+    </string-array>
+
+</resources>

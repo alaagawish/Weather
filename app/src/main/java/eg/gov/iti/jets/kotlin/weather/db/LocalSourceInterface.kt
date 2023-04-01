@@ -1,9 +1,6 @@
 package eg.gov.iti.jets.kotlin.weather.db
 
-import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
-import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
-import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
-import eg.gov.iti.jets.kotlin.weather.model.HourlyDBModel
+import eg.gov.iti.jets.kotlin.weather.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface LocalSourceInterface {
@@ -22,5 +19,10 @@ interface LocalSourceInterface {
     suspend fun addPlaceToFav(favouritePlace: FavouritePlace)
 
     suspend fun deletePlaceFromFav(favouritePlace: FavouritePlace)
+
+    val getAllAlerts: Flow<List<AlertsDB>>
+
+    suspend fun addAlert(alertsDB: AlertsDB)
+    suspend fun deleteAlert(alert: AlertsDB)
 
 }

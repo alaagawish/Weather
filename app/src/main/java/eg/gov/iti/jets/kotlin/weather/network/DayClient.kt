@@ -16,9 +16,6 @@ class DayClient private constructor() : RemoteSource {
         }
     }
 
-//    override suspend fun getDayForecastByNetwork(lat: Double, lon: Double) =
-//        dayService.getForecast(lat, lon)
-
     override suspend fun getOneCallByNetwork(lat: Double, lon: Double, unit: String, lang: String) =
         dayService.getOneCall(lat, lon, unit, lang)
 }

@@ -3,7 +3,6 @@ package eg.gov.iti.jets.kotlin.weather.model
 import kotlinx.coroutines.flow.Flow
 
 interface RepositoryInterface {
-    //    suspend fun getForecastRemote(lat: Double, lon: Double): Flow<Forecast>
     suspend fun getOneCallRemote(
         lat: Double,
         lon: Double,
@@ -26,5 +25,9 @@ interface RepositoryInterface {
     suspend fun addPlaceToFav(favouritePlace: FavouritePlace)
     suspend fun deleteFavPlace(favouritePlace: FavouritePlace)
     val getAllFav: Flow<List<FavouritePlace>>
+
+    suspend fun addAlert(alertsDB: AlertsDB)
+    suspend fun deleteAlert(alertsDB: AlertsDB)
+    val getAllAlerts: Flow<List<AlertsDB>>
 
 }

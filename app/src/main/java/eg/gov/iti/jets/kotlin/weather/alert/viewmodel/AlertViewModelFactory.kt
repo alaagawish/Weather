@@ -7,10 +7,10 @@ import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
 class AlertViewModelFactory(private val repositoryInterface: RepositoryInterface) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(AlertViewModelFactory::class.java)) {
-            AlertViewModelFactory(repositoryInterface) as T
+        return if (modelClass.isAssignableFrom(AlertViewModel::class.java)) {
+            AlertViewModel(repositoryInterface) as T
         } else {
-            throw IllegalArgumentException("AlertViewModelFactory, NO FOUND")
+            throw IllegalArgumentException("AlertViewModel, NO FOUND")
         }
     }
 

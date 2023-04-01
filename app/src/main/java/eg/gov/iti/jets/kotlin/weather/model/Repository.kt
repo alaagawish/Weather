@@ -5,8 +5,6 @@ import eg.gov.iti.jets.kotlin.weather.network.RemoteSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-const val TAG = "TAG"
-
 class Repository private constructor(
     var remoteSource: RemoteSource,
     var localSourceInterface: LocalSourceInterface
@@ -33,6 +31,7 @@ class Repository private constructor(
     ) = flowOf(remoteSource.getOneCallByNetwork(lat, lon, unit, lang))
 
     override suspend fun addDay(day: DayDBModel) {
+        localSourceInterface.deleteAll()
         localSourceInterface.addDay(day)
     }
 
@@ -62,7 +61,7 @@ class Repository private constructor(
 
     override val getNextDays = localSourceInterface.getNextDays
     override suspend fun addPlaceToFav(favouritePlace: FavouritePlace) {
-       localSourceInterface.addPlaceToFav(favouritePlace)
+        localSourceInterface.addPlaceToFav(favouritePlace)
     }
 
     override suspend fun deleteFavPlace(favouritePlace: FavouritePlace) {
@@ -71,6 +70,17 @@ class Repository private constructor(
 
     override val getAllFav: Flow<List<FavouritePlace>>
         get() = localSourceInterface.getAllFavPlaces
+
+    override suspend fun addAlert(alertsDB: AlertsDB) {
+        localSourceInterface.addAlert(alertsDB)
+    }
+
+    override suspend fun deleteAlert(alertsDB: AlertsDB) {
+        localSourceInterface.deleteAlert(alertsDB)
+    }
+
+    override val getAllAlerts: Flow<List<AlertsDB>>
+        get() = localSourceInterface.getAllAlerts
 
 
 }

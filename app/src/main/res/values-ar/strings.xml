@@ -11,10 +11,9 @@
     <string name="action_alerts">التنبيهات</string>
     <string name="action_home">الصفحة الرئيسية</string>
     <string name="menu_home">الصفحة الرئيسية</string>
-    <string name="menu_favourite">المفصل</string>
+    <string name="menu_favourite">المفضل</string>
     <string name="menu_alert">التنبيهات</string>
     <string name="menu_settings">الاعدادات</string>
-    <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
     <string name="weather">الطقس</string>
     <string name="city">البلد</string>
     <string name="temperature">16℉</string>
@@ -35,20 +34,19 @@
     <string name="visibility_value">1000m</string>
     <string name="uv">فوق البنفسجية</string>
     <string name="uv_value">0.0</string>
-    <string name="temperature_txt">درجة الحرارة</string>
+    <string name="temperature_txt">وحدات القياس</string>
     <string name="wind_speed">سرعة الرياح</string>
     <string name="location">الموقع</string>
     <string name="language">اللغة</string>
     <string name="notifications">الاشعارات</string>
-    <string name="map">Map</string>
-    <string name="gps">GPS</string>
+    <string name="map">الخريطة</string>
+    <string name="gps">نظام تحديد الموقع</string>
     <string name="m_sec">م/ث</string>
     <string name="m_hour">ميل/س</string>
     <string name="celsius">℃ - م/ث</string>
     <string name="fahrenheit">℉ - ميل لكل ساعة</string>
     <string name="kelvin">K - م/ث</string>
-    <string name="enable">مفعل</string>
-    <string name="disable">غير مفعل</string>
+    <string name="enable">مفعل/غير مفعل </string>
     <string name="english">انجليزية</string>
     <string name="arabic">عربية</string>
     <string name="no_alert">لا يوجد تنبيهات</string>
@@ -74,7 +72,7 @@
     <string name="Thursday">الخميس</string>
     <string name="Friday">الجمعة</string>
     <string name="Today">اليوم</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps">الخريطة</string>
     <string name="next">التالي</string>
     <string name="previous">السابق</string>
 
@@ -83,5 +81,19 @@
     <string name="delete_question">حذف مكان من المفضل</string>
     <string name="no">لا</string>
     <string name="yes">متأكد</string>
+    <string name="delete_alert">احذف المنبه</string>
+    <string name="channel_description">Channel Description</string>
+    <string name="channel_name">Channel Name</string>
+    <string name="snooze">غفوة</string>
+    <string name="notification_title">titleee</string>
+    <string name="alert_type">اختر نوع الإنذار…</string>
+    <string name="start_time">00:00</string>
+    <string name="start_date" />
+    <string name="dismiss">ايقاف</string>
+    <string name="repeat">كرر</string>
+    <string name="repeat_day">كرر</string>
+    <string name="temp">4&#176;</string>
+    <string name="humidity">الرطوبة</string>
+
 
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    tools:context=".OnboardingActivity">
+    tools:context=".onboarding.OnboardingActivity">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation"
@@ -38,6 +38,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:backgroundTint="@color/transparent"
+            android:fontFamily="@font/prata_regular"
             android:gravity="center"
             android:text="@string/language"
             android:textColor="@color/black"
@@ -57,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:checked="true"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/english"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -66,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:checked="false"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/arabic"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -94,6 +97,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:backgroundTint="@color/transparent"
+            android:fontFamily="@font/prata_regular"
             android:gravity="center"
             android:text="@string/temperature_txt"
             android:textColor="@color/black"
@@ -112,6 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:checked="true"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/celsius"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -121,6 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:checked="false"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/fahrenheit"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -130,6 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:checked="false"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/kelvin"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -138,71 +145,74 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@color/gray"
+        android:elevation="10dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/units">
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/location"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="8dp"-->
-<!--        android:background="@color/gray"-->
-<!--        android:elevation="10dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:weightSum="2"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/units">-->
-<!---->
-<!--        <TextView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_weight="1"-->
-<!--            android:backgroundTint="@color/transparent"-->
-<!--            android:gravity="center"-->
-<!--            android:text="@string/location"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="25sp"-->
-<!--            android:textStyle="bold" />-->
-<!---->
-<!--        <RadioGroup-->
-<!--            android:id="@+id/locationIntroRadioGroup"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center">-->
-<!---->
-<!--            <RadioButton-->
-<!--                android:id="@+id/mapIntroRadioButton"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:checked="true"-->
-<!--                android:text="@string/map"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="20sp" />-->
-<!---->
-<!--            <RadioButton-->
-<!--                android:id="@+id/gpsIntroRadioButton"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:checked="false"-->
-<!--                android:text="@string/gps"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="20sp" />-->
-<!---->
-<!---->
-<!--        </RadioGroup>-->
-<!---->
-<!--    </LinearLayout>-->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:backgroundTint="@color/transparent"
+            android:fontFamily="@font/prata_regular"
+            android:gravity="center"
+            android:text="@string/location"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/locationIntroRadioGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <RadioButton
+                android:id="@+id/mapIntroRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:checked="false"
+                android:fontFamily="@font/prata_regular"
+                android:text="@string/map"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/gpsIntroRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:checked="true"
+                android:fontFamily="@font/prata_regular"
+                android:text="@string/gps"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+
+        </RadioGroup>
+
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveSettingMaterialButton"
-        android:layout_width="match_parent"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:layout_marginVertical="16dp"
         android:background="@drawable/rounded_appbar_bg"
-        android:padding="8dp"
+        android:fontFamily="@font/prata_regular"
+        android:padding="16dp"
         android:text="@string/done"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

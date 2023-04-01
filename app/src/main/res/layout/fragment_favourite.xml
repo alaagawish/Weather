@@ -113,11 +113,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
                 <ImageView
                     android:id="@+id/backToFav"
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
+                    android:layout_width="50dp"
+                    android:layout_height="35dp"
                     android:contentDescription="@string/back"
                     android:src="@drawable/baseline_arrow_back_24"
                     app:layout_constraintStart_toStartOf="parent"
@@ -128,125 +127,110 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
+                    android:fontFamily="@font/prata_regular"
                     android:gravity="center"
                     android:text="@string/city"
                     android:textColor="@color/blue"
                     android:textSize="35sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-
-                <TextView
-                    android:id="@+id/temperatureTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
-                    android:gravity="center"
-                    android:text="@string/temperature"
-                    android:textColor="@color/blue"
-                    android:textSize="70sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cityNameTextView" />
-
-
-                <TextView
-                    android:id="@+id/descriptionTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
-                    android:gravity="center"
-                    android:text="@string/description"
-                    android:textColor="@color/blue"
-                    android:textSize="25sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
 
                 <TextView
                     android:id="@+id/highLowTemperatureTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
+                    android:fontFamily="@font/prata_regular"
                     android:gravity="center"
                     android:text="@string/range_temperature"
                     android:textColor="@color/blue"
-                    android:textSize="30sp"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/cityNameTextView" />
 
                 <ImageView
                     android:id="@+id/dayIconImageView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:contentDescription="@string/description"
+                    android:layout_width="150dp"
+                    android:layout_height="130dp"
                     android:src="@drawable/weather"
-                    app:layout_constraintBottom_toBottomOf="@+id/detailsCardView"
-                    app:layout_constraintEnd_toStartOf="@+id/detailsCardView"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/highLowTemperatureTextView" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/detailsCardView"
+                <TextView
+                    android:id="@+id/temperatureTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:fontFamily="@font/prata_regular"
+                    android:gravity="center"
+                    android:text="@string/temperature"
+                    android:textColor="@color/blue"
+                    android:textSize="70sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dayIconImageView" />
+
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="6dp"
+                    android:gravity="center"
+                    android:text="@string/description"
+                    android:textColor="@color/blue"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
+
+                <TextView
+                    android:id="@+id/dateTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/light_blue"
-                    app:cardCornerRadius="25dp"
-                    app:cardElevation="8dp"
-                    app:cardUseCompatPadding="true"
+                    android:layout_margin="16dp"
+
+                    android:fontFamily="@font/prata_regular"
+                    android:gravity="center"
+                    android:text="@string/date"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/timeTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+
+                <TextView
+                    android:id="@+id/timeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:fontFamily="@font/prata_regular"
+                    android:gravity="center"
+                    android:text="@string/time"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/dayIconImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/highLowTemperatureTextView">
+                    app:layout_constraintStart_toEndOf="@+id/dateTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp">
-
-                        <TextView
-                            android:id="@+id/dateTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="8dp"
-                            android:gravity="center"
-                            android:text="@string/date"
-                            android:textColor="@color/white"
-                            android:textSize="25sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/timeTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="8dp"
-                            android:gravity="center"
-                            android:text="@string/time"
-                            android:textColor="@color/white"
-                            android:textSize="25sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/hoursCardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/light_gray"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
                     app:cardUseCompatPadding="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/detailsCardView">
+                    app:layout_constraintTop_toBottomOf="@+id/timeTextView">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/hoursDetailsRecyclerView"
@@ -264,7 +248,7 @@
                     android:id="@+id/windCardView"
                     android:layout_width="0dp"
                     android:layout_height="190dp"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     android:orientation="vertical"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
@@ -284,22 +268,23 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="50dp"
-                            android:contentDescription="@string/wind"
                             android:src="@drawable/wind" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/wind"
-                            android:textColor="@color/white"
-                            android:textSize="25sp" />
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/windValueTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/wind_value"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="30sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -308,7 +293,7 @@
                     android:id="@+id/humidityCardView"
                     android:layout_width="0dp"
                     android:layout_height="190dp"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
                     app:cardUseCompatPadding="true"
@@ -328,22 +313,23 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="50dp"
-                            android:contentDescription="@string/humidity_value"
                             android:src="@drawable/humidity" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/wind"
-                            android:textColor="@color/white"
+                            android:fontFamily="@font/prata_regular"
+                            android:text="@string/humidity"
+                            android:textColor="@color/black"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/humidityValueTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/humidity_value"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="30sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -352,7 +338,7 @@
                     android:id="@+id/cloudCardView"
                     android:layout_width="0dp"
                     android:layout_height="190dp"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     android:orientation="vertical"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
@@ -372,22 +358,23 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="50dp"
-                            android:contentDescription="@string/cloud"
                             android:src="@drawable/cloud" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/cloud"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/cloudValueTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/cloud_value"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="30sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -396,7 +383,7 @@
                     android:id="@+id/pressureCardView"
                     android:layout_width="0dp"
                     android:layout_height="190dp"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
                     app:cardUseCompatPadding="true"
@@ -416,22 +403,23 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="50dp"
-                            android:contentDescription="@string/pressure"
                             android:src="@drawable/pressure" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/pressure"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/pressureValueTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/pressure_value"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="30sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -440,7 +428,7 @@
                     android:id="@+id/uvCardView"
                     android:layout_width="0dp"
                     android:layout_height="190dp"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     android:orientation="vertical"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
@@ -460,22 +448,23 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="50dp"
-                            android:contentDescription="@string/uv"
                             android:src="@drawable/uv" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/uv"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/uvValueTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/uv_value"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="30sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -484,7 +473,7 @@
                     android:id="@+id/visibilityCardView"
                     android:layout_width="0dp"
                     android:layout_height="190dp"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/white"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="8dp"
                     app:cardUseCompatPadding="true"
@@ -504,22 +493,23 @@
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="50dp"
-                            android:contentDescription="@string/visibility"
                             android:src="@drawable/visibility" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/visibility"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/visibilityValueTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/prata_regular"
                             android:text="@string/visibility_value"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="30sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -528,7 +518,7 @@
                     android:id="@+id/daysCardView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/light_gray"
                     app:cardCornerRadius="25dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
@@ -549,6 +539,7 @@
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -557,10 +548,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="28dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="75dp"
         android:backgroundTint="@color/blue"
         android:contentDescription="@string/add_place"
-        android:elevation="10dp"
+        android:elevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_add_24" />
