@@ -15,8 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.*
-import eg.gov.iti.jets.kotlin.weather.Constants.SOURCE
-import eg.gov.iti.jets.kotlin.weather.Constants.TAG
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.SOURCE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentFavouriteBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel

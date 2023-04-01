@@ -1,19 +1,15 @@
 package eg.gov.iti.jets.kotlin.weather.settings.view
 
 import android.Manifest
-import android.Manifest.permission_group.LOCATION
 import android.annotation.SuppressLint
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.location.Geocoder
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -25,21 +21,18 @@ import android.widget.RadioButton
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
 import eg.gov.iti.jets.kotlin.weather.*
-import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
-import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
-import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
-import eg.gov.iti.jets.kotlin.weather.Constants.NOTIFICATION
-import eg.gov.iti.jets.kotlin.weather.Constants.NOTIFICATION_ID
-import eg.gov.iti.jets.kotlin.weather.Constants.PERMISSION_ID
-import eg.gov.iti.jets.kotlin.weather.Constants.TAG
-import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.PERMISSION_ID
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.R
-import eg.gov.iti.jets.kotlin.weather.databinding.ActivityOnboardingBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentSettingsBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.map.MapsActivity
@@ -47,6 +40,8 @@ import eg.gov.iti.jets.kotlin.weather.model.Repository
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModel
 import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
 import java.util.*
 
 class SettingsFragment : Fragment() {
@@ -83,14 +78,13 @@ class SettingsFragment : Fragment() {
         } else
             binding.arabicRadioButton.isChecked = true
 
-        if (sharedPreferences.getString(LOCATION, null) == "map") {
+        if (sharedPreferences.getString(Constants.LOCATION, null) == "map") {
             binding.mapRadioButton.isChecked = true
         } else
             binding.gpsRadioButton.isChecked = true
-        if (sharedPreferences.getString(NOTIFICATION, null) == "enable") {
-            binding.enableNotificationsSwitch.isChecked = true
-        } else
-            binding.enableNotificationsSwitch.isChecked = true
+
+        binding.enableNotificationsSwitch.isChecked =
+            sharedPreferences.getString(NOTIFICATION, null) == "enable"
 
         if (sharedPreferences.getString(UNIT, null) == "metric") {
             binding.celsiusRadioButton.isChecked = true
@@ -127,7 +121,7 @@ class SettingsFragment : Fragment() {
             val radioButton = view.findViewById<RadioButton>(i)
             when (radioButton.text) {
                 context?.getString(R.string.map) -> {
-                    editor.putString(LOCATION, "map")
+                    editor.putString(Constants.LOCATION, "map")
                     editor.apply()
 
                     val intent = Intent(requireContext(), MapsActivity::class.java)
@@ -135,7 +129,7 @@ class SettingsFragment : Fragment() {
                     startActivity(intent)
                 }
                 context?.getString(R.string.gps) -> {
-                    editor.putString(LOCATION, "gps")
+                    editor.putString(Constants.LOCATION, "gps")
                     getLocation()
                 }
 
@@ -265,10 +259,28 @@ class SettingsFragment : Fragment() {
             if (lastLocation != null) {
                 val latitude = lastLocation.latitude
                 val longitude = lastLocation.longitude
-                editor.putString(LONGITUDE, longitude.toString())
-                editor.putString(LATITUDE, latitude.toString())
-                editor.apply()
-                Log.d("TAG", "onLocationResult: ${lastLocation.latitude}")
+
+                if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
+                    editor.putString(LONGITUDE, longitude.toString())
+                    editor.putString(LATITUDE, latitude.toString())
+                    Log.d(TAG, "Settings onLocationResult: ${lastLocation.latitude}")
+
+                    editor.putString(
+                        STR_LOCATION,
+                        "settings geocoder error"
+//                        LocationUtils.getAddress(
+//                            requireContext(),
+//                            activity?.applicationContext!!,
+//                            lastLocation.latitude,
+//                            lastLocation.longitude
+//                        )
+                    )
+                    editor.apply()
+                }
+//                editor.putString(LONGITUDE, longitude.toString())
+//                editor.putString(LATITUDE, latitude.toString())
+//                editor.apply()
+//                Log.d(TAG, " Settings onLocationResult: ${lastLocation.latitude}")
 //                val myLocation = Geocoder(applicationContext, Locale.getDefault())
 //                val addressList =
 //                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)

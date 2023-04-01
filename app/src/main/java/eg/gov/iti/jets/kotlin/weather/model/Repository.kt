@@ -31,6 +31,7 @@ class Repository private constructor(
     ) = flowOf(remoteSource.getOneCallByNetwork(lat, lon, unit, lang))
 
     override suspend fun addDay(day: DayDBModel) {
+        localSourceInterface.deleteAll()
         localSourceInterface.addDay(day)
     }
 

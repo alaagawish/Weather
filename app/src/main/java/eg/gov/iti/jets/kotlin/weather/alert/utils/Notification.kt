@@ -10,9 +10,9 @@ import android.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import eg.gov.iti.jets.kotlin.weather.Constants
-import eg.gov.iti.jets.kotlin.weather.Constants.CHANNEL_ID
-import eg.gov.iti.jets.kotlin.weather.Constants.CHANNEL_NAME
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.CHANNEL_ID
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.CHANNEL_NAME
 import eg.gov.iti.jets.kotlin.weather.MainActivity
 import eg.gov.iti.jets.kotlin.weather.R
 

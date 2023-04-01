@@ -13,5 +13,5 @@ interface DayDao {
     suspend fun addDay(day: DayDBModel)
 
     @Query("DELETE FROM day")
-    suspend fun deleteAll()
+    suspend fun deleteAll(): Int
 }

@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
-import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
-import eg.gov.iti.jets.kotlin.weather.Constants.NAME
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
 import java.util.*
 import timber.log.Timber
 

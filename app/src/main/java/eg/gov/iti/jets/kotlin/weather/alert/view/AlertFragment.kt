@@ -18,8 +18,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
-import eg.gov.iti.jets.kotlin.weather.Constants
-import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.R
 
 import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModel
@@ -35,12 +35,12 @@ import eg.gov.iti.jets.kotlin.weather.model.Repository
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 
 class AlertFragment : Fragment(), AlertOnClickListener {
@@ -237,6 +237,15 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
                 }
             dialog.findViewById<Button>(R.id.saveAlertMaterialButton).setOnClickListener {
+                if (sharedPreferences.getString(NOTIFICATION, "disable") == "disable") {
+                    Snackbar.make(
+                        requireActivity().findViewById(android.R.id.content),
+                        "Enable notification from settings to receive Notification.",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+
+                }
+
                 if (alerts.isNotEmpty()) {
                     for (alert in alerts) {
                         println("alerts found")

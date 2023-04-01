@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.map
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +12,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.jets.kotlin.weather.*
-import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
-import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
-import eg.gov.iti.jets.kotlin.weather.Constants.SOURCE
-import eg.gov.iti.jets.kotlin.weather.Constants.TAG
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.SOURCE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMapsBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
@@ -26,6 +27,10 @@ import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.Repository
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
+import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils.Companion.getAddress
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -66,6 +71,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.addToFavButton.text = "Add to favourite"
         } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
             binding.addToFavButton.text = "Select location"
+        } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
+            binding.addToFavButton.text = "Confirm Location"
         }
         mapFragment.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
@@ -80,10 +87,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (intent.getStringExtra(SOURCE) == "fav") {
                 addPlaceToFav(latLng.latitude, latLng.longitude)
             } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
+                println("Map Activity map settings ")
                 editor.putString(LATITUDE, latLng.latitude.toString())
                 editor.putString(LONGITUDE, latLng.longitude.toString())
+                editor.putString(LOCATION, "map")
+                println(
+                    "Map Activity map settings  ${sharedPreferences.getString(LATITUDE, "1")}  ${
+                        sharedPreferences.getString(
+                            LONGITUDE, "1.0"
+                        )
+                    } ${sharedPreferences.getString(LOCATION, "")}"
+                )
+
                 editor.apply()
+                println(
+                    "Map Activity map settings 2 ${sharedPreferences.getString(LATITUDE, "1")}  ${
+                        sharedPreferences.getString(
+                            LONGITUDE, "1.0"
+                        )
+                    } ${sharedPreferences.getString(LOCATION, "")}"
+                )
                 finish()
+
+            } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
+                editor.putString(LATITUDE, latLng.latitude.toString())
+                editor.putString(LONGITUDE, latLng.longitude.toString())
+                editor.putString(LOCATION, "map")
+
+                println(" $latLng mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+                editor.putString(STR_LOCATION, getAddress(this, latLng.latitude, latLng.longitude))
+                editor.apply()
+                startActivity(Intent(this@MapsActivity, MainActivity::class.java))
 
             }
         }

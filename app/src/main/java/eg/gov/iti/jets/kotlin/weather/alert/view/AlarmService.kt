@@ -5,8 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import eg.gov.iti.jets.kotlin.weather.Constants
-import eg.gov.iti.jets.kotlin.weather.RandomUtil
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.RandomUtil
 import eg.gov.iti.jets.kotlin.weather.alert.receiver.AlarmReceiver
 
 class AlarmService(private val context: Context) {

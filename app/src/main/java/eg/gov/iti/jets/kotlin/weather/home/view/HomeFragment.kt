@@ -16,12 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.*
-import eg.gov.iti.jets.kotlin.weather.Constants.LANGUAGE
-import eg.gov.iti.jets.kotlin.weather.Constants.LATITUDE
-import eg.gov.iti.jets.kotlin.weather.Constants.LONGITUDE
-import eg.gov.iti.jets.kotlin.weather.Constants.STRLOCATION
-import eg.gov.iti.jets.kotlin.weather.Constants.TAG
-import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentHomeBinding
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
@@ -29,8 +29,10 @@ import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.*
 import eg.gov.iti.jets.kotlin.weather.network.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
@@ -45,12 +47,9 @@ class HomeFragment : Fragment() {
     private lateinit var daysAdapter: DaysAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding =
-            FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
         if (locale != null) {
             Locale.setDefault(locale)
@@ -66,25 +65,18 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(),
-                LocalSource(requireContext())
+                DayClient.getInstance(), LocalSource(requireContext())
             )
         )
         units = when (sharedPreferences.getString(UNIT, "metric")) {
             "metric" -> Triple(
-                "℃",
-                context?.getString(R.string.m_sec),
-                context?.getString(R.string.kilo_meter)
+                "℃", context?.getString(R.string.m_sec), context?.getString(R.string.kilo_meter)
             )
             "imperial" -> Triple(
-                "℉",
-                context?.getString(R.string.m_hour),
-                context?.getString(R.string.yard)
+                "℉", context?.getString(R.string.m_hour), context?.getString(R.string.yard)
             )
             else -> Triple(
-                "K",
-                context?.getString(R.string.m_sec),
-                context?.getString(R.string.kilo_meter)
+                "K", context?.getString(R.string.m_sec), context?.getString(R.string.kilo_meter)
             )
         }
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
@@ -93,27 +85,55 @@ class HomeFragment : Fragment() {
         binding.daysDetailsRecyclerView.adapter = daysAdapter
         binding.hoursDetailsRecyclerView.adapter = hoursAdapter
 
-        lifecycleScope.launch {
-            if (isOnline(requireContext())) {
-                println("remote source")
-                homeViewModel.getForecastData(
-                    sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-                    sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!,
-                    sharedPreferences.getString(UNIT, "metric")!!,
+//        lifecycleScope.launch {
+        if (isOnline(requireContext())) {
+            println(
+                "remote source  mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${
                     sharedPreferences.getString(
-                        LANGUAGE, "en"
-                    )!!
+                        LATITUDE,
+                        "1.0"
+                    )
+                }"
+            )
+            println(
+                "remote source mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${
+                    sharedPreferences.getString(
+                        LONGITUDE,
+                        "1.0"
+                    )
+                }"
+            )
+
+            homeViewModel.getForecastData(
+                sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences.getString(UNIT, "metric")!!,
+                sharedPreferences.getString(
+                    LANGUAGE, "en"
+                )!!
+            )
+            lifecycleScope.launch {
+                println(
+                    "HOME FRAGMENT   ${sharedPreferences.getString(LATITUDE, "1")}  ${
+                        sharedPreferences.getString(
+                            LONGITUDE, "1.0"
+                        )
+                    } ${sharedPreferences.getString(Constants.LOCATION, "")}"
                 )
                 homeViewModel.forecastStateFlow.collectLatest { result ->
                     when (result) {
                         is APIState.Waiting -> {
                             binding.progressBar.visibility = View.VISIBLE
                             binding.homeConstraintLayout.visibility = View.GONE
-                            Log.d(TAG, "onCreateView: waiting")
+                            Timber.tag(TAG).d("onCreateView: waiting")
 
                         }
                         is APIState.Success -> {
-                            Log.d(TAG, "onCreateView: done ${result.oneCall.current.weather[0]}")
+                            Log.d(
+                                TAG,
+                                "onCreateView: done ${result.oneCall.current.weather[0]}"
+                            )
+
                             val day = DayDBModel(
                                 result.oneCall.current.dt,
                                 result.oneCall.lat,
@@ -164,38 +184,40 @@ class HomeFragment : Fragment() {
                             binding.homeConstraintLayout.visibility = View.VISIBLE
 
                             binding.cityNameTextView.text =
-                                sharedPreferences.getString(STRLOCATION, result.oneCall.timezone)
+                                sharedPreferences.getString(
+                                    STR_LOCATION,
+                                    result.oneCall.timezone
+                                )
                             binding.temperatureTextView.text =
                                 "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
                             binding.descriptionTextView.text =
                                 result.oneCall.current.weather[0].description
-                            binding.highLowTemperatureTextView.text = "Sunrise: ${
+                            binding.highLowTemperatureTextView.text = "sunrise ${
                                 getDateFormat(
-                                    "HH:MM",
-                                    result.oneCall.current.sunrise
+                                    "HH:MM aa", result.oneCall.current.sunrise
                                 )
-                            }\nSunset: ${
+                            }\nsunset${
                                 getDateFormat(
-                                    "HH:MM", result.oneCall.current.sunset
+                                    "HH:MM aa", result.oneCall.current.sunset
                                 )
                             }"
-                            Picasso
-                                .get()
-                                .load(
-                                    "https://openweathermap.org/img/wn/${
-                                        result.oneCall.current.weather[0].icon
-                                    }@2x.png"
-                                )
-                                .into(binding.dayIconImageView)
+                            Picasso.get().load(
+                                "https://openweathermap.org/img/wn/${
+                                    result.oneCall.current.weather[0].icon
+                                }@2x.png"
+                            ).into(binding.dayIconImageView)
                             binding.dateTextView.text =
-                                getDateFormat("dd-MM-yyyy", result.oneCall.current.dt).toString()
+                                getDateFormat(
+                                    "dd-MM-yyyy",
+                                    result.oneCall.current.dt
+                                ).toString()
                             binding.timeTextView.text =
-                                getDateFormat("HH:MM", result.oneCall.current.dt)
-                                    .toString()
+                                getDateFormat("HH:MM aa", result.oneCall.current.dt).toString()
                             daysAdapter.submitList(result.oneCall.daily)
 
                             hoursAdapter.submitList(result.oneCall.hourly)
-                            binding.cloudValueTextView.text = "${result.oneCall.current.clouds}%"
+                            binding.cloudValueTextView.text =
+                                "${result.oneCall.current.clouds}%"
                             binding.windValueTextView.text =
                                 "${result.oneCall.current.wind_speed}${units.second}"
                             binding.pressureValueTextView.text =
@@ -220,12 +242,18 @@ class HomeFragment : Fragment() {
                     }
 
                 }
-
-            } else if (sharedPreferences.getBoolean("isSavedLocal", false)) {
-                println("local source")
+            }
+        } else if (sharedPreferences.getBoolean("isSavedLocal", false)) {
+            println("local source")
+            lifecycleScope.launch {
                 homeViewModel.comingDaysLocalStateFlow.collectLatest { result ->
                     when (result) {
                         is APIState.SuccessRoomDaily -> {
+                            Snackbar.make(
+                                requireActivity().findViewById(android.R.id.content),
+                                "Check internet to get recent updates",
+                                Snackbar.LENGTH_LONG
+                            ).show()
                             binding.progressBar.visibility = View.GONE
                             binding.homeConstraintLayout.visibility = View.VISIBLE
                             var list: MutableList<Daily> = mutableListOf<Daily>()
@@ -245,17 +273,13 @@ class HomeFragment : Fragment() {
                                         binding.progressBar.visibility = View.GONE
                                         binding.homeConstraintLayout.visibility = View.VISIBLE
 
-                                        var list: MutableList<Hourly> = mutableListOf<Hourly>()
+                                        val list: MutableList<Hourly> = mutableListOf<Hourly>()
                                         for (i in result.list) {
                                             list.add(
                                                 Hourly(
-                                                    i.dt,
-                                                    i.temp,
-                                                    mutableListOf(
+                                                    i.dt, i.temp, mutableListOf(
                                                         WeatherObject(
-                                                            i.main,
-                                                            i.description,
-                                                            i.icon
+                                                            i.main, i.description, i.icon
                                                         )
                                                     )
                                                 )
@@ -276,32 +300,25 @@ class HomeFragment : Fragment() {
                                                     binding.descriptionTextView.text =
                                                         result.day.description
                                                     binding.highLowTemperatureTextView.text =
-                                                        "Sunrise: ${
+                                                        "sunrise ${
                                                             getDateFormat(
-                                                                "HH:MM",
-                                                                result.day.sunrise
+                                                                "HH:MM aa", result.day.sunrise
                                                             )
-                                                        }\nSunset: ${
+                                                        }\nsunset ${
                                                             getDateFormat(
-                                                                "HH:MM",
-                                                                result.day.sunset
+                                                                "HH:MM aa", result.day.sunset
                                                             )
                                                         }"
-                                                    Picasso
-                                                        .get()
-                                                        .load(
-                                                            "https://openweathermap.org/img/wn/${
-                                                                result.day.icon
-                                                            }@2x.png"
-                                                        )
-                                                        .into(binding.dayIconImageView)
+                                                    Picasso.get().load(
+                                                        "https://openweathermap.org/img/wn/${
+                                                            result.day.icon
+                                                        }@2x.png"
+                                                    ).into(binding.dayIconImageView)
                                                     binding.dateTextView.text = getDateFormat(
-                                                        "dd-MM-yyyy",
-                                                        result.day.dt
+                                                        "dd-MM-yyyy", result.day.dt
                                                     ).toString()
                                                     binding.timeTextView.text = getDateFormat(
-                                                        "HH:MM",
-                                                        result.day.dt
+                                                        "HH:MM aa", result.day.dt
                                                     ).toString()
                                                     binding.cloudValueTextView.text =
                                                         "${result.day.clouds}%"
@@ -372,18 +389,18 @@ class HomeFragment : Fragment() {
                         }
                     }
                 }
-
-            } else {
-                binding.homeConstraintLayout.visibility = View.GONE
-                binding.progressBar.visibility = View.GONE
-                binding.connectionAnimation.visibility = View.VISIBLE
-                Snackbar.make(
-                    requireActivity().findViewById(android.R.id.content),
-                    "Check your connection, please",
-                    Snackbar.LENGTH_LONG
-                ).show()
             }
+        } else {
+            binding.homeConstraintLayout.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            binding.connectionAnimation.visibility = View.VISIBLE
+            Snackbar.make(
+                requireActivity().findViewById(android.R.id.content),
+                "Check your connection, please",
+                Snackbar.LENGTH_LONG
+            ).show()
         }
+//        }
 
     }
 

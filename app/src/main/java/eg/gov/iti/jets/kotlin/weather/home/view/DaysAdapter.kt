@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import eg.gov.iti.jets.kotlin.weather.Constants.UNIT
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.DayItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.Daily

@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.kotlin.weather
+package eg.gov.iti.jets.kotlin.weather.utils
 
 import java.util.concurrent.atomic.AtomicInteger
 

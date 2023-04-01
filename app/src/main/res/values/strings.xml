@@ -29,7 +29,7 @@
     <string name="cloud">Cloud</string>
     <string name="cloud_value">0%</string>
     <string name="pressure_value">1020hpa</string>
-    <string name="range_temperature">H:26℉\nL:16℉</string>
+    <string name="range_temperature">H:26℉ L:16℉</string>
     <string name="visibility">Visibility</string>
     <string name="visibility_value">1000m</string>
     <string name="uv">Ultra-Violet</string>
@@ -93,4 +93,5 @@
     <string name="repeat">repeat</string>
     <string name="repeat_day">Repeat</string>
     <string name="temp">4&#176;</string>
+    <string name="humidity">Humidity</string>
 </resources>
