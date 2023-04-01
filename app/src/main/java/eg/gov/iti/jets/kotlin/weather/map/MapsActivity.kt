@@ -126,11 +126,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-//        val sydney = LatLng(
-//            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-//            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!
-//        )
-//        latLng = sydney
+        val sydney = LatLng(
+            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
+            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!
+        )
+        latLng = sydney
 //        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }

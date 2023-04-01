@@ -42,6 +42,8 @@ import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModel
 import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
+import eg.gov.iti.jets.kotlin.weather.utils.checkLocationPermissions
+import eg.gov.iti.jets.kotlin.weather.utils.isLocationEnabled
 import java.util.*
 
 class SettingsFragment : Fragment() {
@@ -182,14 +184,12 @@ class SettingsFragment : Fragment() {
             editor.apply()
 
         }
-
     }
-
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
+        if (checkLocationPermissions(requireContext())) {
+            if (isLocationEnabled(requireContext())) {
                 requestNewLocation()
             } else {
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -227,22 +227,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun checkPermissions() = ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-
-
-    private fun isLocationEnabled(): Boolean {
-        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocation() {

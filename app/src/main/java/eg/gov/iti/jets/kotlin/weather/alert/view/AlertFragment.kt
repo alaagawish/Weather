@@ -189,7 +189,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                 setAlarm {
                     end = it
                     println("date ${Calendar.getInstance().timeInMillis}")
-                    if (it <= Calendar.getInstance().timeInMillis) {
+                    if (it <= start) {
                         dialog.dismiss()
                         Snackbar.make(
                             requireActivity().findViewById(android.R.id.content),
@@ -208,7 +208,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             }
 
             var type = "notification"
-            var tag = "any danger"
+            var tag = "Any types"
             var description = "Weather is fine, no alerts found about $tag"
             var repeated = false
 
@@ -221,6 +221,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                         id: Long
                     ) {
                         tag = parent.getItemAtPosition(position).toString()
+                        println("tagggggggggggg kkkk $tag")
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
@@ -245,14 +246,18 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     ).show()
 
                 }
-
                 if (alerts.isNotEmpty()) {
                     for (alert in alerts) {
-                        println("alerts found")
-                        if (alert.start * 1000 <= start && alert.end * 1000 >= end) {
-                            if (tag == alert.event)
+                        if (alert.start * 1000 <= start) {
+
+                            if (tag == alert.event) {
+                                description = alert.description
+                            }
+                            if (tag == "Any types") {
+                                tag = alert.event
                                 description = alert.description
 
+                            }
 
                         }
                     }
@@ -264,7 +269,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
 
-                    println(" notification permission is prohibited,enable it")
+                    println("notification permission is prohibited,enable it")
                     ActivityCompat.requestPermissions(
                         requireActivity(),
                         arrayOf(Manifest.permission.POST_NOTIFICATIONS),

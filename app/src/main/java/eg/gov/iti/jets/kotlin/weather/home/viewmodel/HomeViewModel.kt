@@ -46,6 +46,7 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         unit: String = sharedPreferences.getString(UNIT, "standard")!!,
         lang: String = sharedPreferences.getString(LANGUAGE, "en")!!
     ) {
+        println("gggggggggggggggggggggggg $lat $lon")
         viewModelScope.launch {
             repositoryInterface.getOneCallRemote(lat, lon, unit, lang)
                 .catch { e -> forecastStateFlow.value = APIState.Failure(e) }

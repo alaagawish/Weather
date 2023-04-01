@@ -36,6 +36,8 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.PERMISSION_ID
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils
+import eg.gov.iti.jets.kotlin.weather.utils.checkLocationPermissions
+import eg.gov.iti.jets.kotlin.weather.utils.isLocationEnabled
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -86,8 +88,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (sharedPreferences.getString(LOCATION, "gps") == "gps") {
-            if (checkPermissions()) {
-                if (isLocationEnabled()) {
+            if (checkLocationPermissions(this)) {
+                if (isLocationEnabled(this)) {
                     requestNewLocation()
                     getLocation()
 
@@ -106,8 +108,8 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun getLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
+        if (checkLocationPermissions(this)) {
+            if (isLocationEnabled(this)) {
                 requestNewLocation()
             } else {
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun requestPermissions() {
+    private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             this, arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
@@ -135,20 +137,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == PERMISSION_ID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocation()
         }
-    }
-
-    fun checkPermissions() = ActivityCompat.checkSelfPermission(
-        this, Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-        this, Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-
-
-    private fun isLocationEnabled(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
     }
 
     @SuppressLint("MissingPermission")
