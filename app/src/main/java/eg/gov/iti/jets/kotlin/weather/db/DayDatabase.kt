@@ -8,7 +8,6 @@ import eg.gov.iti.jets.kotlin.weather.model.*
 
 
 @Database(entities = [DayDBModel::class, HourlyDBModel::class, DailyDBModel::class,FavouritePlace::class,AlertsDB::class], version = 1)
-
 abstract class DayDatabase : RoomDatabase() {
 
     abstract fun getDayDao(): DayDao

@@ -77,12 +77,12 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
 //        .setStyle(bigPicStyle)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+//        .addAction(
+//            R.drawable.baseline_repeat_24, context.getString(R.string.snooze),
+//            pendingPlayIntent
+//        )
         .addAction(
-            R.drawable.baseline_repeat_24, context.getString(R.string.snooze),
-            pendingPlayIntent
-        )
-        .addAction(
-            R.drawable.baseline_cancel_presentation_24, context.getString(R.string.dismiss),
+            R.drawable.baseline_cancel_presentation_24, context.getString(R.string.stop),
             dismissIntent
         )
 

@@ -18,6 +18,7 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.SOURCE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMapsBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
@@ -51,13 +52,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(this)
+                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(this).getFavDao(),DayDatabase.getInstance(this).getDayDao(),DayDatabase.getInstance(this).getAlertsDao(),DayDatabase.getInstance(this).getHourDao(),DayDatabase.getInstance(this).getDailyDao())
             )
         )
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
         favouriteViewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(this)
+                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(this).getFavDao(),DayDatabase.getInstance(this).getDayDao(),DayDatabase.getInstance(this).getAlertsDao(),DayDatabase.getInstance(this).getHourDao(),DayDatabase.getInstance(this).getDailyDao())
             )
         )
 

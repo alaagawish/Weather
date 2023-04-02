@@ -62,7 +62,7 @@ data class FavouritePlace(
 
 @Entity(tableName = "alert")
 
-data class AlertsDB(
+data class AlertsDB constructor(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val type: String,

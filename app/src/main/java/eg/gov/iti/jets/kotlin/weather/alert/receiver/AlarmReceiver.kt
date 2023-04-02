@@ -73,37 +73,6 @@ class AlarmReceiver : BroadcastReceiver() {
                     )
                 }
                 context.getString(R.string.dismiss) -> {
-                    println("ggggggggggggggggggggggggggggggggggggggg")
-//                if (sharedPreferences.getBoolean("isFirstTime", true)) {
-//                    editor.putBoolean("isFirstTime", false)
-//                    editor.commit()
-//
-//                    MediaPlayer.create(context, R.raw.alarm)
-//
-//                } else {
-//                    editor.putBoolean("isFirstTime",true)
-//                    editor.commit()
-//                    println("Dismiss: cancel audio")
-//                    mediaPlayer.stop()
-//                    mediaPlayer.release()
-//
-//                }
-
-
-//                try {
-
-//                    mediaPlayer?.pause()
-
-//                } catch (e: java.lang.Exception) {
-//                    println("stop media player error ${e.message}")
-//                }
-//                mediaPlayer = null
-
-
-//                if (mediaPlayer?.isPlaying!!) {
-//                    println("playing")
-//                    mediaPlayer?.stop()
-//                }
 
                 }
 

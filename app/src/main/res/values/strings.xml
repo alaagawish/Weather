@@ -94,4 +94,5 @@
     <string name="repeat_day">Repeat</string>
     <string name="temp">4&#176;</string>
     <string name="humidity">Humidity</string>
+    <string name="stop">Stop</string>
 </resources>

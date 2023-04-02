@@ -18,6 +18,7 @@ import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.SOURCE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentFavouriteBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
@@ -56,13 +57,15 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
         super.onViewCreated(view, savedInstanceState)
         favouriteViewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+//                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
             )
         )
 
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+//                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
             )
         )
         favouriteViewModel =

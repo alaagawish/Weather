@@ -34,6 +34,7 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentSettingsBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.map.MapsActivity
 import eg.gov.iti.jets.kotlin.weather.model.Repository
@@ -66,7 +67,7 @@ class SettingsFragment : Fragment() {
         settingsViewModelFactory = SettingsViewModelFactory(
             Repository.getInstance(
                 DayClient.getInstance(),
-                LocalSource(requireContext())
+                LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
             )
         )
         settingsViewModel = ViewModelProvider(

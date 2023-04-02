@@ -1,34 +1,23 @@
 package eg.gov.iti.jets.kotlin.weather.db
 
-import android.content.Context
 import eg.gov.iti.jets.kotlin.weather.model.*
 import kotlinx.coroutines.flow.Flow
 
-class LocalSource(context: Context) : LocalSourceInterface {
-    private val dayDatabase: DayDatabase = DayDatabase.getInstance(context)
+class LocalSource internal constructor(
+    private val favDao: FavDao,
+    private val dayDao: DayDao,
+    private val alertDao: AlertDao,
+    private val hourDao: HourDao,
+    private val dailyDao: DailyDao
+) : LocalSourceInterface {
 
-    private val dayDao: DayDao by lazy {
-        dayDatabase.getDayDao()
-    }
-    private val dailyDao: DailyDao by lazy {
-        dayDatabase.getDailyDao()
-    }
-    private val hourDao: HourDao by lazy {
-        dayDatabase.getHourDao()
-    }
-    private val favDao: FavDao by lazy {
-        dayDatabase.getFavDao()
-    }
-    private val alertDao: AlertDao by lazy {
-        dayDatabase.getAlertsDao()
-    }
     private val dayFromDB: Flow<DayDBModel> = dayDao.getDay
     private val dailyFromDB: Flow<List<DailyDBModel>> = dailyDao.getNextDays
     private val hourFromDB: Flow<List<HourlyDBModel>> = hourDao.getDayHours
     private val favFromDB: Flow<List<FavouritePlace>> = favDao.getAllFavPlaces
     private val alertsFromDB: Flow<List<AlertsDB>> = alertDao.getAllAlerts
     override suspend fun addDay(day: DayDBModel) {
-        println("localsource: $day")
+        println("local source: $day")
         dayDao.addDay(day)
     }
 

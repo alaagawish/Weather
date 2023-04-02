@@ -26,6 +26,7 @@ import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModel
 import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.databinding.AlertDialogBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentAlertBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
 import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
@@ -70,7 +71,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
         alarmService = AlarmService(requireContext())
         alertViewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
             )
         )
         alertViewModel =
@@ -78,7 +79,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
             )
         )
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
