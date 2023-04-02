@@ -2,12 +2,10 @@ package eg.gov.iti.jets.kotlin.weather.settings.view
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -67,7 +65,13 @@ class SettingsFragment : Fragment() {
         settingsViewModelFactory = SettingsViewModelFactory(
             Repository.getInstance(
                 DayClient.getInstance(),
-                LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         settingsViewModel = ViewModelProvider(

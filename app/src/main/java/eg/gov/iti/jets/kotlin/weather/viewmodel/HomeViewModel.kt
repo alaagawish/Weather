@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.kotlin.weather.home.viewmodel
+package eg.gov.iti.jets.kotlin.weather.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,7 @@ import eg.gov.iti.jets.kotlin.weather.model.DailyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
 import eg.gov.iti.jets.kotlin.weather.model.HourlyDBModel
 import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
 import kotlinx.coroutines.Dispatchers

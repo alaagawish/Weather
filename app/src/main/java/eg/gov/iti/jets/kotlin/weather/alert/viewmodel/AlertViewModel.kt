@@ -3,9 +3,8 @@ package eg.gov.iti.jets.kotlin.weather.alert.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
-import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch

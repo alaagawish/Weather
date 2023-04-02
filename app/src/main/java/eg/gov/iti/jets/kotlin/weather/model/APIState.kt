@@ -1,6 +1,4 @@
-package eg.gov.iti.jets.kotlin.weather.network
-
-import eg.gov.iti.jets.kotlin.weather.model.*
+package eg.gov.iti.jets.kotlin.weather.model
 
 sealed class APIState {
     class Success(val oneCall: OneCall) : APIState()

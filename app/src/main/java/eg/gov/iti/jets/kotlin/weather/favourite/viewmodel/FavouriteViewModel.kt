@@ -3,7 +3,7 @@ package eg.gov.iti.jets.kotlin.weather.favourite.viewmodel
 import androidx.lifecycle.*
 import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.RepositoryInterface
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch

@@ -22,11 +22,11 @@ import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.Repository
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION

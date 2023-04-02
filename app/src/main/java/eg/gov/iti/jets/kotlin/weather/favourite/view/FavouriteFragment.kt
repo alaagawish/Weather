@@ -25,11 +25,11 @@ import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFact
 import eg.gov.iti.jets.kotlin.weather.home.view.DaysAdapter
 import eg.gov.iti.jets.kotlin.weather.home.view.HoursAdapter
 import eg.gov.iti.jets.kotlin.weather.home.view.units
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.map.MapsActivity
 import eg.gov.iti.jets.kotlin.weather.model.*
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -57,15 +57,27 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
         super.onViewCreated(view, savedInstanceState)
         favouriteViewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
-//                DayClient.getInstance(), LocalSource(requireContext())
-                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
 
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-//                DayClient.getInstance(), LocalSource(requireContext())
-                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         favouriteViewModel =

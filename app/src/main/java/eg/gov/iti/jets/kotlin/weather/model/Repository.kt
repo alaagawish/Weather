@@ -2,17 +2,23 @@ package eg.gov.iti.jets.kotlin.weather.model
 
 import eg.gov.iti.jets.kotlin.weather.db.LocalSourceInterface
 import eg.gov.iti.jets.kotlin.weather.network.RemoteSource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 class Repository private constructor(
-    var remoteSource: RemoteSource, var localSourceInterface: LocalSourceInterface
+    var remoteSource: RemoteSource,
+    var localSourceInterface: LocalSourceInterface,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : RepositoryInterface {
 
     companion object {
         private var INSTANCE: Repository? = null
         fun getInstance(
-            remoteSource: RemoteSource, localSourceInterface: LocalSourceInterface
+            remoteSource: RemoteSource,
+            localSourceInterface: LocalSourceInterface,
+            ioDispatcher: CoroutineDispatcher = Dispatchers.IO
         ): Repository {
             return INSTANCE ?: synchronized(this) {
                 val i = Repository(remoteSource, localSourceInterface)

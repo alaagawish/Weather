@@ -28,12 +28,12 @@ import eg.gov.iti.jets.kotlin.weather.databinding.AlertDialogBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentAlertBinding
 import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.Alert
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
 import eg.gov.iti.jets.kotlin.weather.model.Repository
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
