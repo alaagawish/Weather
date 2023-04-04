@@ -10,7 +10,7 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
 import java.util.*
 import timber.log.Timber
 
-lateinit var sharedPreferences: SharedPreferences
+var sharedPreferences: SharedPreferences? = null
 
 lateinit var editor: SharedPreferences.Editor
 
@@ -18,19 +18,21 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         Timber.plant(Timber.DebugTree())
     }
 
     override fun attachBaseContext(base: Context) {
         sharedPreferences = base.getSharedPreferences(NAME, Context.MODE_PRIVATE)
-        editor = sharedPreferences.edit()
+
+        editor = sharedPreferences!!.edit()
 
         super.attachBaseContext(updateBaseContextLocale(base))
 
     }
 
     private fun updateBaseContextLocale(context: Context): Context {
-        val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+        val locale = sharedPreferences?.getString(LANGUAGE, "en")?.let { Locale(it) }
         if (locale != null) {
             Locale.setDefault(locale)
         }

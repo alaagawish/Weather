@@ -47,35 +47,40 @@ class AlertDaoTest {
 
     }
 
+    private val alert =
+        AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
+    private val alert2 =
+        AlertsDB(2, "new alert2", 1679556049, 1679666049, "description", "tag", false)
+    private val alert3 =
+        AlertsDB(3, "new alert2", 1679556049, 1679666049, "description", "tag", false)
+    private val alert4 =
+        AlertsDB(4, "new alert2", 1679556049, 1679666049, "description", "tag", false)
+
     @Test
     fun getAllAlerts_Alerts() = runBlockingTest {
 
-        val alert = AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
-        val alert2 = AlertsDB(2, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-        val alert3 = AlertsDB(3, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-        val alert4 = AlertsDB(4, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-        delay(100)
         dayDatabase.getAlertsDao().addAlert(alert)
         dayDatabase.getAlertsDao().addAlert(alert2)
         dayDatabase.getAlertsDao().addAlert(alert3)
         dayDatabase.getAlertsDao().addAlert(alert4)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getAlertsDao().getAllAlerts.collectLatest { res ->
                 assertThat(
                     res.size,
                     `is`(4)
                 )
+                cancel()
             }
         }
 
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
+        launch {
             dayDatabase.getAlertsDao().getAllAlerts.collectLatest { res ->
+
                 assertThat(
                     res[2],
                     `is`(alert3)
                 )
+                cancel()
             }
         }
 
@@ -83,17 +88,14 @@ class AlertDaoTest {
 
     @Test
     fun addAlert_Alert_AddDone() = runBlockingTest {
-
-        val alert = AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
-        delay(100)
         dayDatabase.getAlertsDao().addAlert(alert)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getAlertsDao().getAllAlerts.collectLatest { res ->
                 assertThat(
                     res[0].id,
                     `is`(alert.id)
                 )
+                cancel()
             }
         }
 
@@ -102,29 +104,26 @@ class AlertDaoTest {
     @Test
     fun deleteAlert_Alert_DeleteDone() = runBlockingTest {
 
-        val alert = AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
-        val alert2 = AlertsDB(2, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-        delay(100)
         dayDatabase.getAlertsDao().addAlert(alert)
         dayDatabase.getAlertsDao().addAlert(alert2)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getAlertsDao().getAllAlerts.collectLatest { res ->
                 assertThat(
                     res.size,
                     `is`(2)
                 )
+                cancel()
             }
         }
 
         dayDatabase.getAlertsDao().deleteAlert(alert)
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        launch {
             dayDatabase.getAlertsDao().getAllAlerts.collectLatest { res ->
                 assertThat(
                     res.size,
                     `is`(1)
                 )
+                cancel()
             }
         }
 

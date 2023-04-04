@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="50dp"
+    android:layout_marginBottom="100dp"
     android:background="@color/lighter_blue"
     tools:context=".settings.view.SettingsFragment">
 

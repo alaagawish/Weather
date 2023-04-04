@@ -48,7 +48,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+//        sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
+
+        val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
         if (locale != null) {
             Locale.setDefault(locale)
         }
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getString(LOCATION, "gps") == "gps") {
+        if (sharedPreferences!!.getString(LOCATION, "gps") == "gps") {
             if (checkLocationPermissions(this)) {
                 if (isLocationEnabled(this)) {
                     requestNewLocation()
@@ -156,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             if (lastLocation != null) {
                 val latitude = lastLocation.latitude
                 val longitude = lastLocation.longitude
-                if (sharedPreferences.getString(LOCATION, "gps") == "gps") {
+                if (sharedPreferences!!.getString(LOCATION, "gps") == "gps") {
                     editor.putString(LONGITUDE, longitude.toString())
                     editor.putString(LATITUDE, latitude.toString())
                     Log.d(TAG, "Main Activity onLocationResult: ${lastLocation.latitude}")

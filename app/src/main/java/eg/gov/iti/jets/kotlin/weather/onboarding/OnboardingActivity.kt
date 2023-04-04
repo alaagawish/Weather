@@ -42,6 +42,9 @@ class OnboardingActivity : AppCompatActivity() {
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContentView(binding.root)
+        binding.animation.playAnimation()
+
+
         binding.saveSettingMaterialButton.setOnClickListener {
             if (binding.arabicIntroRadioButton.isChecked)
                 editor.putString(LANGUAGE, "ar")
@@ -62,30 +65,32 @@ class OnboardingActivity : AppCompatActivity() {
 
 
 
-            if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
-                if (checkLocationPermissions(this)) {
-                    if (isLocationEnabled(this)) {
-                        requestNewLocation()
-                        getLocation()
+            if (sharedPreferences!!.getString(Constants.LOCATION, "gps") == "gps") {
+//                if (checkLocationPermissions(this)) {
+//                    if (isLocationEnabled(this)) {
+//                        requestNewLocation()
+//                        getLocation()
+//
+//                    } else {
+//                        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+//                        getLocation()
+//
+//                    }
+//                } else {
+//                    requestPermissions()
+//                }
+//                getLocation()
+                val intent = Intent(this@OnboardingActivity, MainActivity::class.java)
+                startActivity(intent)
 
-                    } else {
-                        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                        getLocation()
 
-                    }
-                } else {
-                    requestPermissions()
-                }
-                getLocation()
-
-            } else {
+            } else if (sharedPreferences!!.getString(Constants.LOCATION, "gps") == "map") {
                 val intent = Intent(this@OnboardingActivity, MapsActivity::class.java)
                 intent.putExtra(SOURCE, BOARDING)
                 startActivity(intent)
             }
 
         }
-        binding.animation.playAnimation()
 
 //        binding.languagesIntroRadioGroup.setOnCheckedChangeListener { _, checkedId ->
 //            val radioButton = findViewById<RadioButton>(checkedId)
@@ -116,96 +121,96 @@ class OnboardingActivity : AppCompatActivity() {
 
     }
 
-    @SuppressLint("MissingPermission")
-    fun getLocation() {
-        if (checkLocationPermissions(this)) {
-            if (isLocationEnabled(this)) {
-                requestNewLocation()
-            } else {
-                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-
-            }
-        } else {
-            requestPermissions()
-        }
-    }
-
-    fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this, arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-            ), PERMISSION_ID
-        )
-    }
-
-    @SuppressLint("LogNotTimber")
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.d(TAG, "onRequestPermissionsResult: $requestCode")
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocation()
-        }
-    }
-
-
-    @SuppressLint("MissingPermission")
-    fun requestNewLocation() {
-        val locationRequest = LocationRequest()
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        locationRequest.setInterval(5)
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest, locationCallback, Looper.myLooper()
-        )
-    }
-
-    private val locationCallback = object : LocationCallback() {
-        @SuppressLint("LogNotTimber")
-        override fun onLocationResult(p0: LocationResult) {
-            val lastLocation = p0.lastLocation
-            if (lastLocation != null) {
-                val latitude = lastLocation.latitude
-                val longitude = lastLocation.longitude
-                if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
-                    editor.putString(LONGITUDE, longitude.toString())
-                    editor.putString(LATITUDE, latitude.toString())
-                    Log.d(TAG, "On Boarding onLocationResult: ${lastLocation.latitude}")
-
-                    editor.putString(
-                        STR_LOCATION,
-                        LocationUtils.getAddress(
-                            this@OnboardingActivity,
-                            lastLocation.latitude,
-                            lastLocation.longitude
-                        )
-                    )
-                    editor.apply()
-                }
-//                editor.putString(LONGITUDE, longitude.toString())
-//                editor.putString(LATITUDE, latitude.toString())
-//                editor.apply()
-//                Log.d(TAG, "On Boarding onLocationResult: ${lastLocation.latitude}")
-//                val myLocation = Geocoder(applicationContext, Locale.getDefault())
-//                val addressList =
-//                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)
+//    @SuppressLint("MissingPermission")
+//    fun getLocation() {
+//        if (checkLocationPermissions(this)) {
+//            if (isLocationEnabled(this)) {
+//                requestNewLocation()
+//            } else {
+//                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
 //
-//                if (addressList != null && addressList.isNotEmpty()) {
-//                    val address = addressList[0]
-//                    val sb = StringBuilder()
-//
-//                    sb.append(address.countryName)
-//                    println("countryyyyyyyyyyyyyyyyyy: ${address.countryName}")
-
-//                    editor.putString(STR_LOCATION, sb.toString())
-//                    editor.apply()
-
-                val intent = Intent(this@OnboardingActivity, MainActivity::class.java)
-                startActivity(intent)
-                finish()
 //            }
-            }
-        }
-    }
+//        } else {
+//            requestPermissions()
+//        }
+//    }
+
+//    fun requestPermissions() {
+//        ActivityCompat.requestPermissions(
+//            this, arrayOf(
+//                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+//            ), PERMISSION_ID
+//        )
+//    }
+
+//    @SuppressLint("LogNotTimber")
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        Log.d(TAG, "onRequestPermissionsResult: $requestCode")
+//        if (requestCode == PERMISSION_ID) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocation()
+//        }
+//    }
+
+
+//    @SuppressLint("MissingPermission")
+//    fun requestNewLocation() {
+//        val locationRequest = LocationRequest()
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+//        locationRequest.setInterval(5)
+//        fusedLocationClient.requestLocationUpdates(
+//            locationRequest, locationCallback, Looper.myLooper()
+//        )
+//    }
+
+//    private val locationCallback = object : LocationCallback() {
+//        @SuppressLint("LogNotTimber")
+//        override fun onLocationResult(p0: LocationResult) {
+//            val lastLocation = p0.lastLocation
+//            if (lastLocation != null) {
+//                val latitude = lastLocation.latitude
+//                val longitude = lastLocation.longitude
+//                if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
+//                    editor.putString(LONGITUDE, longitude.toString())
+//                    editor.putString(LATITUDE, latitude.toString())
+//                    Log.d(TAG, "On Boarding onLocationResult: ${lastLocation.latitude}")
+//
+//                    editor.putString(
+//                        STR_LOCATION,
+//                        LocationUtils.getAddress(
+//                            this@OnboardingActivity,
+//                            lastLocation.latitude,
+//                            lastLocation.longitude
+//                        )
+//                    )
+//                    editor.apply()
+//                }
+////                editor.putString(LONGITUDE, longitude.toString())
+////                editor.putString(LATITUDE, latitude.toString())
+////                editor.apply()
+////                Log.d(TAG, "On Boarding onLocationResult: ${lastLocation.latitude}")
+////                val myLocation = Geocoder(applicationContext, Locale.getDefault())
+////                val addressList =
+////                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)
+////
+////                if (addressList != null && addressList.isNotEmpty()) {
+////                    val address = addressList[0]
+////                    val sb = StringBuilder()
+////
+////                    sb.append(address.countryName)
+////                    println("countryyyyyyyyyyyyyyyyyy: ${address.countryName}")
+//
+////                    editor.putString(STR_LOCATION, sb.toString())
+////                    editor.apply()
+//
+//                val intent = Intent(this@OnboardingActivity, MainActivity::class.java)
+//                startActivity(intent)
+//                finish()
+////            }
+//            }
+//        }
+//    }
 
 }

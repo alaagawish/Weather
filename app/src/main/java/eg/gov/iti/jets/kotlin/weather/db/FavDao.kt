@@ -9,7 +9,7 @@ interface FavDao {
     @get:Query("SELECT * FROM fav")
     val getAllFavPlaces: Flow<List<FavouritePlace>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFavPlace(favouritePlace: FavouritePlace)
 
     @Delete

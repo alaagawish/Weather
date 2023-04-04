@@ -80,22 +80,22 @@ class SettingsFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        if (sharedPreferences.getString(LANGUAGE, null) == "en") {
+        if (sharedPreferences!!.getString(LANGUAGE, null) == "en") {
             binding.englishRadioButton.isChecked = true
         } else
             binding.arabicRadioButton.isChecked = true
 
-        if (sharedPreferences.getString(Constants.LOCATION, null) == "map") {
+        if (sharedPreferences!!.getString(Constants.LOCATION, null) == "map") {
             binding.mapRadioButton.isChecked = true
         } else
             binding.gpsRadioButton.isChecked = true
 
         binding.enableNotificationsSwitch.isChecked =
-            sharedPreferences.getString(NOTIFICATION, null) == "enable"
+            sharedPreferences!!.getString(NOTIFICATION, null) == "enable"
 
-        if (sharedPreferences.getString(UNIT, null) == "metric") {
+        if (sharedPreferences!!.getString(UNIT, null) == "metric") {
             binding.celsiusRadioButton.isChecked = true
-        } else if (sharedPreferences.getString(UNIT, null) == "imperial")
+        } else if (sharedPreferences!!.getString(UNIT, null) == "imperial")
             binding.fahrenheitRadioButton.isChecked = true
         else
             binding.kelvinRadioButton.isChecked = true
@@ -111,7 +111,7 @@ class SettingsFragment : Fragment() {
             }
             editor.apply()
 
-            val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+            val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
             if (locale != null) {
                 Locale.setDefault(locale)
             }
@@ -252,7 +252,7 @@ class SettingsFragment : Fragment() {
                 val latitude = lastLocation.latitude
                 val longitude = lastLocation.longitude
 
-                if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
+                if (sharedPreferences!!.getString(Constants.LOCATION, "gps") == "gps") {
                     editor.putString(LONGITUDE, longitude.toString())
                     editor.putString(LATITUDE, latitude.toString())
                     Log.d(TAG, "Settings onLocationResult: ${lastLocation.latitude}")

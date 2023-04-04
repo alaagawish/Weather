@@ -20,11 +20,11 @@ class SplashActivity : AppCompatActivity() {
 
         Handler().postDelayed({
 
-            val isShown = sharedPreferences.getBoolean(BOARDING, false)
+            val isShown = sharedPreferences!!.getBoolean(BOARDING, false)
             if (!isShown) {
                 val intent = Intent(this, OnboardingActivity::class.java)
                 startActivity(intent)
-                with(sharedPreferences.edit()) {
+                with(sharedPreferences!!.edit()) {
                     putBoolean(BOARDING, true)
                     apply()
                 }

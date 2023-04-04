@@ -31,6 +31,8 @@ import eg.gov.iti.jets.kotlin.weather.model.*
 import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
+import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -51,7 +53,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+        val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
         if (locale != null) {
             Locale.setDefault(locale)
         }
@@ -64,12 +66,13 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
                 DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
             )
         )
-        units = when (sharedPreferences.getString(UNIT, "metric")) {
+        units = when (sharedPreferences!!.getString(UNIT, "metric")) {
             "metric" -> Triple(
                 "℃", context?.getString(R.string.m_sec), context?.getString(R.string.kilo_meter)
             )
@@ -90,7 +93,7 @@ class HomeFragment : Fragment() {
         if (isOnline(requireContext())) {
             println(
                 "remote source  mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${
-                    sharedPreferences.getString(
+                    sharedPreferences!!.getString(
                         LATITUDE,
                         "1.0"
                     )
@@ -98,7 +101,7 @@ class HomeFragment : Fragment() {
             )
             println(
                 "remote source mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${
-                    sharedPreferences.getString(
+                    sharedPreferences!!.getString(
                         LONGITUDE,
                         "1.0"
                     )
@@ -106,20 +109,20 @@ class HomeFragment : Fragment() {
             )
 
             homeViewModel.getForecastData(
-                sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-                sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!,
-                sharedPreferences.getString(UNIT, "metric")!!,
-                sharedPreferences.getString(
+                sharedPreferences!!.getString(LATITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences!!.getString(LONGITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences!!.getString(UNIT, "metric")!!,
+                sharedPreferences!!.getString(
                     LANGUAGE, "en"
                 )!!
             )
             lifecycleScope.launch {
                 println(
-                    "HOME FRAGMENT   ${sharedPreferences.getString(LATITUDE, "1")}  ${
-                        sharedPreferences.getString(
+                    "HOME FRAGMENT   ${sharedPreferences!!.getString(LATITUDE, "1")}  ${
+                        sharedPreferences!!.getString(
                             LONGITUDE, "1.0"
                         )
-                    } ${sharedPreferences.getString(Constants.LOCATION, "")}"
+                    } ${sharedPreferences!!.getString(Constants.LOCATION, "")}"
                 )
                 homeViewModel.forecastStateFlow.collectLatest { result ->
                     when (result) {
@@ -184,8 +187,11 @@ class HomeFragment : Fragment() {
                             binding.connectionAnimation.visibility = View.GONE
                             binding.homeConstraintLayout.visibility = View.VISIBLE
 
+
+                            editor.putString(STR_LOCATION,LocationUtils.getAddress(requireContext(),result.oneCall.lat,result.oneCall.lon))
+                            editor.commit()
                             binding.cityNameTextView.text =
-                                sharedPreferences.getString(
+                                sharedPreferences!!.getString(
                                     STR_LOCATION,
                                     result.oneCall.timezone
                                 )
@@ -244,7 +250,7 @@ class HomeFragment : Fragment() {
 
                 }
             }
-        } else if (sharedPreferences.getBoolean("isSavedLocal", false)) {
+        } else if (sharedPreferences!!.getBoolean("isSavedLocal", false)) {
             println("local source")
             lifecycleScope.launch {
                 homeViewModel.comingDaysLocalStateFlow.collectLatest { result ->

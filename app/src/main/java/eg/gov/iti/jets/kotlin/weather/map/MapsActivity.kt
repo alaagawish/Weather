@@ -52,13 +52,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(this).getFavDao(),DayDatabase.getInstance(this).getDayDao(),DayDatabase.getInstance(this).getAlertsDao(),DayDatabase.getInstance(this).getHourDao(),DayDatabase.getInstance(this).getDailyDao())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(this).getFavDao(),
+                    DayDatabase.getInstance(this).getDayDao(),
+                    DayDatabase.getInstance(this).getAlertsDao(),
+                    DayDatabase.getInstance(this).getHourDao(),
+                    DayDatabase.getInstance(this).getDailyDao()
+                )
             )
         )
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
         favouriteViewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(this).getFavDao(),DayDatabase.getInstance(this).getDayDao(),DayDatabase.getInstance(this).getAlertsDao(),DayDatabase.getInstance(this).getHourDao(),DayDatabase.getInstance(this).getDailyDao())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(this).getFavDao(),
+                    DayDatabase.getInstance(this).getDayDao(),
+                    DayDatabase.getInstance(this).getAlertsDao(),
+                    DayDatabase.getInstance(this).getHourDao(),
+                    DayDatabase.getInstance(this).getDailyDao()
+                )
             )
         )
 
@@ -79,7 +93,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
             googleMap.uiSettings.isZoomControlsEnabled = true
             googleMap.setOnMapClickListener { latLng ->
-                googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
+                if (intent.getStringExtra(SOURCE) != "fav")
+                    googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
                 Log.d(TAG, "Picked location: $latLng")
                 this.latLng = latLng
             }
@@ -94,20 +109,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.putString(LOCATION, "map")
                 println(
-                    "Map Activity map settings  ${sharedPreferences.getString(LATITUDE, "1")}  ${
-                        sharedPreferences.getString(
+                    "Map Activity map settings  ${sharedPreferences!!.getString(LATITUDE, "1")}  ${
+                        sharedPreferences!!.getString(
                             LONGITUDE, "1.0"
                         )
-                    } ${sharedPreferences.getString(LOCATION, "")}"
+                    } ${sharedPreferences!!.getString(LOCATION, "")}"
                 )
 
                 editor.apply()
                 println(
-                    "Map Activity map settings 2 ${sharedPreferences.getString(LATITUDE, "1")}  ${
-                        sharedPreferences.getString(
+                    "Map Activity map settings 2 ${sharedPreferences!!.getString(LATITUDE, "1")}  ${
+                        sharedPreferences!!.getString(
                             LONGITUDE, "1.0"
                         )
-                    } ${sharedPreferences.getString(LOCATION, "")}"
+                    } ${sharedPreferences!!.getString(LOCATION, "")}"
                 )
                 finish()
 
@@ -128,12 +143,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val sydney = LatLng(
-            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!
+            sharedPreferences!!.getString(LATITUDE, "1.0")?.toDouble()!!,
+            sharedPreferences!!.getString(LONGITUDE, "1.0")?.toDouble()!!
         )
         latLng = sydney
-//        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     private fun addPlaceToFav(lat: Double, lon: Double) {
@@ -155,8 +170,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             result.oneCall.current.weather[0].icon,
                             result.oneCall.current.temp
                         )
-                        favouriteViewModel.addPlaceToFav(favouritePlace)
-//                        favouriteViewModel.getAllFavPlaces()
+                        if (result.oneCall.lat != sharedPreferences?.getString(LATITUDE, "0.0")!!
+                                .toDouble() && result.oneCall.lon != sharedPreferences?.getString(
+                                LONGITUDE, "0.0"
+                            )!!.toDouble()
+                        ) {
+
+                            favouriteViewModel.addPlaceToFav(favouritePlace)
+                        }
                         finish()
 
                     }

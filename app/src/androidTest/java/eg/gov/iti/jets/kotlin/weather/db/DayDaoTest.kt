@@ -7,13 +7,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import eg.gov.iti.jets.kotlin.weather.MainRule
 import eg.gov.iti.jets.kotlin.weather.model.DayDBModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -34,6 +34,24 @@ class DayDaoTest {
     val rule = InstantTaskExecutorRule()
 
     lateinit var dayDatabase: DayDatabase
+    val day = DayDBModel(
+        1679556049,
+        22.4,
+        -40.3,
+        "egypt",
+        10000000,
+        20000000,
+        55.9,
+        12,
+        10,
+        9.0,
+        2,
+        22222222,
+        3.0,
+        "cloudy",
+        "desc",
+        "0xD"
+    )
 
     @Before
     fun setUp() {
@@ -48,82 +66,37 @@ class DayDaoTest {
 
     }
 
-
     @Test
     fun getDay_returnDayDetails() = runBlockingTest {
-        val day = DayDBModel(
-            1679556049,
-            22.4,
-            -40.3,
-            "egypt",
-            10000000,
-            20000000,
-            55.9,
-            12,
-            10,
-            9.0,
-            2,
-            22222222,
-            3.0,
-            "cloudy",
-            "desc",
-            "0xD"
-        )
-
-        delay(100)
         dayDatabase.getDayDao().addDay(day)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getDayDao().getDay.collectLatest { res ->
                 MatcherAssert.assertThat(
                     res.lat,
                     CoreMatchers.`is`(day.lat)
                 )
-            }
-        }
-
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
-            dayDatabase.getDayDao().getDay.collectLatest { res ->
                 MatcherAssert.assertThat(
                     res,
                     CoreMatchers.`is`(day)
                 )
+                cancel()
             }
         }
+
 
     }
 
     @Test
     fun addDay_Day_AddDone() = runBlockingTest {
 
-        val day = DayDBModel(
-            1679556049,
-            22.4,
-            -40.3,
-            "egypt",
-            10000000,
-            20000000,
-            55.9,
-            12,
-            10,
-            9.0,
-            2,
-            22222222,
-            3.0,
-            "cloudy",
-            "desc",
-            "0xD"
-        )
-        delay(100)
         dayDatabase.getDayDao().addDay(day)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getDayDao().getDay.collectLatest { res ->
                 MatcherAssert.assertThat(
                     res.dt,
                     CoreMatchers.`is`(day.dt)
                 )
+                cancel()
             }
         }
 
@@ -131,45 +104,27 @@ class DayDaoTest {
 
     @Test
     fun deleteAllDays_DeleteDone() = runBlockingTest {
-
-        val day = DayDBModel(
-            1679556049,
-            22.4,
-            -40.3,
-            "cairo",
-            10000000,
-            20000000,
-            55.9,
-            12,
-            10,
-            9.0,
-            2,
-            22222222,
-            3.0,
-            "cloudy",
-            "desc",
-            "0xD"
-        )
-        delay(100)
         dayDatabase.getDayDao().addDay(day)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getDayDao().getDay.collectLatest { res ->
                 MatcherAssert.assertThat(
                     res,
                     CoreMatchers.`is`(day)
                 )
+                cancel()
             }
         }
 
         dayDatabase.getDayDao().deleteAll()
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        launch {
             dayDatabase.getDayDao().getDay.collectLatest { res ->
-                MatcherAssert.assertThat(
-                    res,
-                    CoreMatchers.`is`(null)
-                )
+//               assertThat(
+//                    res,
+//                    CoreMatchers.`is`(null)
+//                )
+                assertNull(res)
+
+                cancel()
             }
         }
 

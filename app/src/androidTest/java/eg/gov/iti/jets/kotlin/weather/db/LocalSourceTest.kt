@@ -7,10 +7,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import eg.gov.iti.jets.kotlin.weather.MainRule
 import eg.gov.iti.jets.kotlin.weather.model.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -40,8 +39,7 @@ class LocalSourceTest {
     fun setUp() {
         dayDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(), DayDatabase::class.java
-        ).allowMainThreadQueries()
-            .build()
+        ).allowMainThreadQueries().build()
 
         localSource = LocalSource(
             dayDatabase.getFavDao(),
@@ -57,21 +55,57 @@ class LocalSourceTest {
         dayDatabase.close()
     }
 
+    private val day = DayDBModel(
+        1679556049,
+        22.4,
+        -40.3,
+        "egypt",
+        10000000,
+        20000000,
+        55.9,
+        12,
+        10,
+        9.0,
+        2,
+        22222222,
+        3.0,
+        "cloudy",
+        "desc",
+        "0xD"
+    )
+
+    private val alert =
+        AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
+    private val alert2 =
+        AlertsDB(2, "new alert2", 1679556049, 1679666049, "description", "tag", false)
+    private val alert3 =
+        AlertsDB(3, "new alert2", 1679556049, 1679666049, "description", "tag", false)
+    private val alert4 =
+        AlertsDB(4, "new alert2", 1679556049, 1679666049, "description", "tag", false)
+
+    private val saturday = DailyDBModel(11, 22.4, -40.3, "Cold", "description", "0xd")
+    private val sunday = DailyDBModel(22, 22.4, -40.3, "Cold", "description", "0xd")
+    private val monday = DailyDBModel(33, 22.4, -40.3, "Cold", "description", "0xd")
+
+    private val hour1 = HourlyDBModel(1, 33.9, "Sunny", "desc", "0x1")
+    private val hour2 = HourlyDBModel(2, 33.9, "Sunny", "desc", "0x1")
+    private val hour3 = HourlyDBModel(3, 33.9, "Sunny", "desc", "0x1")
+    private val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+
     @Test
     fun addAlert_Alert_AddDone() = runBlockingTest {
 
-        val alert = AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
         localSource.addAlert(alert)
-        delay(100)
         val result = localSource.getAllAlerts
 
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res[0].type,
-                    `is`(alert.type)
+                    res[0].type, `is`(alert.type)
                 )
+                cancel()
             }
         }
 
@@ -80,35 +114,21 @@ class LocalSourceTest {
     @Test
     fun getAllAlerts_Alerts() = runBlockingTest {
 
-        val alert = AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
-        val alert2 = AlertsDB(2, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-        val alert3 = AlertsDB(3, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-        val alert4 = AlertsDB(4, "new alert2", 1679556049, 1679666049, "description", "tag", false)
-
         localSource.addAlert(alert)
         localSource.addAlert(alert2)
         localSource.addAlert(alert3)
         localSource.addAlert(alert4)
-        delay(100)
         val result = localSource.getAllAlerts
 
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(4)
+                    res.size, `is`(4)
                 )
-            }
-        }
-
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
-            result.collectLatest { res ->
                 assertThat(
-                    res[2],
-                    `is`(alert3)
+                    res[2], `is`(alert3)
                 )
+                cancel()
             }
         }
 
@@ -117,31 +137,26 @@ class LocalSourceTest {
     @Test
     fun deleteAlert_Alert_DeleteDone() = runBlockingTest {
 
-        val alert = AlertsDB(1, "new alert", 1679556049, 1679666049, "description", "tag", false)
-        val alert2 = AlertsDB(2, "new alert2", 1679556049, 1679666049, "description", "tag", false)
 
         localSource.addAlert(alert)
         localSource.addAlert(alert2)
-        delay(100)
         val result = localSource.getAllAlerts
 
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(2)
+                    res.size, `is`(2)
                 )
+                cancel()
             }
         }
         localSource.deleteAlert(alert)
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(1)
+                    res.size, `is`(1)
                 )
+                cancel()
             }
         }
 
@@ -150,33 +165,29 @@ class LocalSourceTest {
 
     @Test
     fun getAllNextDays_returnNextDays() = runBlockingTest {
-        val saturday = DailyDBModel(1679556049, 22.4, -40.3, "Cold", "description", "0xd")
-        val sunday = DailyDBModel(1679666049, 22.4, -40.3, "Cold", "description", "0xd")
-        val monday = DailyDBModel(1679557749, 22.4, -40.3, "Cold", "description", "0xd")
-        delay(100)
+
         localSource.addComingDay(saturday)
         localSource.addComingDay(sunday)
         localSource.addComingDay(monday)
 
         val result = localSource.getNextDays
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(3)
+                    res.size, `is`(3)
                 )
+                cancel()
             }
 
         }
 
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
+        launch {
             dayDatabase.getDailyDao().getNextDays.collectLatest { res ->
                 assertThat(
-                    res[2],
-                    `is`(monday)
+                    res[2], `is`(monday)
                 )
+                cancel()
+
             }
         }
 
@@ -185,22 +196,19 @@ class LocalSourceTest {
     @Test
     fun addNextDays_Days_AddDone() = runBlockingTest {
 
-        val saturday = DailyDBModel(1679556049, 22.4, -40.3, "Cold", "description", "0xd")
-        val sunday = DailyDBModel(1679666049, 22.4, -40.3, "Cold", "description", "0xd")
 
-        delay(100)
         localSource.addComingDay(saturday)
         localSource.addComingDay(sunday)
 
         val result = localSource.getNextDays
 
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res[0].dt,
-                    `is`(saturday.dt)
+                    res[0].dt, `is`(saturday.dt)
                 )
+                cancel()
+
             }
         }
 
@@ -209,30 +217,27 @@ class LocalSourceTest {
     @Test
     fun deleteAllDays_DeleteDone() = runBlockingTest {
 
-        val saturday = DailyDBModel(1679556049, 22.4, -40.3, "Cold", "description", "0xd")
-        val sunday = DailyDBModel(1679666049, 22.4, -40.3, "Cold", "description", "0xd")
-        delay(100)
         localSource.addComingDay(saturday)
         localSource.addComingDay(sunday)
 
         val result = localSource.getNextDays
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             result.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(2)
+                    res.size, `is`(2)
                 )
+                cancel()
+
             }
         }
         localSource.deleteAllComingDays()
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        launch {
             localSource.getNextDays.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(0)
+                    res.size, `is`(0)
                 )
+                cancel()
+
             }
         }
 
@@ -241,79 +246,33 @@ class LocalSourceTest {
 
     @Test
     fun getDay_returnDayDetails() = runBlockingTest {
-        val day = DayDBModel(
-            1679556049,
-            22.4,
-            -40.3,
-            "egypt",
-            10000000,
-            20000000,
-            55.9,
-            12,
-            10,
-            9.0,
-            2,
-            22222222,
-            3.0,
-            "cloudy",
-            "desc",
-            "0xD"
-        )
 
-        delay(100)
         localSource.addDay(day)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getDay.collectLatest { res ->
                 assertThat(
-                    res.lat,
-                    `is`(day.lat)
+                    res.lat, `is`(day.lat)
                 )
+                assertThat(
+                    res, `is`(day)
+                )
+                cancel()
             }
         }
 
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
-            localSource.getDay.collectLatest { res ->
-                assertThat(
-                    res,
-                    `is`(day)
-                )
-            }
-        }
 
     }
 
     @Test
     fun addDay_Day_AddDone() = runBlockingTest {
 
-        val day = DayDBModel(
-            1679556049,
-            22.4,
-            -40.3,
-            "egypt",
-            10000000,
-            20000000,
-            55.9,
-            12,
-            10,
-            9.0,
-            2,
-            22222222,
-            3.0,
-            "cloudy",
-            "desc",
-            "0xD"
-        )
-        delay(100)
         localSource.addDay(day)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getDay.collectLatest { res ->
                 assertThat(
-                    res.dt,
-                    `is`(day.dt)
+                    res.dt, `is`(day.dt)
                 )
+                cancel()
             }
         }
 
@@ -322,44 +281,21 @@ class LocalSourceTest {
     @Test
     fun deleteDay_DeleteDone() = runBlockingTest {
 
-        val day = DayDBModel(
-            1679556049,
-            22.4,
-            -40.3,
-            "cairo",
-            10000000,
-            20000000,
-            55.9,
-            12,
-            10,
-            9.0,
-            2,
-            22222222,
-            3.0,
-            "cloudy",
-            "desc",
-            "0xD"
-        )
-        delay(100)
         localSource.addDay(day)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getDay.collectLatest { res ->
                 assertThat(
-                    res,
-                    `is`(day)
+                    res, `is`(day)
                 )
+                cancel()
             }
         }
 
         localSource.deleteAll()
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        launch {
             localSource.getDay.collectLatest { res ->
-                assertThat(
-                    res,
-                    `is`(null)
-                )
+                assertNull(res)
+                cancel()
             }
         }
 
@@ -368,31 +304,20 @@ class LocalSourceTest {
 
     @Test
     fun getAllFavPlaces_returnFavPlaces() = runBlockingTest {
-        val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
 
-        delay(100)
+
         localSource.addPlaceToFav(place1)
         localSource.addPlaceToFav(place2)
         localSource.addPlaceToFav(place3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getAllFavPlaces.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(3)
+                    res.size, `is`(3)
                 )
-            }
-        }
-
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
-            localSource.getAllFavPlaces.collectLatest { res ->
                 assertThat(
-                    res[2],
-                    `is`(place3)
+                    res[2], `is`(place3)
                 )
+                cancel()
             }
         }
 
@@ -401,21 +326,15 @@ class LocalSourceTest {
     @Test
     fun addPlaceToFav_Place_AddDone() = runBlockingTest {
 
-        val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-
-        delay(100)
         localSource.addPlaceToFav(place1)
         localSource.addPlaceToFav(place2)
         localSource.addPlaceToFav(place3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getAllFavPlaces.collectLatest { res ->
                 assertThat(
-                    res[0].dt,
-                    `is`(place1.dt)
+                    res[0].dt, `is`(place1.dt)
                 )
+                cancel()
             }
         }
 
@@ -424,33 +343,27 @@ class LocalSourceTest {
     @Test
     fun deletePlaceFromFav_Place_DeleteDone() = runBlockingTest {
 
-        val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
 
-        delay(100)
         localSource.addPlaceToFav(place1)
         localSource.addPlaceToFav(place2)
         localSource.addPlaceToFav(place3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getAllFavPlaces.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(3)
+                    res.size, `is`(3)
                 )
+                cancel()
             }
         }
 
         localSource.deletePlaceFromFav(place1)
         localSource.deletePlaceFromFav(place3)
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        launch {
             localSource.getAllFavPlaces.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(1)
+                    res.size, `is`(1)
                 )
+                cancel()
             }
         }
 
@@ -458,31 +371,25 @@ class LocalSourceTest {
 
     @Test
     fun getAllDayHours_returnSavedHours() = runBlockingTest {
-        val hour1 = HourlyDBModel(1679556049, 33.9, "Sunny", "desc", "0x1")
-        val hour2 = HourlyDBModel(1677777777, 33.9, "Sunny", "desc", "0x1")
-        val hour3 = HourlyDBModel(1679999999, 33.9, "Sunny", "desc", "0x1")
 
-        delay(100)
         localSource.addDayHours(hour1)
         localSource.addDayHours(hour2)
         localSource.addDayHours(hour3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getDayHours.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(3)
+                    res.size, `is`(3)
                 )
+                cancel()
             }
         }
 
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
+        launch {
             localSource.getDayHours.collectLatest { res ->
                 assertThat(
-                    res[0],
-                    `is`(hour1)
+                    res[0], `is`(hour1)
                 )
+                cancel()
             }
         }
 
@@ -491,21 +398,16 @@ class LocalSourceTest {
     @Test
     fun addDayHours_Hours_AddDone() = runBlockingTest {
 
-        val hour1 = HourlyDBModel(1679556049, 33.9, "cold", "desc", "0x1")
-        val hour2 = HourlyDBModel(1677777777, 33.9, "Sunny", "desc", "0x1")
-        val hour3 = HourlyDBModel(1679999999, 33.9, "Sunny", "desc", "0x1")
 
-        delay(100)
         localSource.addDayHours(hour1)
         localSource.addDayHours(hour2)
         localSource.addDayHours(hour3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getDayHours.collectLatest { res ->
                 assertThat(
-                    res[0].main,
-                    `is`(hour1.main)
+                    res[0].main, `is`(hour1.main)
                 )
+                cancel()
             }
         }
 
@@ -514,32 +416,26 @@ class LocalSourceTest {
     @Test
     fun deleteAllHours_DeleteDone() = runBlockingTest {
 
-        val hour1 = HourlyDBModel(1679556049, 33.9, "Sunny", "desc", "0x1")
-        val hour2 = HourlyDBModel(1677777777, 33.9, "Sunny", "desc", "0x1")
-        val hour3 = HourlyDBModel(1679999999, 33.9, "Sunny", "desc", "0x1")
 
-        delay(100)
         localSource.addDayHours(hour1)
         localSource.addDayHours(hour2)
         localSource.addDayHours(hour3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             localSource.getDayHours.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(3)
+                    res.size, `is`(3)
                 )
+                cancel()
             }
         }
 
-        localSource.deleteAllComingDays()
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        localSource.deleteAllHours()
+        launch {
             localSource.getDayHours.collectLatest { res ->
                 assertThat(
-                    res.size,
-                    `is`(0)
+                    res.size, `is`(0)
                 )
+                cancel()
             }
         }
 

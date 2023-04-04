@@ -21,6 +21,7 @@ import timber.log.Timber
 lateinit var mediaPlayer: MediaPlayer
 
 class AlarmReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
         val timeInMillis = intent.getLongExtra(Constants.EXTRA_EXACT_ALARM_TIME, 0L)
         var message = intent.getStringExtra(Constants.MESSAGE)
@@ -28,13 +29,13 @@ class AlarmReceiver : BroadcastReceiver() {
         var title = intent.getStringExtra(Constants.TITLE)
         mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
 
-        if (sharedPreferences.getString(NOTIFICATION, null) == "enable") {
+        if (sharedPreferences!!.getString(NOTIFICATION, null) == "enable") {
             when (intent.action) {
                 ALARM_ACTION -> {
                     println("ALARM_ACTION")
                     println(
                         "ALARM_ACTION  ${
-                            sharedPreferences.getBoolean(
+                            sharedPreferences!!.getBoolean(
                                 "isNotFirstTime",
                                 false
                             )
@@ -110,10 +111,10 @@ class AlarmReceiver : BroadcastReceiver() {
         if (type == "notification")
             createNotificationChannel(context, title, message)
         else {
-            if (!sharedPreferences.getBoolean("isNotFirstTime", false)) {
+            if (!sharedPreferences!!.getBoolean("isNotFirstTime", false)) {
                 editor.putBoolean("isNotFirstTime", true)
                 editor.commit()
-
+                println("kkkkkkkkkkkkkkkkkk")
                 mediaPlayer.start()
 
             } else {

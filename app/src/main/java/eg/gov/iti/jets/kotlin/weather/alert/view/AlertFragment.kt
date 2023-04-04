@@ -134,8 +134,8 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
         binding.addAlertFloatingActionButton.setOnClickListener {
             homeViewModel.getForecastData(
-                sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-                sharedPreferences.getString(Constants.LONGITUDE, "1.0")?.toDouble()!!
+                sharedPreferences!!.getString(LATITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences!!.getString(Constants.LONGITUDE, "1.0")?.toDouble()!!
             )
             var alerts: List<Alert> = mutableListOf()
             lifecycleScope.launch {
@@ -239,7 +239,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
                 }
             dialog.findViewById<Button>(R.id.saveAlertMaterialButton).setOnClickListener {
-                if (sharedPreferences.getString(NOTIFICATION, "disable") == "disable") {
+                if (sharedPreferences!!.getString(NOTIFICATION, "disable") == "disable") {
                     Snackbar.make(
                         requireActivity().findViewById(android.R.id.content),
                         "Enable notification from settings to receive Notification.",

@@ -28,7 +28,7 @@ class DaysAdapter(val context: Context) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        val units = when (sharedPreferences.getString(UNIT, "metric")) {
+        val units = when (sharedPreferences!!.getString(UNIT, "metric")) {
             "metric" -> Triple(
                 "℃",
                 context?.getString(R.string.m_sec),

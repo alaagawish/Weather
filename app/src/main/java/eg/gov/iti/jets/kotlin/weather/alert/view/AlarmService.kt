@@ -8,6 +8,7 @@ import android.os.Build
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.RandomUtil
 import eg.gov.iti.jets.kotlin.weather.alert.receiver.AlarmReceiver
+import eg.gov.iti.jets.kotlin.weather.editor
 
 class AlarmService(private val context: Context) {
     private val alarmManager: AlarmManager? =
@@ -43,6 +44,7 @@ class AlarmService(private val context: Context) {
                     action = if (type == "notification") {
                         putExtra(Constants.TYPE, "notification")
                         Constants.ACTION_SET_REPETITIVE_EXACT
+
                     } else {
                         putExtra(Constants.TYPE, "alarm")
                         Constants.ACTION_SET_REPETITIVE_EXACT
@@ -50,6 +52,8 @@ class AlarmService(private val context: Context) {
                     putExtra(Constants.EXTRA_EXACT_ALARM_TIME, timeInMillis)
                     putExtra(Constants.MESSAGE, message)
                     putExtra(Constants.TITLE, title)
+                    editor.putBoolean("isNotFirstTime",false)
+                    editor.commit()
                 }
             )
         )

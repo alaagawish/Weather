@@ -1,6 +1,9 @@
 package eg.gov.iti.jets.kotlin.weather.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
@@ -16,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repositoryInterface: RepositoryInterface) : ViewModel() {
@@ -26,25 +30,28 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     val comingDaysLocalStateFlow = MutableStateFlow<APIState>(APIState.Waiting)
 
     init {
-        getForecastData(
-            sharedPreferences.getString(LATITUDE, "0.0")!!.toDouble(),
-            sharedPreferences.getString(LONGITUDE, "0.0")!!.toDouble(),
-            sharedPreferences.getString(UNIT, "standard")!!,
-            sharedPreferences.getString(LANGUAGE, "en")!!
-        )
-        if (sharedPreferences.getBoolean("isSavedLocal", false)) {
-            getNextDaysStored()
-            getDayStored()
-            getHoursStored()
+
+        if (sharedPreferences != null) {
+            getForecastData(
+                sharedPreferences!!.getString(LATITUDE, "0.0")!!.toDouble(),
+                sharedPreferences!!.getString(LONGITUDE, "0.0")!!.toDouble(),
+                sharedPreferences!!.getString(UNIT, "standard")!!,
+                sharedPreferences!!.getString(LANGUAGE, "en")!!
+            )
         }
+//        if (sharedPreferences.getBoolean("isSavedLocal", false)) {
+//            getNextDaysStored()
+//            getDayStored()
+//            getHoursStored()
+//        }
 
     }
 
     fun getForecastData(
-        lat: Double = sharedPreferences.getString(LATITUDE, "0.0")!!.toDouble(),
-        lon: Double = sharedPreferences.getString(LONGITUDE, "0.0")!!.toDouble(),
-        unit: String = sharedPreferences.getString(UNIT, "standard")!!,
-        lang: String = sharedPreferences.getString(LANGUAGE, "en")!!
+        lat: Double = sharedPreferences!!.getString(LATITUDE, "0.0")!!.toDouble(),
+        lon: Double = sharedPreferences!!.getString(LONGITUDE, "0.0")!!.toDouble(),
+        unit: String = sharedPreferences!!.getString(UNIT, "standard")!!,
+        lang: String = sharedPreferences!!.getString(LANGUAGE, "en")!!
     ) {
         println("gggggggggggggggggggggggg $lat $lon")
         viewModelScope.launch {
@@ -53,35 +60,38 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
                 .collect { data -> forecastStateFlow.value = APIState.Success(data) }
 
         }
-
-        with(sharedPreferences.edit()) {
-            putBoolean("isSavedLocal", true)
-            apply()
-        }
+        if (sharedPreferences != null)
+            with(sharedPreferences!!.edit()) {
+                putBoolean("isSavedLocal", true)
+                apply()
+            }
 
     }
 
-    private fun resetLocalSource() {
-        viewModelScope.launch(Dispatchers.IO) {
+    fun resetLocalSource() {
+        viewModelScope.launch{
             repositoryInterface.deleteAllComingDays()
             repositoryInterface.deleteAll()
             repositoryInterface.deleteAllHours()
         }
     }
 
-    private fun getDayStored() {
+    fun getDayStored() {
         println("getDayStored")
-
         viewModelScope.launch {
             repositoryInterface.getDay
                 .catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
                 .collect { data ->
-                    if (data != null) dayLocalStateFlow.value = APIState.SuccessRoomDay(data)
+                    if (data != null) {
+                        dayLocalStateFlow.value = APIState.SuccessRoomDay(data)
+                    }
                 }
+
+
         }
     }
 
-    private fun getNextDaysStored() {
+    fun getNextDaysStored() {
         println("getNextDaysStored")
 
         viewModelScope.launch {
@@ -94,7 +104,7 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         }
     }
 
-    private fun getHoursStored() {
+    fun getHoursStored() {
         println("getHoursStored")
         viewModelScope.launch {
             repositoryInterface.getDayHours.catch { e ->

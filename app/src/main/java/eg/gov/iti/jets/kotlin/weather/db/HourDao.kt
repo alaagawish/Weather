@@ -14,7 +14,7 @@ interface HourDao {
     @get:Query("SELECT * FROM hour")
     val getDayHours: Flow<List<HourlyDBModel>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addDayHours(hourlyDBModel: HourlyDBModel)
 
     @Query("DELETE FROM hour")

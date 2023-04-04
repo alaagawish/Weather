@@ -24,6 +24,7 @@ class FakeLocalSource(
 
 
     override suspend fun addDayHours(hour: HourlyDBModel) {
+
         hours.add(hour)
     }
 
@@ -35,6 +36,7 @@ class FakeLocalSource(
         get() = flowOf(hours)
 
     override suspend fun addComingDay(day: DailyDBModel) {
+
         days.add(day)
     }
 
@@ -66,5 +68,11 @@ class FakeLocalSource(
         alerts.remove(alert)
     }
 
-
+    fun clear() {
+        alerts.clear()
+        favs.clear()
+        day.clear()
+        days.clear()
+        hours.clear()
+    }
 }

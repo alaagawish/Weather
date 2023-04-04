@@ -8,13 +8,16 @@ import androidx.test.filters.SmallTest
 import eg.gov.iti.jets.kotlin.weather.MainRule
 import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
 import org.junit.After
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.*
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.*
+
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,73 +37,68 @@ class FavDaoTest {
     val rule = InstantTaskExecutorRule()
 
 
+    private val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+
+
     lateinit var dayDatabase: DayDatabase
+    lateinit var favDao: FavDao
 
     @Before
     fun setUp() {
         dayDatabase = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(), DayDatabase::class.java
         ).build()
+        favDao = dayDatabase.getFavDao()
     }
 
     @After
     fun tearDown() {
         dayDatabase.close()
-
+//        testCoroutineScope.cleanupTestCoroutines()
     }
-
 
     @Test
     fun getAllFavPlaces_returnFavPlaces() = runBlockingTest {
-        val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-
-        delay(100)
-        dayDatabase.getFavDao().addFavPlace(place1)
-        dayDatabase.getFavDao().addFavPlace(place2)
-        dayDatabase.getFavDao().addFavPlace(place3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
-            dayDatabase.getFavDao().getAllFavPlaces.collectLatest { res ->
-                MatcherAssert.assertThat(
+        favDao.addFavPlace(place1)
+        favDao.addFavPlace(place2)
+        favDao.addFavPlace(place3)
+        launch {
+            favDao.getAllFavPlaces.collectLatest { res ->
+                assertThat(
                     res.size,
-                    CoreMatchers.`is`(3)
+                    `is`(3)
                 )
+                assertThat(
+                    res[2],
+                    `is`(place3)
+                )
+                cancel()
             }
         }
 
-        val checkJob = coroutineContext.job
-        if (checkJob.isCompleted) {
-            dayDatabase.getFavDao().getAllFavPlaces.collectLatest { res ->
-                MatcherAssert.assertThat(
-                    res[2],
-                    CoreMatchers.`is`(place3)
-                )
-            }
-        }
 
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun addPlaceToFav_Place_AddDone() = runBlockingTest {
+    fun addPlaceToFav_Place_AddDone() = runTest {
 
-        val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-
-        delay(100)
         dayDatabase.getFavDao().addFavPlace(place1)
         dayDatabase.getFavDao().addFavPlace(place2)
         dayDatabase.getFavDao().addFavPlace(place3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
-            dayDatabase.getFavDao().getAllFavPlaces.collectLatest { res ->
-                MatcherAssert.assertThat(
-                    res[0].dt,
-                    CoreMatchers.`is`(place1.dt)
-                )
-            }
+        launch {
+            dayDatabase.getFavDao().getAllFavPlaces
+                .collectLatest { res ->
+                    assertThat(
+                        res[0].dt,
+                        `is`(place1.dt)
+                    )
+                    cancel()
+
+                }
+
         }
 
     }
@@ -108,34 +106,31 @@ class FavDaoTest {
     @Test
     fun deletePlaceFromFav_Place_DeleteDone() = runBlockingTest {
 
-        val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-        val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-
-        delay(100)
         dayDatabase.getFavDao().addFavPlace(place1)
         dayDatabase.getFavDao().addFavPlace(place2)
         dayDatabase.getFavDao().addFavPlace(place3)
-        val job = coroutineContext.job
-        if (job.isCompleted) {
+        launch {
             dayDatabase.getFavDao().getAllFavPlaces.collectLatest { res ->
-                MatcherAssert.assertThat(
+                assertThat(
                     res.size,
-                    CoreMatchers.`is`(3)
+                    `is`(3)
                 )
+                cancel()
             }
         }
 
+
         dayDatabase.getFavDao().deletePlaceFromFav(place1)
         dayDatabase.getFavDao().deletePlaceFromFav(place3)
-        val deleteJob = coroutineContext.job
-        if (deleteJob.isCompleted) {
+        launch {
             dayDatabase.getFavDao().getAllFavPlaces.collectLatest { res ->
-                MatcherAssert.assertThat(
+                assertThat(
                     res.size,
-                    CoreMatchers.`is`(1)
+                    `is`(1)
                 )
+                cancel()
             }
+
         }
 
     }

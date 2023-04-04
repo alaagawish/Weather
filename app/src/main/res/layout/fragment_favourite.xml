@@ -548,7 +548,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="28dp"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="100dp"
         android:backgroundTint="@color/blue"
         android:contentDescription="@string/add_place"
         android:elevation="16dp"
