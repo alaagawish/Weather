@@ -84,7 +84,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
             ViewModelProvider(this, favouriteViewModelFactory)[FavouriteViewModel::class.java]
 
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-        placesAdapter = PlacesAdapter(this)
+        placesAdapter = PlacesAdapter(this,requireContext())
 
         binding.addCityFloatingActionButton.setOnClickListener {
             val intent = Intent(requireContext(), MapsActivity::class.java)
@@ -153,7 +153,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
                     is APIState.Waiting -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.homeConstraintLayout.visibility = View.GONE
-                        Log.d(TAG, "onCreateView: waiting")
+                        Log.d(TAG, "Fav fragment onCreateView: waiting")
 
                     }
                     is APIState.Success -> {

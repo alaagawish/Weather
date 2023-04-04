@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="15dp">
@@ -19,6 +18,7 @@
             android:layout_marginTop="20dp"
             android:backgroundTint="@color/blue"
             android:entries="@array/alert_array"
+            android:fontFamily="@font/prata_regular"
             android:padding="8dp"
             android:prompt="@string/alert_type"
             app:layout_constraintBottom_toTopOf="@+id/from"
@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/prata_regular"
             android:padding="8dp"
             android:text="@string/from"
             android:textAlignment="center"
@@ -46,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/prata_regular"
             android:padding="8dp"
             android:text="@string/to"
             android:textAlignment="center"
@@ -76,6 +78,7 @@
                 android:paddingVertical="8dp"
                 android:text="@string/start_date"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="20sp" />
 
             <TextView
@@ -86,7 +89,7 @@
                 android:paddingVertical="8dp"
                 android:text="@string/start_date"
                 android:textAlignment="center"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
 
@@ -113,6 +116,7 @@
                 android:paddingVertical="8dp"
                 android:text="@string/start_date"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="20sp" />
 
             <TextView
@@ -123,7 +127,7 @@
                 android:paddingVertical="8dp"
                 android:text="@string/start_date"
                 android:textAlignment="center"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
 
@@ -145,6 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/notification"
                 android:textColor="@color/blue"
                 android:textSize="20sp" />
@@ -155,35 +160,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:checked="false"
+                android:fontFamily="@font/prata_regular"
                 android:text="@string/alarm"
                 android:textColor="@color/blue"
                 android:textSize="20sp" />
 
         </RadioGroup>
-
-<!--        <TextView-->
-<!--            android:id="@+id/repeated"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            android:layout_marginVertical="20dp"-->
-<!--            android:text="@string/repeat_day"-->
-<!--            android:textColor="@color/blue"-->
-<!--            android:textSize="20sp"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/saveAlertMaterialButton"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/alertMethodRadioGroup"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/alertMethodRadioGroup" />-->
-<!---->
-<!--        <Switch-->
-<!--            android:id="@+id/repeatedSwitch"-->
-<!--            android:layout_width="50dp"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:checked="false"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/saveAlertMaterialButton"-->
-<!--            app:layout_constraintStart_toEndOf="@id/repeated"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/alertMethodRadioGroup"-->
-<!--            tools:ignore="UseSwitchCompatOrMaterialXml" />-->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveAlertMaterialButton"
@@ -191,6 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/dialog_bg"
+            android:fontFamily="@font/prata_regular"
             android:padding="8dp"
             android:text="@string/save"
             android:textAlignment="center"

@@ -259,42 +259,10 @@ class SettingsFragment : Fragment() {
 
                     editor.putString(
                         STR_LOCATION,
-                        "settings geocoder error"
-//                        LocationUtils.getAddress(
-//                            requireContext(),
-//                            activity?.applicationContext!!,
-//                            lastLocation.latitude,
-//                            lastLocation.longitude
-//                        )
+                        ""
                     )
                     editor.apply()
                 }
-//                editor.putString(LONGITUDE, longitude.toString())
-//                editor.putString(LATITUDE, latitude.toString())
-//                editor.apply()
-//                Log.d(TAG, " Settings onLocationResult: ${lastLocation.latitude}")
-//                val myLocation = Geocoder(applicationContext, Locale.getDefault())
-//                val addressList =
-//                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)
-//
-//                if (addressList != null && addressList.isNotEmpty()) {
-//                    val address = addressList[0]
-//                    val sb = StringBuilder()
-//                    for (i in 0 until address.maxAddressLineIndex) {
-//                        sb.append(address.getAddressLine(i)).append("\n")
-//                    }
-//                    sb.append(address.countryName).append(",")
-//                    if (address.premises != null)
-//                        sb.append(address.premises).append(", ")
-//                    sb.append(address.adminArea).append(", ")
-//                    sb.append(address.locality).append(", ")
-//                    sb.append(address.subAdminArea)
-//  //                  sb.append(address.postalCode)
-//
-//                    editor.putString(STRLOCATION, sb.toString())
-//
-//                    editor.apply()
-//                }
             }
         }
     }

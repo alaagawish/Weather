@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
@@ -57,7 +58,7 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         viewModelScope.launch {
             repositoryInterface.getOneCallRemote(lat, lon, unit, lang)
                 .catch { e -> forecastStateFlow.value = APIState.Failure(e) }
-                .collect { data -> forecastStateFlow.value = APIState.Success(data) }
+                .collectLatest { data -> forecastStateFlow.value = APIState.Success(data) }
 
         }
         if (sharedPreferences != null)

@@ -37,7 +37,7 @@ class AlertsAdapter(var listener: AlertOnClickListener) :
             "${getDateFormat("hh:mm aa", item.start)}\n${getDateFormat("mm-dd", item.start)}"
         holder.binding.endDateAlertTextView.text =
             "${getDateFormat("hh:mm aa", item.end)}\n${getDateFormat("mm-dd", item.end)}"
-
+        holder.binding.typeOfAlert.text = item.type.toUpperCase()
     }
 
     private fun getDateFormat(pattern: String, date: Long) =

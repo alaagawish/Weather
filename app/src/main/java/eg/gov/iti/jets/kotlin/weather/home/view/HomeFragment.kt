@@ -1,10 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.home.view
 
-import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,13 +27,12 @@ import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.*
 import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
-import eg.gov.iti.jets.kotlin.weather.utils.Constants
-import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
+import eg.gov.iti.jets.kotlin.weather.utils.ConvertTime
+import eg.gov.iti.jets.kotlin.weather.utils.InternetCheck
 import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
 
@@ -69,7 +65,14 @@ class HomeFragment : Fragment() {
 
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(DayDatabase.getInstance(requireContext()).getFavDao(),DayDatabase.getInstance(requireContext()).getDayDao(),DayDatabase.getInstance(requireContext()).getAlertsDao(),DayDatabase.getInstance(requireContext()).getHourDao(),DayDatabase.getInstance(requireContext()).getDailyDao())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         units = when (sharedPreferences!!.getString(UNIT, "metric")) {
@@ -89,25 +92,7 @@ class HomeFragment : Fragment() {
         binding.daysDetailsRecyclerView.adapter = daysAdapter
         binding.hoursDetailsRecyclerView.adapter = hoursAdapter
 
-//        lifecycleScope.launch {
-        if (isOnline(requireContext())) {
-            println(
-                "remote source  mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${
-                    sharedPreferences!!.getString(
-                        LATITUDE,
-                        "1.0"
-                    )
-                }"
-            )
-            println(
-                "remote source mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ${
-                    sharedPreferences!!.getString(
-                        LONGITUDE,
-                        "1.0"
-                    )
-                }"
-            )
-
+        if (InternetCheck.isOnline(requireContext())) {
             homeViewModel.getForecastData(
                 sharedPreferences!!.getString(LATITUDE, "1.0")?.toDouble()!!,
                 sharedPreferences!!.getString(LONGITUDE, "1.0")?.toDouble()!!,
@@ -117,13 +102,7 @@ class HomeFragment : Fragment() {
                 )!!
             )
             lifecycleScope.launch {
-                println(
-                    "HOME FRAGMENT   ${sharedPreferences!!.getString(LATITUDE, "1")}  ${
-                        sharedPreferences!!.getString(
-                            LONGITUDE, "1.0"
-                        )
-                    } ${sharedPreferences!!.getString(Constants.LOCATION, "")}"
-                )
+
                 homeViewModel.forecastStateFlow.collectLatest { result ->
                     when (result) {
                         is APIState.Waiting -> {
@@ -138,103 +117,129 @@ class HomeFragment : Fragment() {
                                 "onCreateView: done ${result.oneCall.current.weather[0]}"
                             )
 
-                            val day = DayDBModel(
-                                result.oneCall.current.dt,
-                                result.oneCall.lat,
-                                result.oneCall.lon,
-                                result.oneCall.timezone,
-                                result.oneCall.current.sunrise,
-                                result.oneCall.current.sunset,
-                                result.oneCall.current.temp,
-                                result.oneCall.current.pressure,
-                                result.oneCall.current.humidity,
-                                result.oneCall.current.uvi,
-                                result.oneCall.current.clouds,
-                                result.oneCall.current.visibility,
-                                result.oneCall.current.wind_speed,
-                                result.oneCall.current.weather[0].main,
-                                result.oneCall.current.weather[0].description,
-                                result.oneCall.current.weather[0].icon
-                            )
-                            val days = mutableListOf<DailyDBModel>()
-                            for (i in result.oneCall.daily) {
-                                days.add(
-                                    DailyDBModel(
-                                        i.dt,
-                                        i.temp.min,
-                                        i.temp.max,
-                                        i.weather[0].main,
-                                        i.weather[0].description,
-                                        i.weather[0].icon
-                                    )
-                                )
-                            }
-                            val hours = mutableListOf<HourlyDBModel>()
-                            for (i in result.oneCall.hourly) {
-                                hours.add(
-                                    HourlyDBModel(
-                                        i.dt,
-                                        i.temp,
-                                        i.weather[0].main,
-                                        i.weather[0].description,
-                                        i.weather[0].icon
-                                    )
-                                )
-                            }
-                            homeViewModel.addDay(day, hours, days)
-                            binding.progressBar.visibility = View.GONE
-                            binding.homeConstraintLayout.visibility = View.VISIBLE
-                            binding.connectionAnimation.visibility = View.GONE
-                            binding.homeConstraintLayout.visibility = View.VISIBLE
+//
+                            if (LocationUtils.getAddress(
+                                    requireContext(),
+                                    result.oneCall.lat,
+                                    result.oneCall.lon
+                                ) == ""
+                            ) {
+                                binding.progressBar.visibility = View.VISIBLE
 
+                                val mainActivity = activity as MainActivity
+                                mainActivity.navController.navigate(R.id.nav_home)
 
-                            editor.putString(STR_LOCATION,LocationUtils.getAddress(requireContext(),result.oneCall.lat,result.oneCall.lon))
-                            editor.commit()
-                            binding.cityNameTextView.text =
-                                sharedPreferences!!.getString(
+                            } else {
+                                editor.putString(
                                     STR_LOCATION,
-                                    result.oneCall.timezone
+                                    LocationUtils.getAddress(
+                                        requireContext(),
+                                        result.oneCall.lat,
+                                        result.oneCall.lon
+                                    )
                                 )
-                            binding.temperatureTextView.text =
-                                "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
-                            binding.descriptionTextView.text =
-                                result.oneCall.current.weather[0].description
-                            binding.highLowTemperatureTextView.text = "sunrise ${
-                                getDateFormat(
-                                    "HH:MM aa", result.oneCall.current.sunrise
-                                )
-                            }\nsunset${
-                                getDateFormat(
-                                    "HH:MM aa", result.oneCall.current.sunset
-                                )
-                            }"
-                            Picasso.get().load(
-                                "https://openweathermap.org/img/wn/${
+                                editor.commit()
+                                binding.progressBar.visibility = View.GONE
+                                binding.homeConstraintLayout.visibility = View.VISIBLE
+                                binding.connectionAnimation.visibility = View.GONE
+                                binding.homeConstraintLayout.visibility = View.VISIBLE
+
+                                binding.cityNameTextView.text =
+                                    sharedPreferences!!.getString(
+                                        STR_LOCATION,
+                                        result.oneCall.timezone
+                                    )
+                                binding.temperatureTextView.text =
+                                    "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
+                                binding.descriptionTextView.text =
+                                    result.oneCall.current.weather[0].description
+                                binding.highLowTemperatureTextView.text = "sunrise ${
+                                    ConvertTime.getDateFormat(
+                                        "HH:MM aa", result.oneCall.current.sunrise * 1000
+                                    )
+                                }\nsunset${
+                                    ConvertTime.getDateFormat(
+                                        "HH:MM aa", result.oneCall.current.sunset * 1000
+                                    )
+                                }"
+                                Picasso.get().load(
+                                    "https://openweathermap.org/img/wn/${
+                                        result.oneCall.current.weather[0].icon
+                                    }@2x.png"
+                                ).into(binding.dayIconImageView)
+                                binding.dateTextView.text =
+                                    ConvertTime.getDateFormat(
+                                        "dd-MM-yyyy",
+                                        result.oneCall.current.dt * 1000
+                                    )
+                                binding.timeTextView.text =
+                                    ConvertTime.getDateFormat(
+                                        "HH:MM aa",
+                                        result.oneCall.current.dt * 1000
+                                    )
+                                daysAdapter.submitList(result.oneCall.daily)
+
+                                hoursAdapter.submitList(result.oneCall.hourly)
+                                binding.cloudValueTextView.text =
+                                    "${result.oneCall.current.clouds}%"
+                                binding.windValueTextView.text =
+                                    "${result.oneCall.current.wind_speed}${units.second}"
+                                binding.pressureValueTextView.text =
+                                    "${result.oneCall.current.pressure}hpa"
+                                binding.humidityValueTextView.text =
+                                    "${result.oneCall.current.humidity}%"
+                                binding.visibilityValueTextView.text =
+                                    "${result.oneCall.current.visibility / 1000}${units.third}"
+
+                                val day = DayDBModel(
+                                    result.oneCall.current.dt,
+                                    result.oneCall.lat,
+                                    result.oneCall.lon,
+                                    LocationUtils.getAddress(
+                                        requireContext(),
+                                        result.oneCall.lat,
+                                        result.oneCall.lon
+                                    ),
+                                    result.oneCall.current.sunrise,
+                                    result.oneCall.current.sunset,
+                                    result.oneCall.current.temp,
+                                    result.oneCall.current.pressure,
+                                    result.oneCall.current.humidity,
+                                    result.oneCall.current.uvi,
+                                    result.oneCall.current.clouds,
+                                    result.oneCall.current.visibility,
+                                    result.oneCall.current.wind_speed,
+                                    result.oneCall.current.weather[0].main,
+                                    result.oneCall.current.weather[0].description,
                                     result.oneCall.current.weather[0].icon
-                                }@2x.png"
-                            ).into(binding.dayIconImageView)
-                            binding.dateTextView.text =
-                                getDateFormat(
-                                    "dd-MM-yyyy",
-                                    result.oneCall.current.dt
-                                ).toString()
-                            binding.timeTextView.text =
-                                getDateFormat("HH:MM aa", result.oneCall.current.dt).toString()
-                            daysAdapter.submitList(result.oneCall.daily)
-
-                            hoursAdapter.submitList(result.oneCall.hourly)
-                            binding.cloudValueTextView.text =
-                                "${result.oneCall.current.clouds}%"
-                            binding.windValueTextView.text =
-                                "${result.oneCall.current.wind_speed}${units.second}"
-                            binding.pressureValueTextView.text =
-                                "${result.oneCall.current.pressure}hpa"
-                            binding.humidityValueTextView.text =
-                                "${result.oneCall.current.humidity}%"
-                            binding.visibilityValueTextView.text =
-                                "${result.oneCall.current.visibility / 1000}${units.third}"
-
-
+                                )
+                                val days = mutableListOf<DailyDBModel>()
+                                for (i in result.oneCall.daily) {
+                                    days.add(
+                                        DailyDBModel(
+                                            i.dt,
+                                            i.temp.min,
+                                            i.temp.max,
+                                            i.weather[0].main,
+                                            i.weather[0].description,
+                                            i.weather[0].icon
+                                        )
+                                    )
+                                }
+                                val hours = mutableListOf<HourlyDBModel>()
+                                for (i in result.oneCall.hourly) {
+                                    hours.add(
+                                        HourlyDBModel(
+                                            i.dt,
+                                            i.temp,
+                                            i.weather[0].main,
+                                            i.weather[0].description,
+                                            i.weather[0].icon
+                                        )
+                                    )
+                                }
+                                homeViewModel.addDay(day, hours, days)
+                            }
                         }
                         else -> {
                             binding.progressBar.visibility = View.GONE
@@ -253,6 +258,11 @@ class HomeFragment : Fragment() {
         } else if (sharedPreferences!!.getBoolean("isSavedLocal", false)) {
             println("local source")
             lifecycleScope.launch {
+
+                homeViewModel.getNextDaysStored()
+                homeViewModel.getDayStored()
+                homeViewModel.getHoursStored()
+
                 homeViewModel.comingDaysLocalStateFlow.collectLatest { result ->
                     when (result) {
                         is APIState.SuccessRoomDaily -> {
@@ -302,18 +312,20 @@ class HomeFragment : Fragment() {
 
                                                     binding.cityNameTextView.text =
                                                         result.day.timezone
+
                                                     binding.temperatureTextView.text =
                                                         "${ceil(result.day.temp).toInt()}${units.first}"
                                                     binding.descriptionTextView.text =
                                                         result.day.description
                                                     binding.highLowTemperatureTextView.text =
                                                         "sunrise ${
-                                                            getDateFormat(
-                                                                "HH:MM aa", result.day.sunrise
+                                                            ConvertTime.getDateFormat(
+                                                                "HH:MM aa",
+                                                                result.day.sunrise * 1000
                                                             )
                                                         }\nsunset ${
-                                                            getDateFormat(
-                                                                "HH:MM aa", result.day.sunset
+                                                            ConvertTime.getDateFormat(
+                                                                "HH:MM aa", result.day.sunset * 1000
                                                             )
                                                         }"
                                                     Picasso.get().load(
@@ -321,12 +333,14 @@ class HomeFragment : Fragment() {
                                                             result.day.icon
                                                         }@2x.png"
                                                     ).into(binding.dayIconImageView)
-                                                    binding.dateTextView.text = getDateFormat(
-                                                        "dd-MM-yyyy", result.day.dt
-                                                    ).toString()
-                                                    binding.timeTextView.text = getDateFormat(
-                                                        "HH:MM aa", result.day.dt
-                                                    ).toString()
+                                                    binding.dateTextView.text =
+                                                        ConvertTime.getDateFormat(
+                                                            "dd-MM-yyyy", result.day.dt * 1000
+                                                        )
+                                                    binding.timeTextView.text =
+                                                        ConvertTime.getDateFormat(
+                                                            "HH:MM aa", result.day.dt * 1000
+                                                        )
                                                     binding.cloudValueTextView.text =
                                                         "${result.day.clouds}%"
                                                     binding.windValueTextView.text =
@@ -397,6 +411,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+
         } else {
             binding.homeConstraintLayout.visibility = View.GONE
             binding.progressBar.visibility = View.GONE
@@ -407,29 +422,8 @@ class HomeFragment : Fragment() {
                 Snackbar.LENGTH_LONG
             ).show()
         }
-//        }
 
     }
 
-    private fun isOnline(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivityManager != null) {
-            val capabilities =
-                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities != null) {
-                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                    return true
-                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-                    return true
-                }
-            }
-        }
-        return false
-    }
 
-    private fun getDateFormat(pattern: String, date: Long) =
-        SimpleDateFormat(pattern).format(Date(date * 1000))
 }

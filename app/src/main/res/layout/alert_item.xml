@@ -10,53 +10,73 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:weightSum="4">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/startDateAlertTextView"
-            android:layout_width="100dp"
+            android:id="@+id/typeOfAlert"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_weight="1"
-            android:text="@string/start"
-            android:textAlignment="center"
+            android:fontFamily="@font/prata_regular"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/notification"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/toTextView"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="15dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/to"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/endDateAlertTextView"
-            android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_weight="1"
-            android:text="@string/start"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="4">
 
-        <ImageView
-            android:id="@+id/deleteAlertIconImageView"
-            android:layout_width="70dp"
-            android:layout_height="30dp"
-            android:layout_gravity="end|center"
-            android:layout_weight="1"
-            android:src="@drawable/baseline_delete_24" />
+            <TextView
+                android:id="@+id/startDateAlertTextView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/prata_regular"
+                android:text="@string/start"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/toTextView"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/prata_regular"
+                android:gravity="center"
+                android:text="@string/to"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/endDateAlertTextView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/prata_regular"
+                android:text="@string/start"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/deleteAlertIconImageView"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_gravity="end|center"
+                android:layout_weight="1"
+                android:src="@drawable/baseline_delete_24" />
 
 
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

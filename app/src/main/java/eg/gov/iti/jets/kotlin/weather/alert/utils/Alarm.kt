@@ -62,7 +62,7 @@ fun createAlarmChannel(context: Context, title: String, content: String) {
     val dismissIntent =
         PendingIntent.getBroadcast(
             context,
-            NOTIFICATION_ID,
+            1,
             actionIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )

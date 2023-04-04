@@ -1,22 +1,24 @@
 package eg.gov.iti.jets.kotlin.weather.alert.receiver
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
-import android.text.format.DateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import eg.gov.iti.jets.kotlin.weather.utils.Constants
-import eg.gov.iti.jets.kotlin.weather.utils.Constants.ALARM_ACTION
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createAlarmChannel
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.alert.view.AlarmService
-import eg.gov.iti.jets.kotlin.weather.editor
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
+import eg.gov.iti.jets.kotlin.weather.utils.Constants
+import eg.gov.iti.jets.kotlin.weather.utils.Constants.ALARM_ACTION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
+import eg.gov.iti.jets.kotlin.weather.utils.ConvertTime
 import timber.log.Timber
+import java.util.*
+import java.util.concurrent.TimeUnit
+import eg.gov.iti.jets.kotlin.weather.alert.utils.MediaPlayer as MedPlayer
 
 lateinit var mediaPlayer: MediaPlayer
 
@@ -26,29 +28,20 @@ class AlarmReceiver : BroadcastReceiver() {
         val timeInMillis = intent.getLongExtra(Constants.EXTRA_EXACT_ALARM_TIME, 0L)
         var message = intent.getStringExtra(Constants.MESSAGE)
         var type = intent.getStringExtra(Constants.TYPE)
+        var type1 = intent.getStringExtra("fff")
         var title = intent.getStringExtra(Constants.TITLE)
-        mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
+        var id = intent.getStringExtra(Constants.Alarm_ID)?.toInt()
+        mediaPlayer = MedPlayer.getInstance(context)
 
+        if (type1 == "a") {
+            val alarmManager =
+                context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.cancel(getPendingIntent(context))
+        }
         if (sharedPreferences!!.getString(NOTIFICATION, null) == "enable") {
             when (intent.action) {
                 ALARM_ACTION -> {
                     println("ALARM_ACTION")
-                    println(
-                        "ALARM_ACTION  ${
-                            sharedPreferences!!.getBoolean(
-                                "isNotFirstTime",
-                                false
-                            )
-                        }"
-                    )
-//                mediaPlayer?.prepare()
-//                mediaPlayer?.start()
-//                mediaPlayer?.stop()
-//                mediaPlayer?.reset()
-//                mediaPlayer = MediaPlayer.create(context, R.raw.alarm)
-
-//                mediaPlayer?.prepare()
-//                mediaPlayer.start()
                     if (title.isNullOrEmpty())
                         title = "Weather"
                     if (type.isNullOrEmpty())
@@ -59,7 +52,12 @@ class AlarmReceiver : BroadcastReceiver() {
                     buildNotification(
                         context,
                         title,
-                        "$message Alarm at ${convertDate(timeInMillis)}",
+                        "$message Alarm at ${
+                            ConvertTime.getDateFormat(
+                                "dd/MM/yyyy hh:mm:ss aa",
+                                timeInMillis
+                            )
+                        }",
                         type
                     )
 
@@ -69,7 +67,12 @@ class AlarmReceiver : BroadcastReceiver() {
                     buildNotification(
                         context,
                         title!!,
-                        "$message Alert at ${convertDate(timeInMillis)}",
+                        "$message Alert at ${
+                            ConvertTime.getDateFormat(
+                                "dd/MM/yyyy hh:mm:ss aa",
+                                timeInMillis
+                            )
+                        }",
                         type!!
                     )
                 }
@@ -82,6 +85,8 @@ class AlarmReceiver : BroadcastReceiver() {
                         title = "Weather"
                     if (type.isNullOrEmpty())
                         type = "alarm"
+                    if (id != null)
+                        id = 0
                     println("ACTION_SET_REPETITIVE_EXACT")
                     if (type == "alarm")
                         mediaPlayer?.start()
@@ -89,7 +94,7 @@ class AlarmReceiver : BroadcastReceiver() {
                         AlarmService(context),
                         title,
                         "Your repeated alarm\n$timeInMillis\n$message",
-                        type
+                        type, id!!
                     )
                     buildNotification(
                         context,
@@ -111,19 +116,12 @@ class AlarmReceiver : BroadcastReceiver() {
         if (type == "notification")
             createNotificationChannel(context, title, message)
         else {
-            if (!sharedPreferences!!.getBoolean("isNotFirstTime", false)) {
-                editor.putBoolean("isNotFirstTime", true)
-                editor.commit()
-                println("kkkkkkkkkkkkkkkkkk")
-                mediaPlayer.start()
+            if (title == "Weather") {
+                println("Dismiss: cancel audio")
+                mediaPlayer.pause()
 
             } else {
-                editor.putBoolean("isNotFirstTime", false)
-                editor.commit()
-                println("Dismiss: cancel audio")
-                mediaPlayer.stop()
-                mediaPlayer.release()
-
+                mediaPlayer.start()
             }
             createAlarmChannel(context, title, message)
         }
@@ -135,16 +133,25 @@ class AlarmReceiver : BroadcastReceiver() {
         alarmService: AlarmService,
         type: String,
         message: String,
-        title: String
+        title: String, id: Int
     ) {
         val cal = Calendar.getInstance().apply {
             this.timeInMillis = timeInMillis + TimeUnit.SECONDS.toMillis(60)
-            Timber.d("Set alarm for next 30 seconds same time - ${convertDate(this.timeInMillis)}")
+            Timber.d(
+                "Set alarm for next 30 seconds same time - ${
+                    ConvertTime.getDateFormat(
+                        "dd/MM/yyyy hh:mm:ss aa",
+                        this.timeInMillis
+                    )
+                }"
+            )
         }
-        alarmService.setRepetitiveAlarm(cal.timeInMillis, type, message, title)
+        alarmService.setRepetitiveAlarm(cal.timeInMillis, type, message, title, id)
     }
 
-    private fun convertDate(timeInMillis: Long): String =
-        DateFormat.format("dd/MM/yyyy hh:mm:ss aa", timeInMillis).toString()
+    private fun getPendingIntent(ctxt: Context): PendingIntent {
+        val i = Intent(ctxt, AlarmReceiver::class.java)
+        return PendingIntent.getBroadcast(ctxt, 0, i, 0)
+    }
 
 }

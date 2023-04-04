@@ -26,7 +26,6 @@ import androidx.navigation.NavController
 import com.google.android.gms.location.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
-//import eg.gov.iti.jets.kotlin.weather.alert.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
 import eg.gov.iti.jets.kotlin.weather.onboarding.OnboardingActivity
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
@@ -98,12 +97,13 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                     getLocation()
+                    this.recreate()
 
                 }
             } else {
                 requestPermissions()
             }
-            getLocation()
+
 
         }
     }
@@ -161,8 +161,8 @@ class MainActivity : AppCompatActivity() {
                 if (sharedPreferences!!.getString(LOCATION, "gps") == "gps") {
                     editor.putString(LONGITUDE, longitude.toString())
                     editor.putString(LATITUDE, latitude.toString())
-                    Log.d(TAG, "Main Activity onLocationResult: ${lastLocation.latitude}")
 
+                    Log.d(TAG, "Main Activity onLocationResult: ${lastLocation.latitude}")
                     editor.putString(
                         STR_LOCATION,
                         LocationUtils.getAddress(
@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity() {
                             lastLocation.longitude
                         )
                     )
+
                     editor.apply()
                 }
             }

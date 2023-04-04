@@ -93,9 +93,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
             googleMap.uiSettings.isZoomControlsEnabled = true
             googleMap.setOnMapClickListener { latLng ->
-                if (intent.getStringExtra(SOURCE) != "fav")
-                    googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
-                Log.d(TAG, "Picked location: $latLng")
+
+                googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
+
                 this.latLng = latLng
             }
         }
@@ -131,7 +131,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.putString(LOCATION, "map")
 
-                println(" $latLng mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
                 editor.putString(STR_LOCATION, getAddress(this, latLng.latitude, latLng.longitude))
                 editor.apply()
                 startActivity(Intent(this@MapsActivity, MainActivity::class.java))
@@ -147,7 +146,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             sharedPreferences!!.getString(LONGITUDE, "1.0")?.toDouble()!!
         )
         latLng = sydney
-        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
+        if (intent.getStringExtra(SOURCE) != "fav")
+            mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 

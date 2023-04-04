@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="@drawable/rounded_appbar_bg"
+        android:fontFamily="@font/prata_regular"
         android:gravity="center"
         android:textAlignment="center"
         android:theme="@style/Theme.Weather.AppBarOverlay">
@@ -24,6 +25,7 @@
             android:layout_gravity="center"
             android:background="@color/transparent"
             android:elevation="-80dp"
+            android:fontFamily="@font/prata_regular"
             android:gravity="center"
             android:textAlignment="center"
             app:layout_scrollFlags="scroll|enterAlways"

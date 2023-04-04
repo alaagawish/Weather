@@ -1,18 +1,21 @@
 package eg.gov.iti.jets.kotlin.weather.favourite.view
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import eg.gov.iti.jets.kotlin.weather.databinding.PlaceItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
+import eg.gov.iti.jets.kotlin.weather.utils.InternetCheck
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PlacesAdapter(var listener: PlaceOnClickListener) :
+class PlacesAdapter(var listener: PlaceOnClickListener, var context: Context) :
     ListAdapter<FavouritePlace, PlacesAdapter.ViewHolder>(DayDiffUtil()) {
     lateinit var binding: PlaceItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +30,16 @@ class PlacesAdapter(var listener: PlaceOnClickListener) :
 
         holder.binding.countryNameTextView.text = item.timezone
         holder.binding.countryCardView.setOnClickListener {
-            listener.displayPlace(item)
+            if (InternetCheck.isOnline(context)) {
+                listener.displayPlace(item)
+
+            } else {
+                Snackbar.make(
+                    (context as Activity).findViewById(android.R.id.content),
+                    "Check internet and try again",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
         }
         holder.binding.deleteCountryIconImageView.setOnClickListener {
             listener.deletePlace(item)

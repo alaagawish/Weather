@@ -7,6 +7,7 @@ object Constants {
     const val TYPE = "TYPE"
 
     const val TAG = "TAG"
+    const val Alarm_ID = "Alarm_ID"
 
     const val LANGUAGE = "LANGUAGE"
     const val LOCATION = "LOCATION"
