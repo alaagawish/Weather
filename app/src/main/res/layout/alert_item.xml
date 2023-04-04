@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/light_blue"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageOfTypeImageView"
+                android:layout_width="70dp"
+                android:layout_height="60dp"
+                android:contentDescription="@string/alarm"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/alarm" />
+
+            <TextView
+                android:id="@+id/typeOfAlert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/prata_regular"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:text="@string/notification"
+                android:textColor="@color/dark_blue"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/startDateAlertTextView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/prata_regular"
+                android:text="@string/start"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/toTextView"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/to"
+                android:fontFamily="@font/prata_regular"
+                android:gravity="center"
+                android:text="@string/to"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/endDateAlertTextView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/to"
+                android:fontFamily="@font/prata_regular"
+                android:text="@string/start"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/deleteAlertIconImageView"
+                android:layout_width="70dp"
+                android:layout_height="45dp"
+                android:layout_gravity="end|center"
+                android:layout_weight="1"
+                android:contentDescription="@string/delete_alert"
+                android:src="@drawable/baseline_delete_24" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

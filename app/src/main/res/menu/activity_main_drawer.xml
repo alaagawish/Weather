@@ -14,7 +14,7 @@
             android:title="@string/menu_favourite" />
         <item
             android:id="@+id/alertFragment"
-            android:icon="@drawable/baseline_add_alert_24"
+            android:icon="@drawable/notification"
             android:title="@string/menu_alert" />
         <item
             android:id="@+id/settingsFragment"

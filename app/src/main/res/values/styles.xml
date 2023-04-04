@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/rounded_corner</item>
+    </style>
+
+    <style name="FontStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:fontFamily">@font/prata_regular</item>
+    </style>
+</resources>
