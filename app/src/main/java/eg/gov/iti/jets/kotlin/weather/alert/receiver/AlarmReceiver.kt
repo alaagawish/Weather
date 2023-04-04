@@ -58,7 +58,17 @@ class AlarmReceiver : BroadcastReceiver() {
                 }
 
                 Constants.ACTION_SET_EXACT -> {
+
                     println("ACTION_SET_EXACT, Notification only")
+                    if (title.isNullOrEmpty())
+                        title = "Weather"
+                    if (type.isNullOrEmpty())
+                        type = "Alarm is stopped"
+                    if (message.isNullOrEmpty())
+                        message = ""
+                    if (id == null)
+                        id = 0L
+
                     buildNotification(
                         context,
                         title!!,

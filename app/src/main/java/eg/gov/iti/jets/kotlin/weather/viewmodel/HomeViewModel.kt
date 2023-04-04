@@ -28,14 +28,14 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
 
     init {
 
-        if (sharedPreferences != null) {
-            getForecastData(
-                sharedPreferences!!.getString(LATITUDE, "0.0")!!.toDouble(),
-                sharedPreferences!!.getString(LONGITUDE, "0.0")!!.toDouble(),
-                sharedPreferences!!.getString(UNIT, "standard")!!,
-                sharedPreferences!!.getString(LANGUAGE, "en")!!
-            )
-        }
+//        if (sharedPreferences != null) {
+//            getForecastData(
+//                sharedPreferences!!.getString(LATITUDE, "0.0")!!.toDouble(),
+//                sharedPreferences!!.getString(LONGITUDE, "0.0")!!.toDouble(),
+//                sharedPreferences!!.getString(UNIT, "standard")!!,
+//                sharedPreferences!!.getString(LANGUAGE, "en")!!
+//            )
+//        }
     }
 
     fun getForecastData(

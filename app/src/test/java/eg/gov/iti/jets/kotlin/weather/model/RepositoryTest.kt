@@ -20,9 +20,10 @@ class RepositoryTest {
     private val alert = AlertsDB(1, "type1", 11111111, 22222222, "desc", "tag", false)
     private val alert2 = AlertsDB(2, "type2", 33333333, 44444444, "desc", "tag", false)
     private val alert4 = AlertsDB(4, "type4", 77777777, 88888888, "desc", "tag", false)
-    private val favouritePlace = FavouritePlace(90909090, 22.3, 23.4, "egypt", "main", "icon", 33.4)
+    private val favouritePlace =
+        FavouritePlace(0, 90909090, 22.3, 23.4, "egypt", "main", "icon", 33.4)
     private val favouritePlace2 =
-        FavouritePlace(333333333, 22.3, 23.4, "egypt", "main", "icon", 33.4)
+        FavouritePlace(1, 333333333, 22.3, 23.4, "egypt", "main", "icon", 33.4)
 
 
     private val hour = HourlyDBModel(1122112, 22.0, "main", "desc", "icon")
@@ -168,7 +169,7 @@ class RepositoryTest {
 
     @Test
     fun addPlaceToFav_Place_AddDone() = runBlockingTest {
-        val favouritePlace = FavouritePlace(90909090, 22.3, 23.4, "egypt", "main", "icon", 33.4)
+        val favouritePlace = FavouritePlace(3,90909090, 22.3, 23.4, "egypt", "main", "icon", 33.4)
 
         val job = launch {
             repository.addPlaceToFav(favouritePlace)

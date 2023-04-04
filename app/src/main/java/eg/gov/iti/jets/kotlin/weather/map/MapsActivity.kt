@@ -29,6 +29,7 @@ import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
+import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils
 import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils.Companion.getAddress
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -80,17 +81,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
         if (intent.getStringExtra(SOURCE) == "fav") {
-            binding.addToFavButton.text = resources.getResourceName(R.string.add_to_fav)
+            binding.addToFavButton.text = getString(R.string.add_to_fav)
         } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
-            binding.addToFavButton.text = resources.getResourceName(R.string.select_loc)
+            binding.addToFavButton.text = getString(R.string.select_loc)
         } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
-            binding.addToFavButton.text = resources.getResourceName(R.string.confirm_location)
+            binding.addToFavButton.text = getString(R.string.confirm_location)
         }
         mapFragment.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
             googleMap.uiSettings.isZoomControlsEnabled = true
             googleMap.setOnMapClickListener { latLng ->
-
+                googleMap.clear()
                 googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
 
                 this.latLng = latLng
@@ -98,7 +99,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         binding.addToFavButton.setOnClickListener {
             if (intent.getStringExtra(SOURCE) == "fav") {
-
+                println("hhhhhhhhhhhhh $latLng")
                 addPlaceToFav(latLng.latitude, latLng.longitude)
             } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
                 editor.putString(LATITUDE, latLng.latitude.toString())
@@ -141,24 +142,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         Timber.tag(TAG).d("Maps onCreateView: waiting")
                     }
                     is APIState.Success -> {
-
-                        val favouritePlace = FavouritePlace(
-                            result.oneCall.current.dt,
+                        val city = getAddress(
+                            this@MapsActivity,
                             result.oneCall.lat,
-                            result.oneCall.lon,
-                            result.oneCall.timezone,
-                            result.oneCall.current.weather[0].main,
-                            result.oneCall.current.weather[0].icon,
-                            result.oneCall.current.temp
+                            result.oneCall.lon
                         )
-                        if (result.oneCall.lat != sharedPreferences?.getString(LATITUDE, "0.0")!!
-                                .toDouble() && result.oneCall.lon != sharedPreferences?.getString(
-                                LONGITUDE, "0.0"
-                            )!!.toDouble()
-                        ) {
-
-                            favouriteViewModel.addPlaceToFav(favouritePlace)
-                        }
+                        val favouritePlace = FavouritePlace(
+                            dt = result.oneCall.current.dt,
+                            lat = result.oneCall.lat,
+                            lon = result.oneCall.lon,
+                            timezone = if (city == "") result.oneCall.timezone else city,
+                            main = result.oneCall.current.weather[0].main,
+                            icon = result.oneCall.current.weather[0].icon,
+                            temp = result.oneCall.current.temp
+                        )
+                        favouriteViewModel.addPlaceToFav(favouritePlace)
                         finish()
 
                     }

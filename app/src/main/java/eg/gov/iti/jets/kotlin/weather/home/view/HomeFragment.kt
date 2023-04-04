@@ -116,28 +116,19 @@ class HomeFragment : Fragment() {
                                 TAG,
                                 "onCreateView: done ${result.oneCall.current.weather[0]}"
                             )
-
-//
-                            if (LocationUtils.getAddress(
-                                    requireContext(),
-                                    result.oneCall.lat,
-                                    result.oneCall.lon
-                                ) == ""
-                            ) {
+                            val city = LocationUtils.getAddress(
+                                requireContext(),
+                                result.oneCall.lat,
+                                result.oneCall.lon
+                            )
+                            if (city == "") {
                                 binding.progressBar.visibility = View.VISIBLE
 
                                 val mainActivity = activity as MainActivity
                                 mainActivity.navController.navigate(R.id.nav_home)
 
                             } else {
-                                editor.putString(
-                                    STR_LOCATION,
-                                    LocationUtils.getAddress(
-                                        requireContext(),
-                                        result.oneCall.lat,
-                                        result.oneCall.lon
-                                    )
-                                )
+                                editor.putString(STR_LOCATION, city)
                                 editor.commit()
                                 binding.progressBar.visibility = View.GONE
                                 binding.homeConstraintLayout.visibility = View.VISIBLE

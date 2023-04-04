@@ -47,9 +47,9 @@ class HomeViewModelTest {
     private val hour1 = HourlyDBModel(1, 33.9, "Sunny", "desc", "0x1")
     private val hour2 = HourlyDBModel(2, 33.9, "Sunny", "desc", "0x1")
     private val hour3 = HourlyDBModel(3, 33.9, "Sunny", "desc", "0x1")
-    private val place1 = FavouritePlace(111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-    private val place2 = FavouritePlace(222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
-    private val place3 = FavouritePlace(333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place1 = FavouritePlace(1, 111111111, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place2 = FavouritePlace(2, 222222222, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
+    private val place3 = FavouritePlace(3, 333333333, 11.4, 23.5, "cairo", "cold", "0xd", 22.4)
 
     private val day = DayDBModel(
         11111,

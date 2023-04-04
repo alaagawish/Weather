@@ -42,6 +42,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/prata_regular"
                 android:text="@string/country"
+                android:maxLines="2"
+                android:maxLength="15"
                 android:textAlignment="textStart"
                 android:textColor="@color/light_blue"
                 android:textSize="20sp"

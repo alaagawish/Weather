@@ -147,7 +147,6 @@ class SettingsFragment : Fragment() {
         binding.enableNotificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
 
-
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
                         Manifest.permission.POST_NOTIFICATIONS

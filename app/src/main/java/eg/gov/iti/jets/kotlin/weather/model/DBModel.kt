@@ -50,7 +50,8 @@ data class DailyDBModel(
 @Entity(tableName = "fav")
 
 data class FavouritePlace(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val dt: Long,
     val lat: Double,
     val lon: Double,
@@ -64,7 +65,7 @@ data class FavouritePlace(
 
 data class AlertsDB constructor(
     @PrimaryKey(autoGenerate = true)
-    val id: Long ,
+    val id: Long,
     val type: String,
     var start: Long,
     val end: Long,

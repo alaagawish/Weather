@@ -33,10 +33,10 @@ class FavouriteViewModelTest {
     lateinit var repository: FakeRepository
     lateinit var favouriteViewModel: FavouriteViewModel
 
-    private val favouritePlace = FavouritePlace(11, 1.0, 2.0, "", "", "", 2.9)
-    private val favouritePlace2 = FavouritePlace(22, 1.0, 2.0, "", "", "", 2.9)
-    private val favouritePlace3 = FavouritePlace(33, 1.0, 2.0, "", "", "", 2.9)
-    private val favouritePlace4 = FavouritePlace(44, 1.0, 2.0, "", "", "", 2.9)
+    private val favouritePlace = FavouritePlace(0,11, 1.0, 2.0, "", "", "", 2.9)
+    private val favouritePlace2 = FavouritePlace(1,22, 1.0, 2.0, "", "", "", 2.9)
+    private val favouritePlace3 = FavouritePlace(2,33, 1.0, 2.0, "", "", "", 2.9)
+    private val favouritePlace4 = FavouritePlace(3,44, 1.0, 2.0, "", "", "", 2.9)
 
     @Before
     fun setUp() {
