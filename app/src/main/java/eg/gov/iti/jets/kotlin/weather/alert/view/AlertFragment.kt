@@ -41,7 +41,6 @@ import eg.gov.iti.jets.kotlin.weather.utils.ConvertTime
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -201,7 +200,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             val toDate = dialog.findViewById<LinearLayout>(R.id.toDate)
 
             fromDate.setOnClickListener {
-                setAlarm {
+                setDateAndTime {
                     start = it
                     dialog.findViewById<TextView>(R.id.fromDateTextView).text =
                         ConvertTime.getDateFormat("dd-MM", it)
@@ -211,7 +210,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                 }
             }
             toDate.setOnClickListener {
-                setAlarm {
+                setDateAndTime {
                     end = it
                     println("date ${Calendar.getInstance().timeInMillis}")
                     if (it <= start) {
@@ -302,7 +301,9 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     )
                 }
 
+
                 val alert = AlertsDB(
+                    id=start,
                     type = type,
                     start = start,
                     end = end,
@@ -311,6 +312,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     repeated = false
                 )
                 alertViewModel.addAlert(alert)
+                println(alert.id)
                 alarmService.setExactAlarm(start, type, description, "Alert about $tag", alert.id)
 
                 alertViewModel.getAllAlerts()
@@ -322,7 +324,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
     }
 
 
-    private fun setAlarm(callback: (Long) -> Unit) {
+    private fun setDateAndTime(callback: (Long) -> Unit) {
         Calendar.getInstance().apply {
             this.set(Calendar.SECOND, 0)
             this.set(Calendar.MILLISECOND, 0)
@@ -367,14 +369,16 @@ class AlertFragment : Fragment(), AlertOnClickListener {
             builder.setMessage(context?.getString(R.string.are_you_sure_to_delete))
             builder.setIcon(R.drawable.baseline_delete_24)
             builder.setPositiveButton(context?.getString(R.string.yes)) { _, _ ->
-                alertViewModel.deleteAlert(alertsDB)
                 alarmService.stopAlarm(
                     alertsDB.start,
                     alertsDB.type,
                     alertsDB.description,
                     "Alert about ${alertsDB.tag}",
-                   1
+                    alertsDB.id
                 )
+                println("sssssssss sss alert id ${alertsDB.id}")
+                alertViewModel.deleteAlert(alertsDB)
+
             }
 
             builder.setNegativeButton(context?.getString(R.string.no)) { dialog, _ ->

@@ -1,9 +1,6 @@
 package eg.gov.iti.jets.kotlin.weather.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
@@ -20,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val repositoryInterface: RepositoryInterface) : ViewModel() {
@@ -40,12 +36,6 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
                 sharedPreferences!!.getString(LANGUAGE, "en")!!
             )
         }
-//        if (sharedPreferences.getBoolean("isSavedLocal", false)) {
-//            getNextDaysStored()
-//            getDayStored()
-//            getHoursStored()
-//        }
-
     }
 
     fun getForecastData(
@@ -54,7 +44,6 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
         unit: String = sharedPreferences!!.getString(UNIT, "standard")!!,
         lang: String = sharedPreferences!!.getString(LANGUAGE, "en")!!
     ) {
-        println("gggggggggggggggggggggggg $lat $lon")
         viewModelScope.launch {
             repositoryInterface.getOneCallRemote(lat, lon, unit, lang)
                 .catch { e -> forecastStateFlow.value = APIState.Failure(e) }
@@ -70,7 +59,7 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     }
 
     fun resetLocalSource() {
-        viewModelScope.launch{
+        viewModelScope.launch {
             repositoryInterface.deleteAllComingDays()
             repositoryInterface.deleteAll()
             repositoryInterface.deleteAllHours()
@@ -78,7 +67,6 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     }
 
     fun getDayStored() {
-        println("getDayStored")
         viewModelScope.launch {
             repositoryInterface.getDay
                 .catch { e -> dayLocalStateFlow.value = APIState.Failure(e) }
@@ -93,7 +81,6 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     }
 
     fun getNextDaysStored() {
-        println("getNextDaysStored")
 
         viewModelScope.launch {
             repositoryInterface.getNextDays.catch { e ->
@@ -106,7 +93,6 @@ class HomeViewModel(private val repositoryInterface: RepositoryInterface) : View
     }
 
     fun getHoursStored() {
-        println("getHoursStored")
         viewModelScope.launch {
             repositoryInterface.getDayHours.catch { e ->
                 hoursLocalStateFlow.value = APIState.Failure(e)

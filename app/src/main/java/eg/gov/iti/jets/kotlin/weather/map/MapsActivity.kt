@@ -1,9 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.map
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -45,7 +43,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var favouriteViewModelFactory: FavouriteViewModelFactory
     private lateinit var binding: ActivityMapsBinding
 
-    @SuppressLint("LogNotTimber", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -83,11 +80,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
         if (intent.getStringExtra(SOURCE) == "fav") {
-            binding.addToFavButton.text = "Add to favourite"
+            binding.addToFavButton.text = resources.getResourceName(R.string.add_to_fav)
         } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
-            binding.addToFavButton.text = "Select location"
+            binding.addToFavButton.text = resources.getResourceName(R.string.select_loc)
         } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
-            binding.addToFavButton.text = "Confirm Location"
+            binding.addToFavButton.text = resources.getResourceName(R.string.confirm_location)
         }
         mapFragment.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
@@ -104,26 +101,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 addPlaceToFav(latLng.latitude, latLng.longitude)
             } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
-                println("Map Activity map settings ")
                 editor.putString(LATITUDE, latLng.latitude.toString())
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.putString(LOCATION, "map")
-                println(
-                    "Map Activity map settings  ${sharedPreferences!!.getString(LATITUDE, "1")}  ${
-                        sharedPreferences!!.getString(
-                            LONGITUDE, "1.0"
-                        )
-                    } ${sharedPreferences!!.getString(LOCATION, "")}"
-                )
-
                 editor.apply()
-                println(
-                    "Map Activity map settings 2 ${sharedPreferences!!.getString(LATITUDE, "1")}  ${
-                        sharedPreferences!!.getString(
-                            LONGITUDE, "1.0"
-                        )
-                    } ${sharedPreferences!!.getString(LOCATION, "")}"
-                )
                 finish()
 
             } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {

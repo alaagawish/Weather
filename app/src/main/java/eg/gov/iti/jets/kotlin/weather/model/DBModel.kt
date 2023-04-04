@@ -64,7 +64,7 @@ data class FavouritePlace(
 
 data class AlertsDB constructor(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long ,
     val type: String,
     var start: Long,
     val end: Long,

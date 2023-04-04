@@ -2,13 +2,10 @@ package eg.gov.iti.jets.kotlin.weather
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.location.Geocoder
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -25,9 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.google.android.gms.location.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
-import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
-import eg.gov.iti.jets.kotlin.weather.onboarding.OnboardingActivity
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
@@ -47,7 +42,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        sharedPreferences = this.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
         val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
         if (locale != null) {

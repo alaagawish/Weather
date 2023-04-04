@@ -1,12 +1,9 @@
 package eg.gov.iti.jets.kotlin.weather.alert.receiver
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
-import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createAlarmChannel
 import eg.gov.iti.jets.kotlin.weather.alert.utils.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.alert.view.AlarmService
@@ -15,7 +12,6 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.ALARM_ACTION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
 import eg.gov.iti.jets.kotlin.weather.utils.ConvertTime
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import eg.gov.iti.jets.kotlin.weather.alert.utils.MediaPlayer as MedPlayer
@@ -28,16 +24,11 @@ class AlarmReceiver : BroadcastReceiver() {
         val timeInMillis = intent.getLongExtra(Constants.EXTRA_EXACT_ALARM_TIME, 0L)
         var message = intent.getStringExtra(Constants.MESSAGE)
         var type = intent.getStringExtra(Constants.TYPE)
-        var type1 = intent.getStringExtra("fff")
         var title = intent.getStringExtra(Constants.TITLE)
-        var id = intent.getStringExtra(Constants.Alarm_ID)?.toInt()
+        var id = intent.getStringExtra(Constants.Alarm_ID)?.toLong()
         mediaPlayer = MedPlayer.getInstance(context)
 
-        if (type1 == "a") {
-            val alarmManager =
-                context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.cancel(getPendingIntent(context))
-        }
+
         if (sharedPreferences!!.getString(NOTIFICATION, null) == "enable") {
             when (intent.action) {
                 ALARM_ACTION -> {
@@ -48,6 +39,8 @@ class AlarmReceiver : BroadcastReceiver() {
                         type = "Alarm is stopped"
                     if (message.isNullOrEmpty())
                         message = ""
+                    if (id == null)
+                        id = 0L
 
                     buildNotification(
                         context,
@@ -58,10 +51,12 @@ class AlarmReceiver : BroadcastReceiver() {
                                 timeInMillis
                             )
                         }",
-                        type
+                        type,
+                        id
                     )
 
                 }
+
                 Constants.ACTION_SET_EXACT -> {
                     println("ACTION_SET_EXACT, Notification only")
                     buildNotification(
@@ -73,11 +68,9 @@ class AlarmReceiver : BroadcastReceiver() {
                                 timeInMillis
                             )
                         }",
-                        type!!
+                        type!!,
+                        id!!
                     )
-                }
-                context.getString(R.string.dismiss) -> {
-
                 }
 
                 Constants.ACTION_SET_REPETITIVE_EXACT -> {
@@ -85,22 +78,22 @@ class AlarmReceiver : BroadcastReceiver() {
                         title = "Weather"
                     if (type.isNullOrEmpty())
                         type = "alarm"
-                    if (id != null)
+                    if (id == null)
                         id = 0
                     println("ACTION_SET_REPETITIVE_EXACT")
                     if (type == "alarm")
-                        mediaPlayer?.start()
+                        mediaPlayer.pause()
                     setRepetitiveAlarm(
                         AlarmService(context),
                         title,
                         "Your repeated alarm\n$timeInMillis\n$message",
-                        type, id!!
+                        type, id
                     )
                     buildNotification(
                         context,
                         title,
                         "Your repeated alarm\n$timeInMillis\n$message",
-                        type
+                        type, id
                     )
 
                 }
@@ -110,20 +103,25 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun buildNotification(context: Context, title: String, message: String, type: String) {
-        println("Sending notification")
-
+    private fun buildNotification(
+        context: Context,
+        title: String,
+        message: String,
+        type: String,
+        id: Long
+    ) {
         if (type == "notification")
             createNotificationChannel(context, title, message)
         else {
             if (title == "Weather") {
                 println("Dismiss: cancel audio")
-                mediaPlayer.pause()
+                mediaPlayer.stop()
 
             } else {
                 mediaPlayer.start()
+                createAlarmChannel(context, title, message, id)
+
             }
-            createAlarmChannel(context, title, message)
         }
 
 
@@ -133,25 +131,13 @@ class AlarmReceiver : BroadcastReceiver() {
         alarmService: AlarmService,
         type: String,
         message: String,
-        title: String, id: Int
+        title: String, id: Long
     ) {
         val cal = Calendar.getInstance().apply {
             this.timeInMillis = timeInMillis + TimeUnit.SECONDS.toMillis(60)
-            Timber.d(
-                "Set alarm for next 30 seconds same time - ${
-                    ConvertTime.getDateFormat(
-                        "dd/MM/yyyy hh:mm:ss aa",
-                        this.timeInMillis
-                    )
-                }"
-            )
         }
-        alarmService.setRepetitiveAlarm(cal.timeInMillis, type, message, title, id)
+        alarmService.setExactAlarm(cal.timeInMillis, type, message, title, id)
     }
 
-    private fun getPendingIntent(ctxt: Context): PendingIntent {
-        val i = Intent(ctxt, AlarmReceiver::class.java)
-        return PendingIntent.getBroadcast(ctxt, 0, i, 0)
-    }
 
 }
