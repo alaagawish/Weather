@@ -1,6 +1,5 @@
 package eg.gov.iti.jets.kotlin.weather.utils
 
-import android.location.Location
 
 object Constants {
     const val MESSAGE = "MESSAGE"
@@ -8,6 +7,7 @@ object Constants {
     const val TYPE = "TYPE"
 
     const val TAG = "TAG"
+    const val Alarm_ID = "Alarm_ID"
 
     const val LANGUAGE = "LANGUAGE"
     const val LOCATION = "LOCATION"
@@ -17,7 +17,7 @@ object Constants {
 
     const val LONGITUDE = "LONGITUDE"
     const val LATITUDE = "LATITUDE"
-    const val PERMISSION_ID = 2
+    const val PERMISSION_ID = 33
 
     const val EXTRA_EXACT_ALARM_TIME = "EXTRA_EXACT_ALARM_TIME"
 

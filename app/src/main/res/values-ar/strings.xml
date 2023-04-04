@@ -94,6 +94,10 @@
     <string name="repeat_day">كرر</string>
     <string name="temp">4&#176;</string>
     <string name="humidity">الرطوبة</string>
+    <string name="stop">إيقاف</string>
+    <string name="add_to_fav">أضف للاماكن المضلة</string>
+    <string name="select_loc">حدد المكان</string>
+    <string name="confirm_location">متأكد من الموقع</string>
 
 
 </resources>

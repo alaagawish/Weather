@@ -76,6 +76,7 @@
             android:id="@+id/countryIconImageView"
             android:layout_width="100dp"
             android:layout_height="80dp"
+            android:contentDescription="@string/weather"
             android:elevation="10dp"
             android:src="@drawable/weather"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -86,7 +87,7 @@
         <ImageView
             android:id="@+id/deleteCountryIconImageView"
             android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:src="@drawable/baseline_delete_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

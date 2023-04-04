@@ -6,7 +6,6 @@ data class Temp(
     val max: Double,
 )
 
-
 data class Alert(
     val sender_name: String,
     val event: String,

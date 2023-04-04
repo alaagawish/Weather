@@ -94,4 +94,8 @@
     <string name="repeat_day">Repeat</string>
     <string name="temp">4&#176;</string>
     <string name="humidity">Humidity</string>
+    <string name="stop">Stop</string>
+    <string name="add_to_fav">Add to favourite</string>
+    <string name="select_loc">Select location</string>
+    <string name="confirm_location">Confirm Location</string>
 </resources>

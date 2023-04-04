@@ -26,20 +26,21 @@ import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModel
 import eg.gov.iti.jets.kotlin.weather.alert.viewmodel.AlertViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.databinding.AlertDialogBinding
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentAlertBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.Alert
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
 import eg.gov.iti.jets.kotlin.weather.model.Repository
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.sharedPreferences
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.NOTIFICATION
+import eg.gov.iti.jets.kotlin.weather.utils.ConvertTime
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -67,10 +68,16 @@ class AlertFragment : Fragment(), AlertOnClickListener {
     @SuppressLint("LogNotTimber")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        alarmService = AlarmService(requireContext())
         alertViewModelFactory = AlertViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         alertViewModel =
@@ -78,7 +85,14 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
@@ -133,8 +147,8 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
         binding.addAlertFloatingActionButton.setOnClickListener {
             homeViewModel.getForecastData(
-                sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-                sharedPreferences.getString(Constants.LONGITUDE, "1.0")?.toDouble()!!
+                sharedPreferences!!.getString(LATITUDE, "1.0")?.toDouble()!!,
+                sharedPreferences!!.getString(Constants.LONGITUDE, "1.0")?.toDouble()!!
             )
             var alerts: List<Alert> = mutableListOf()
             lifecycleScope.launch {
@@ -166,30 +180,40 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
                 }
             }
+            var start = Calendar.getInstance().timeInMillis
+            var end = start + 86400000L
             val dialog = Dialog(requireContext())
             dialog.setContentView(R.layout.alert_dialog)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.findViewById<TextView>(R.id.toDateTextView).text =
+                ConvertTime.getDateFormat("dd-MM", end)
+            dialog.findViewById<TextView>(R.id.toTimeTextView).text =
+                ConvertTime.getDateFormat("hh:mm aa", end)
+            dialog.findViewById<TextView>(R.id.fromDateTextView).text =
+                ConvertTime.getDateFormat("dd-MM", start)
+            dialog.findViewById<TextView>(R.id.fromTimeTextView).text =
+                ConvertTime.getDateFormat("hh:mm aa", start)
+
             dialog.show()
 
             val fromDate = dialog.findViewById<LinearLayout>(R.id.fromDate)
             val toDate = dialog.findViewById<LinearLayout>(R.id.toDate)
-            var start = 0L
-            var end = 0L
+
             fromDate.setOnClickListener {
-                setAlarm {
+                setDateAndTime {
                     start = it
                     dialog.findViewById<TextView>(R.id.fromDateTextView).text =
-                        getDateFormat("dd-MM", it).toString()
+                        ConvertTime.getDateFormat("dd-MM", it)
                     dialog.findViewById<TextView>(R.id.fromTimeTextView).text =
-                        getDateFormat("hh:mm aa", it).toString()
+                        ConvertTime.getDateFormat("hh:mm aa", it)
 
                 }
             }
             toDate.setOnClickListener {
-                setAlarm {
+                setDateAndTime {
                     end = it
                     println("date ${Calendar.getInstance().timeInMillis}")
-                    if (it <= Calendar.getInstance().timeInMillis) {
+                    if (it <= start) {
                         dialog.dismiss()
                         Snackbar.make(
                             requireActivity().findViewById(android.R.id.content),
@@ -199,18 +223,18 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
                     } else {
                         dialog.findViewById<TextView>(R.id.toDateTextView).text =
-                            getDateFormat("dd-MM", it).toString()
+                            ConvertTime.getDateFormat("dd-MM", it)
                         dialog.findViewById<TextView>(R.id.toTimeTextView).text =
-                            getDateFormat("hh:mm aa", it).toString()
+                            ConvertTime.getDateFormat("hh:mm aa", it)
                     }
 
                 }
             }
 
             var type = "notification"
-            var tag = "any danger"
+            var tag = "Any types"
             var description = "Weather is fine, no alerts found about $tag"
-            var repeated = false
+//            var repeated = false
 
             dialog.findViewById<Spinner>(R.id.alertTypeSpinner).onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
@@ -221,6 +245,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                         id: Long
                     ) {
                         tag = parent.getItemAtPosition(position).toString()
+                        println("tagggggggggggg kkkk $tag")
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
@@ -237,7 +262,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
 
                 }
             dialog.findViewById<Button>(R.id.saveAlertMaterialButton).setOnClickListener {
-                if (sharedPreferences.getString(NOTIFICATION, "disable") == "disable") {
+                if (sharedPreferences!!.getString(NOTIFICATION, "disable") == "disable") {
                     Snackbar.make(
                         requireActivity().findViewById(android.R.id.content),
                         "Enable notification from settings to receive Notification.",
@@ -245,14 +270,18 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     ).show()
 
                 }
-
                 if (alerts.isNotEmpty()) {
                     for (alert in alerts) {
-                        println("alerts found")
-                        if (alert.start * 1000 <= start && alert.end * 1000 >= end) {
-                            if (tag == alert.event)
+                        if (alert.start * 1000 <= start) {
+
+                            if (tag == alert.event) {
+                                description = alert.description
+                            }
+                            if (tag == "Any types") {
+                                tag = alert.event
                                 description = alert.description
 
+                            }
 
                         }
                     }
@@ -264,7 +293,7 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
 
-                    println(" notification permission is prohibited,enable it")
+                    println("notification permission is prohibited,enable it")
                     ActivityCompat.requestPermissions(
                         requireActivity(),
                         arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -272,47 +301,30 @@ class AlertFragment : Fragment(), AlertOnClickListener {
                     )
                 }
 
-                if (dialog.findViewById<Switch>(R.id.repeatedSwitch).isChecked)
-                    repeated = true
 
-                alertViewModel.addAlert(
-                    AlertsDB(
-                        type = type,
-                        start = start,
-                        end = end,
-                        description = description,
-                        tag = tag,
-                        repeated = repeated
-                    )
+                val alert = AlertsDB(
+                    id=start,
+                    type = type,
+                    start = start,
+                    end = end,
+                    description = description,
+                    tag = tag,
+                    repeated = false
                 )
-                if (repeated) {
-                    alarmService.setRepetitiveAlarm(start, type, description, "Alert about $tag")
-
-                } else
-                    alarmService.setExactAlarm(start, type, description, "Alert about $tag")
-
+                alertViewModel.addAlert(alert)
+                println(alert.id)
+                alarmService.setExactAlarm(start, type, description, "Alert about $tag", alert.id)
 
                 alertViewModel.getAllAlerts()
                 dialog.dismiss()
             }
 
-
-//            val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-
-//            builder.setPositiveButton(context?.getString(R.string.yes)) { _, _ ->
-//                favouriteViewModel.deletePlaceFromFav(favouritePlace)
-//            }
-//            builder.setNegativeButton(context?.getString(R.string.no)) { dialog, _ ->
-//                dialog.dismiss()
-//            }
-//            val dialog = builder.create()
-
         }
 
     }
-//                    alarmService.setExactAlarm(it)
 
-    private fun setAlarm(callback: (Long) -> Unit) {
+
+    private fun setDateAndTime(callback: (Long) -> Unit) {
         Calendar.getInstance().apply {
             this.set(Calendar.SECOND, 0)
             this.set(Calendar.MILLISECOND, 0)
@@ -348,22 +360,25 @@ class AlertFragment : Fragment(), AlertOnClickListener {
     }
 
 
-    private fun getDateFormat(pattern: String, date: Long) =
-        SimpleDateFormat(pattern).format(Date(date))
-
     override fun deleteAlert(alertsDB: AlertsDB) {
         if (!alertsDB.repeated && alertsDB.start < Calendar.getInstance().timeInMillis) {
             alertViewModel.deleteAlert(alertsDB)
         } else {
-
-
             val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
             builder.setTitle(context?.getString(R.string.delete_alert))
             builder.setMessage(context?.getString(R.string.are_you_sure_to_delete))
             builder.setIcon(R.drawable.baseline_delete_24)
             builder.setPositiveButton(context?.getString(R.string.yes)) { _, _ ->
+                alarmService.stopAlarm(
+                    alertsDB.start,
+                    alertsDB.type,
+                    alertsDB.description,
+                    "Alert about ${alertsDB.tag}",
+                    alertsDB.id
+                )
+                println("sssssssss sss alert id ${alertsDB.id}")
                 alertViewModel.deleteAlert(alertsDB)
-                //TODO delete from alert receiver
+
             }
 
             builder.setNegativeButton(context?.getString(R.string.no)) { dialog, _ ->

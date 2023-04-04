@@ -1,7 +1,5 @@
 package eg.gov.iti.jets.kotlin.weather.alert.view
 
-import eg.gov.iti.jets.kotlin.weather.favourite.view.PlaceOnClickListener
-
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.AlertItemBinding
 import eg.gov.iti.jets.kotlin.weather.model.AlertsDB
-import eg.gov.iti.jets.kotlin.weather.model.Daily
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,6 +35,11 @@ class AlertsAdapter(var listener: AlertOnClickListener) :
             "${getDateFormat("hh:mm aa", item.start)}\n${getDateFormat("mm-dd", item.start)}"
         holder.binding.endDateAlertTextView.text =
             "${getDateFormat("hh:mm aa", item.end)}\n${getDateFormat("mm-dd", item.end)}"
+        holder.binding.typeOfAlert.text = item.type.toUpperCase()
+        if (item.type == "alarm")
+            holder.binding.imageOfTypeImageView.setImageResource(R.drawable.alarm)
+        else
+            holder.binding.imageOfTypeImageView.setImageResource(R.drawable.notif)
 
     }
 

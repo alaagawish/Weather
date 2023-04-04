@@ -8,10 +8,11 @@
         android:id="@+id/hourTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/prata_regular"
         android:gravity="center"
         android:text="@string/hour"
         android:textColor="@color/blue"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/weatherDescriptionImageView"
@@ -23,8 +24,9 @@
         android:id="@+id/hourlyTemperatureTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/prata_regular"
         android:gravity="center"
         android:text="@string/temperature"
         android:textColor="@color/blue"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 </LinearLayout>

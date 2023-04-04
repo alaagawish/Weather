@@ -1,9 +1,7 @@
 package eg.gov.iti.jets.kotlin.weather.map
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -18,14 +16,15 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.SOURCE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMapsBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.model.FavouritePlace
 import eg.gov.iti.jets.kotlin.weather.model.Repository
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION
@@ -44,20 +43,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var favouriteViewModelFactory: FavouriteViewModelFactory
     private lateinit var binding: ActivityMapsBinding
 
-    @SuppressLint("LogNotTimber", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(this)
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(this).getFavDao(),
+                    DayDatabase.getInstance(this).getDayDao(),
+                    DayDatabase.getInstance(this).getAlertsDao(),
+                    DayDatabase.getInstance(this).getHourDao(),
+                    DayDatabase.getInstance(this).getDailyDao()
+                )
             )
         )
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
         favouriteViewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(this)
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(this).getFavDao(),
+                    DayDatabase.getInstance(this).getDayDao(),
+                    DayDatabase.getInstance(this).getAlertsDao(),
+                    DayDatabase.getInstance(this).getHourDao(),
+                    DayDatabase.getInstance(this).getDailyDao()
+                )
             )
         )
 
@@ -68,45 +80,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
         if (intent.getStringExtra(SOURCE) == "fav") {
-            binding.addToFavButton.text = "Add to favourite"
+            binding.addToFavButton.text = resources.getResourceName(R.string.add_to_fav)
         } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
-            binding.addToFavButton.text = "Select location"
+            binding.addToFavButton.text = resources.getResourceName(R.string.select_loc)
         } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
-            binding.addToFavButton.text = "Confirm Location"
+            binding.addToFavButton.text = resources.getResourceName(R.string.confirm_location)
         }
         mapFragment.getMapAsync { googleMap ->
             googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
             googleMap.uiSettings.isZoomControlsEnabled = true
             googleMap.setOnMapClickListener { latLng ->
+
                 googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
-                Log.d(TAG, "Picked location: $latLng")
+
                 this.latLng = latLng
             }
         }
         binding.addToFavButton.setOnClickListener {
             if (intent.getStringExtra(SOURCE) == "fav") {
+
                 addPlaceToFav(latLng.latitude, latLng.longitude)
             } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
-                println("Map Activity map settings ")
                 editor.putString(LATITUDE, latLng.latitude.toString())
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.putString(LOCATION, "map")
-                println(
-                    "Map Activity map settings  ${sharedPreferences.getString(LATITUDE, "1")}  ${
-                        sharedPreferences.getString(
-                            LONGITUDE, "1.0"
-                        )
-                    } ${sharedPreferences.getString(LOCATION, "")}"
-                )
-
                 editor.apply()
-                println(
-                    "Map Activity map settings 2 ${sharedPreferences.getString(LATITUDE, "1")}  ${
-                        sharedPreferences.getString(
-                            LONGITUDE, "1.0"
-                        )
-                    } ${sharedPreferences.getString(LOCATION, "")}"
-                )
                 finish()
 
             } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
@@ -114,7 +112,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.putString(LOCATION, "map")
 
-                println(" $latLng mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
                 editor.putString(STR_LOCATION, getAddress(this, latLng.latitude, latLng.longitude))
                 editor.apply()
                 startActivity(Intent(this@MapsActivity, MainActivity::class.java))
@@ -126,11 +123,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val sydney = LatLng(
-            sharedPreferences.getString(LATITUDE, "1.0")?.toDouble()!!,
-            sharedPreferences.getString(LONGITUDE, "1.0")?.toDouble()!!
+            sharedPreferences!!.getString(LATITUDE, "1.0")?.toDouble()!!,
+            sharedPreferences!!.getString(LONGITUDE, "1.0")?.toDouble()!!
         )
         latLng = sydney
-        mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
+        if (intent.getStringExtra(SOURCE) != "fav")
+            mMap.addMarker(MarkerOptions().position(sydney).title("Current Location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
@@ -140,9 +138,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             homeViewModel.forecastStateFlow.collectLatest { result ->
                 when (result) {
                     is APIState.Waiting -> {
-                        Timber.tag(TAG).d("onCreateView: waiting")
+                        Timber.tag(TAG).d("Maps onCreateView: waiting")
                     }
                     is APIState.Success -> {
+
                         val favouritePlace = FavouritePlace(
                             result.oneCall.current.dt,
                             result.oneCall.lat,
@@ -152,8 +151,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             result.oneCall.current.weather[0].icon,
                             result.oneCall.current.temp
                         )
-                        favouriteViewModel.addPlaceToFav(favouritePlace)
-                        favouriteViewModel.getAllFavPlaces()
+                        if (result.oneCall.lat != sharedPreferences?.getString(LATITUDE, "0.0")!!
+                                .toDouble() && result.oneCall.lon != sharedPreferences?.getString(
+                                LONGITUDE, "0.0"
+                            )!!.toDouble()
+                        ) {
+
+                            favouriteViewModel.addPlaceToFav(favouritePlace)
+                        }
                         finish()
 
                     }

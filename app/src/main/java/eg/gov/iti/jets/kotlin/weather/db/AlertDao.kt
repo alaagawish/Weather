@@ -9,7 +9,7 @@ interface AlertDao {
     @get:Query("SELECT * FROM alert")
     val getAllAlerts: Flow<List<AlertsDB>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAlert(alert: AlertsDB)
 
     @Delete

@@ -18,17 +18,18 @@ import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.SOURCE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentFavouriteBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModel
 import eg.gov.iti.jets.kotlin.weather.favourite.viewmodel.FavouriteViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.home.view.DaysAdapter
 import eg.gov.iti.jets.kotlin.weather.home.view.HoursAdapter
 import eg.gov.iti.jets.kotlin.weather.home.view.units
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModel
-import eg.gov.iti.jets.kotlin.weather.home.viewmodel.HomeViewModelFactory
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModel
+import eg.gov.iti.jets.kotlin.weather.viewmodel.HomeViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.map.MapsActivity
 import eg.gov.iti.jets.kotlin.weather.model.*
-import eg.gov.iti.jets.kotlin.weather.network.APIState
+import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,20 +57,34 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
         super.onViewCreated(view, savedInstanceState)
         favouriteViewModelFactory = FavouriteViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
 
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
-                DayClient.getInstance(), LocalSource(requireContext())
+                DayClient.getInstance(),
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         favouriteViewModel =
             ViewModelProvider(this, favouriteViewModelFactory)[FavouriteViewModel::class.java]
 
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-        placesAdapter = PlacesAdapter(this)
+        placesAdapter = PlacesAdapter(this,requireContext())
 
         binding.addCityFloatingActionButton.setOnClickListener {
             val intent = Intent(requireContext(), MapsActivity::class.java)
@@ -138,7 +153,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
                     is APIState.Waiting -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.homeConstraintLayout.visibility = View.GONE
-                        Log.d(TAG, "onCreateView: waiting")
+                        Log.d(TAG, "Fav fragment onCreateView: waiting")
 
                     }
                     is APIState.Success -> {

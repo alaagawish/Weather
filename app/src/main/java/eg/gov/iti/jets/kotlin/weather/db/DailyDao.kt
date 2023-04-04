@@ -12,7 +12,7 @@ interface DailyDao {
     @get:Query("SELECT * FROM daily")
     val getNextDays: Flow<List<DailyDBModel>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addComingDay(dailyDBModel: DailyDBModel)
 
     @Query("DELETE FROM daily")

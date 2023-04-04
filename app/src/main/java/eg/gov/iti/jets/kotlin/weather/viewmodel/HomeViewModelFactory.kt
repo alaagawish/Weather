@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.kotlin.weather.home.viewmodel
+package eg.gov.iti.jets.kotlin.weather.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

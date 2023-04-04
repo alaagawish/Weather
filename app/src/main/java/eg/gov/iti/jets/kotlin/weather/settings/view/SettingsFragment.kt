@@ -2,12 +2,10 @@ package eg.gov.iti.jets.kotlin.weather.settings.view
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -34,6 +32,7 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.UNIT
 import eg.gov.iti.jets.kotlin.weather.R
 import eg.gov.iti.jets.kotlin.weather.databinding.FragmentSettingsBinding
+import eg.gov.iti.jets.kotlin.weather.db.DayDatabase
 import eg.gov.iti.jets.kotlin.weather.db.LocalSource
 import eg.gov.iti.jets.kotlin.weather.map.MapsActivity
 import eg.gov.iti.jets.kotlin.weather.model.Repository
@@ -42,6 +41,8 @@ import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModel
 import eg.gov.iti.jets.kotlin.weather.settings.viewmodel.SettingsViewModelFactory
 import eg.gov.iti.jets.kotlin.weather.utils.Constants
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
+import eg.gov.iti.jets.kotlin.weather.utils.checkLocationPermissions
+import eg.gov.iti.jets.kotlin.weather.utils.isLocationEnabled
 import java.util.*
 
 class SettingsFragment : Fragment() {
@@ -64,7 +65,13 @@ class SettingsFragment : Fragment() {
         settingsViewModelFactory = SettingsViewModelFactory(
             Repository.getInstance(
                 DayClient.getInstance(),
-                LocalSource(requireContext())
+                LocalSource(
+                    DayDatabase.getInstance(requireContext()).getFavDao(),
+                    DayDatabase.getInstance(requireContext()).getDayDao(),
+                    DayDatabase.getInstance(requireContext()).getAlertsDao(),
+                    DayDatabase.getInstance(requireContext()).getHourDao(),
+                    DayDatabase.getInstance(requireContext()).getDailyDao()
+                )
             )
         )
         settingsViewModel = ViewModelProvider(
@@ -73,22 +80,22 @@ class SettingsFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        if (sharedPreferences.getString(LANGUAGE, null) == "en") {
+        if (sharedPreferences!!.getString(LANGUAGE, null) == "en") {
             binding.englishRadioButton.isChecked = true
         } else
             binding.arabicRadioButton.isChecked = true
 
-        if (sharedPreferences.getString(Constants.LOCATION, null) == "map") {
+        if (sharedPreferences!!.getString(Constants.LOCATION, null) == "map") {
             binding.mapRadioButton.isChecked = true
         } else
             binding.gpsRadioButton.isChecked = true
 
         binding.enableNotificationsSwitch.isChecked =
-            sharedPreferences.getString(NOTIFICATION, null) == "enable"
+            sharedPreferences!!.getString(NOTIFICATION, null) == "enable"
 
-        if (sharedPreferences.getString(UNIT, null) == "metric") {
+        if (sharedPreferences!!.getString(UNIT, null) == "metric") {
             binding.celsiusRadioButton.isChecked = true
-        } else if (sharedPreferences.getString(UNIT, null) == "imperial")
+        } else if (sharedPreferences!!.getString(UNIT, null) == "imperial")
             binding.fahrenheitRadioButton.isChecked = true
         else
             binding.kelvinRadioButton.isChecked = true
@@ -104,7 +111,7 @@ class SettingsFragment : Fragment() {
             }
             editor.apply()
 
-            val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+            val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
             if (locale != null) {
                 Locale.setDefault(locale)
             }
@@ -139,8 +146,7 @@ class SettingsFragment : Fragment() {
 
         binding.enableNotificationsSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                editor.putString(NOTIFICATION, "enable")
-                editor.apply()
+
 
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
@@ -156,6 +162,10 @@ class SettingsFragment : Fragment() {
 
                     }
 
+                }
+                if (notificationManager.areNotificationsEnabled()) {
+                    editor.putString(NOTIFICATION, "enable")
+                    editor.apply()
                 }
 
             } else {
@@ -179,14 +189,12 @@ class SettingsFragment : Fragment() {
             editor.apply()
 
         }
-
     }
-
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
+        if (checkLocationPermissions(requireContext())) {
+            if (isLocationEnabled(requireContext())) {
                 requestNewLocation()
             } else {
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -224,22 +232,6 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun checkPermissions() = ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-
-
-    private fun isLocationEnabled(): Boolean {
-        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocation() {
@@ -260,49 +252,17 @@ class SettingsFragment : Fragment() {
                 val latitude = lastLocation.latitude
                 val longitude = lastLocation.longitude
 
-                if (sharedPreferences.getString(Constants.LOCATION, "gps") == "gps") {
+                if (sharedPreferences!!.getString(Constants.LOCATION, "gps") == "gps") {
                     editor.putString(LONGITUDE, longitude.toString())
                     editor.putString(LATITUDE, latitude.toString())
                     Log.d(TAG, "Settings onLocationResult: ${lastLocation.latitude}")
 
                     editor.putString(
                         STR_LOCATION,
-                        "settings geocoder error"
-//                        LocationUtils.getAddress(
-//                            requireContext(),
-//                            activity?.applicationContext!!,
-//                            lastLocation.latitude,
-//                            lastLocation.longitude
-//                        )
+                        ""
                     )
                     editor.apply()
                 }
-//                editor.putString(LONGITUDE, longitude.toString())
-//                editor.putString(LATITUDE, latitude.toString())
-//                editor.apply()
-//                Log.d(TAG, " Settings onLocationResult: ${lastLocation.latitude}")
-//                val myLocation = Geocoder(applicationContext, Locale.getDefault())
-//                val addressList =
-//                    myLocation.getFromLocation(lastLocation.latitude, lastLocation.longitude, 1)
-//
-//                if (addressList != null && addressList.isNotEmpty()) {
-//                    val address = addressList[0]
-//                    val sb = StringBuilder()
-//                    for (i in 0 until address.maxAddressLineIndex) {
-//                        sb.append(address.getAddressLine(i)).append("\n")
-//                    }
-//                    sb.append(address.countryName).append(",")
-//                    if (address.premises != null)
-//                        sb.append(address.premises).append(", ")
-//                    sb.append(address.adminArea).append(", ")
-//                    sb.append(address.locality).append(", ")
-//                    sb.append(address.subAdminArea)
-//  //                  sb.append(address.postalCode)
-//
-//                    editor.putString(STRLOCATION, sb.toString())
-//
-//                    editor.apply()
-//                }
             }
         }
     }

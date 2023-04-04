@@ -2,13 +2,10 @@ package eg.gov.iti.jets.kotlin.weather
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.location.Geocoder
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -25,10 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.google.android.gms.location.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
-import eg.gov.iti.jets.kotlin.weather.utils.Constants.NAME
-//import eg.gov.iti.jets.kotlin.weather.alert.createNotificationChannel
 import eg.gov.iti.jets.kotlin.weather.databinding.ActivityMainBinding
-import eg.gov.iti.jets.kotlin.weather.onboarding.OnboardingActivity
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LATITUDE
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LONGITUDE
@@ -36,6 +30,8 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.PERMISSION_ID
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.TAG
 import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils
+import eg.gov.iti.jets.kotlin.weather.utils.checkLocationPermissions
+import eg.gov.iti.jets.kotlin.weather.utils.isLocationEnabled
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +42,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val locale = sharedPreferences.getString(LANGUAGE, "en")?.let { Locale(it) }
+
+        val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
         if (locale != null) {
             Locale.setDefault(locale)
         }
@@ -85,29 +82,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getString(LOCATION, "gps") == "gps") {
-            if (checkPermissions()) {
-                if (isLocationEnabled()) {
+        if (sharedPreferences!!.getString(LOCATION, "gps") == "gps") {
+            if (checkLocationPermissions(this)) {
+                if (isLocationEnabled(this)) {
                     requestNewLocation()
                     getLocation()
 
                 } else {
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                     getLocation()
+                    this.recreate()
 
                 }
             } else {
                 requestPermissions()
             }
-            getLocation()
+
 
         }
     }
 
     @SuppressLint("MissingPermission")
     fun getLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
+        if (checkLocationPermissions(this)) {
+            if (isLocationEnabled(this)) {
                 requestNewLocation()
             } else {
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -118,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun requestPermissions() {
+    private fun requestPermissions() {
         ActivityCompat.requestPermissions(
             this, arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
@@ -135,20 +133,6 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == PERMISSION_ID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocation()
         }
-    }
-
-    fun checkPermissions() = ActivityCompat.checkSelfPermission(
-        this, Manifest.permission.ACCESS_COARSE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-        this, Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-
-
-    private fun isLocationEnabled(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
     }
 
     @SuppressLint("MissingPermission")
@@ -168,11 +152,11 @@ class MainActivity : AppCompatActivity() {
             if (lastLocation != null) {
                 val latitude = lastLocation.latitude
                 val longitude = lastLocation.longitude
-                if (sharedPreferences.getString(LOCATION, "gps") == "gps") {
+                if (sharedPreferences!!.getString(LOCATION, "gps") == "gps") {
                     editor.putString(LONGITUDE, longitude.toString())
                     editor.putString(LATITUDE, latitude.toString())
-                    Log.d(TAG, "Main Activity onLocationResult: ${lastLocation.latitude}")
 
+                    Log.d(TAG, "Main Activity onLocationResult: ${lastLocation.latitude}")
                     editor.putString(
                         STR_LOCATION,
                         LocationUtils.getAddress(
@@ -181,6 +165,7 @@ class MainActivity : AppCompatActivity() {
                             lastLocation.longitude
                         )
                     )
+
                     editor.apply()
                 }
             }
