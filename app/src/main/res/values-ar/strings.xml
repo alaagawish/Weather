@@ -98,6 +98,7 @@
     <string name="add_to_fav">أضف للاماكن المفضلة</string>
     <string name="select_loc">حدد المكان</string>
     <string name="confirm_location">متأكد من الموقع</string>
+    <string name="find_location">Fina a Location</string>
 
 
 </resources>

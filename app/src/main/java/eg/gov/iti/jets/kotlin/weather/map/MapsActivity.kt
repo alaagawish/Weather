@@ -2,11 +2,15 @@ package eg.gov.iti.jets.kotlin.weather.map
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import eg.gov.iti.jets.kotlin.weather.*
@@ -31,6 +35,8 @@ import eg.gov.iti.jets.kotlin.weather.utils.Constants.LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.STR_LOCATION
 import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils
 import eg.gov.iti.jets.kotlin.weather.utils.LocationUtils.Companion.getAddress
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -48,6 +54,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val mutableSharedFlow = MutableSharedFlow<String>()
+
         homeViewModelFactory = HomeViewModelFactory(
             Repository.getInstance(
                 DayClient.getInstance(),
@@ -87,16 +95,79 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } else if (intent.getStringExtra(SOURCE) == Constants.BOARDING) {
             binding.addToFavButton.text = getString(R.string.confirm_location)
         }
-        mapFragment.getMapAsync { googleMap ->
-            googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
-            googleMap.uiSettings.isZoomControlsEnabled = true
-            googleMap.setOnMapClickListener { latLng ->
-                googleMap.clear()
-                googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
 
-                this.latLng = latLng
+        mapFragment.getMapAsync { googleMap ->
+            if (binding.searchLocationEditText.text.isNullOrBlank()) {
+                googleMap.moveCamera(CameraUpdateFactory.zoomTo(10f))
+                googleMap.uiSettings.isZoomControlsEnabled = true
+                googleMap.setOnMapClickListener { latLng ->
+                    googleMap.clear()
+                    googleMap.addMarker(MarkerOptions().position(latLng).title("Chosen place"))
+
+                    this.latLng = latLng
+                }
             }
         }
+        lifecycleScope.launch {
+            mutableSharedFlow.collectLatest {
+                delay(100)
+                if (it.length >= 5) {
+                    val latLngUsingString = LocationUtils.getLatLng(this@MapsActivity, it)
+                    if (latLngUsingString.first != null && latLngUsingString.second != null)
+                        mapFragment.getMapAsync { googleMap ->
+                            googleMap.clear()
+                            val latLngg = LatLng(
+                                latLngUsingString.first!!,
+                                latLngUsingString.second!!
+                            )
+                            val cameraPosition = CameraPosition.Builder()
+                                .target(latLngg)
+                                .zoom(7f)
+                                .build()
+                            googleMap.animateCamera(
+                                CameraUpdateFactory.newCameraPosition(
+                                    cameraPosition
+                                )
+                            )
+
+                            googleMap.addMarker(
+                                MarkerOptions().position(latLngg).title("Chosen place")
+                            )
+                            this@MapsActivity.latLng = latLngg
+                            googleMap.setOnMapClickListener { latLng ->
+                                googleMap.clear()
+                                googleMap.addMarker(
+                                    MarkerOptions().position(latLng).title("Chosen place")
+                                )
+
+                                this@MapsActivity.latLng = latLng
+                            }
+                            googleMap.uiSettings.isZoomControlsEnabled = true
+                        }
+
+                }
+            }
+        }
+        binding.searchLocationEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                if (p0 != null)
+                    lifecycleScope.launch {
+                        mutableSharedFlow.emit(p0.toString())
+                    }
+//
+
+            }
+
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
         binding.addToFavButton.setOnClickListener {
             if (intent.getStringExtra(SOURCE) == "fav") {
                 println("hhhhhhhhhhhhh $latLng")

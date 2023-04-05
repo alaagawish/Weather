@@ -98,4 +98,5 @@
     <string name="add_to_fav">Add to favourite</string>
     <string name="select_loc">Select location</string>
     <string name="confirm_location">Confirm Location</string>
+    <string name="find_location">Fina a Location</string>
 </resources>
