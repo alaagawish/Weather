@@ -71,15 +71,15 @@ class AlarmReceiver : BroadcastReceiver() {
 
                     buildNotification(
                         context,
-                        title!!,
+                        title,
                         "$message Alert at ${
                             ConvertTime.getDateFormat(
                                 "dd/MM/yyyy hh:mm:ss aa",
                                 timeInMillis
                             )
                         }",
-                        type!!,
-                        id!!
+                        type,
+                        id
                     )
                 }
 
@@ -125,7 +125,7 @@ class AlarmReceiver : BroadcastReceiver() {
         else {
             if (title == "Weather") {
                 println("Dismiss: cancel audio")
-                mediaPlayer.stop()
+                mediaPlayer.pause()
 
             } else {
                 mediaPlayer.start()

@@ -31,6 +31,7 @@ import eg.gov.iti.jets.kotlin.weather.map.MapsActivity
 import eg.gov.iti.jets.kotlin.weather.model.*
 import eg.gov.iti.jets.kotlin.weather.model.APIState
 import eg.gov.iti.jets.kotlin.weather.network.DayClient
+import eg.gov.iti.jets.kotlin.weather.utils.InternetCheck
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -84,7 +85,7 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
             ViewModelProvider(this, favouriteViewModelFactory)[FavouriteViewModel::class.java]
 
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-        placesAdapter = PlacesAdapter(this,requireContext())
+        placesAdapter = PlacesAdapter(this, requireContext())
 
         binding.addCityFloatingActionButton.setOnClickListener {
             val intent = Intent(requireContext(), MapsActivity::class.java)
@@ -146,84 +147,93 @@ class FavouriteFragment : Fragment(), PlaceOnClickListener {
 
     override fun displayPlace(favouritePlace: FavouritePlace) {
 
-        homeViewModel.getForecastData(favouritePlace.lat, favouritePlace.lon)
-        lifecycleScope.launch {
-            homeViewModel.forecastStateFlow.collectLatest { result ->
-                when (result) {
-                    is APIState.Waiting -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.homeConstraintLayout.visibility = View.GONE
-                        Log.d(TAG, "Fav fragment onCreateView: waiting")
+        if (InternetCheck.isOnline(requireContext())) {
+            homeViewModel.getForecastData(favouritePlace.lat, favouritePlace.lon)
 
+            lifecycleScope.launch {
+                homeViewModel.forecastStateFlow.collectLatest { result ->
+                    when (result) {
+                        is APIState.Waiting -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.homeConstraintLayout.visibility = View.GONE
+                            Log.d(TAG, "Fav fragment onCreateView: waiting")
+
+                        }
+                        is APIState.Success -> {
+                            val daysAdapter = DaysAdapter(requireContext())
+                            val hoursAdapter = HoursAdapter(requireContext())
+                            binding.daysDetailsRecyclerView.adapter = daysAdapter
+                            binding.hoursDetailsRecyclerView.adapter = hoursAdapter
+                            Log.d(TAG, "onCreateView: done ${result.oneCall.current.weather[0]}")
+                            binding.progressBar.visibility = View.GONE
+                            binding.homeConstraintLayout.visibility = View.VISIBLE
+                            binding.connectionAnimation.visibility = View.GONE
+                            binding.homeConstraintLayout.visibility = View.VISIBLE
+                            binding.cityNameTextView.text = result.oneCall.timezone
+                            binding.temperatureTextView.text =
+                                "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
+                            binding.descriptionTextView.text =
+                                result.oneCall.current.weather[0].description
+                            binding.highLowTemperatureTextView.text = "Sunrise: ${
+                                SimpleDateFormat("HH:MM").format(
+                                    Date(result.oneCall.current.sunrise * 1000)
+                                )
+                            }\nSunset: ${
+                                SimpleDateFormat("HH:MM").format(
+                                    Date(result.oneCall.current.sunset * 1000)
+                                )
+                            }"
+                            Picasso
+                                .get()
+                                .load(
+                                    "https://openweathermap.org/img/wn/${
+                                        result.oneCall.current.weather[0].icon
+                                    }@2x.png"
+                                )
+                                .into(binding.dayIconImageView)
+                            binding.dateTextView.text = SimpleDateFormat("dd-MM-yyyy").format(
+                                Date(result.oneCall.current.dt * 1000)
+                            ).toString()
+                            binding.timeTextView.text = SimpleDateFormat("HH:MM").format(
+                                Date(result.oneCall.current.dt * 1000)
+                            ).toString()
+                            daysAdapter.submitList(result.oneCall.daily)
+
+                            hoursAdapter.submitList(result.oneCall.hourly)
+                            binding.cloudValueTextView.text = "${result.oneCall.current.clouds}%"
+                            binding.windValueTextView.text =
+                                "${result.oneCall.current.wind_speed}${units.second}"
+                            binding.pressureValueTextView.text =
+                                "${result.oneCall.current.pressure}hpa"
+                            binding.humidityValueTextView.text =
+                                "${result.oneCall.current.humidity}%"
+                            binding.visibilityValueTextView.text =
+                                "${result.oneCall.current.visibility / 1000}${units.third}"
+
+
+                        }
+                        else -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.homeConstraintLayout.visibility = View.GONE
+                            Snackbar.make(
+                                requireActivity().findViewById(android.R.id.content),
+                                "Something went wrong, check again later",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+
+                        }
                     }
-                    is APIState.Success -> {
-                        val daysAdapter = DaysAdapter(requireContext())
-                        val hoursAdapter = HoursAdapter(requireContext())
-                        binding.daysDetailsRecyclerView.adapter = daysAdapter
-                        binding.hoursDetailsRecyclerView.adapter = hoursAdapter
-                        Log.d(TAG, "onCreateView: done ${result.oneCall.current.weather[0]}")
-                        binding.progressBar.visibility = View.GONE
-                        binding.homeConstraintLayout.visibility = View.VISIBLE
-                        binding.connectionAnimation.visibility = View.GONE
-                        binding.homeConstraintLayout.visibility = View.VISIBLE
-                        binding.cityNameTextView.text = result.oneCall.timezone
-                        binding.temperatureTextView.text =
-                            "${ceil(result.oneCall.current.temp).toInt()}${units.first}"
-                        binding.descriptionTextView.text =
-                            result.oneCall.current.weather[0].description
-                        binding.highLowTemperatureTextView.text = "Sunrise: ${
-                            SimpleDateFormat("HH:MM").format(
-                                Date(result.oneCall.current.sunrise * 1000)
-                            )
-                        }\nSunset: ${
-                            SimpleDateFormat("HH:MM").format(
-                                Date(result.oneCall.current.sunset * 1000)
-                            )
-                        }"
-                        Picasso
-                            .get()
-                            .load(
-                                "https://openweathermap.org/img/wn/${
-                                    result.oneCall.current.weather[0].icon
-                                }@2x.png"
-                            )
-                            .into(binding.dayIconImageView)
-                        binding.dateTextView.text = SimpleDateFormat("dd-MM-yyyy").format(
-                            Date(result.oneCall.current.dt * 1000)
-                        ).toString()
-                        binding.timeTextView.text = SimpleDateFormat("HH:MM").format(
-                            Date(result.oneCall.current.dt * 1000)
-                        ).toString()
-                        daysAdapter.submitList(result.oneCall.daily)
 
-                        hoursAdapter.submitList(result.oneCall.hourly)
-                        binding.cloudValueTextView.text = "${result.oneCall.current.clouds}%"
-                        binding.windValueTextView.text =
-                            "${result.oneCall.current.wind_speed}${units.second}"
-                        binding.pressureValueTextView.text =
-                            "${result.oneCall.current.pressure}hpa"
-                        binding.humidityValueTextView.text =
-                            "${result.oneCall.current.humidity}%"
-                        binding.visibilityValueTextView.text =
-                            "${result.oneCall.current.visibility / 1000}${units.third}"
-
-
-                    }
-                    else -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.homeConstraintLayout.visibility = View.GONE
-                        Snackbar.make(
-                            requireActivity().findViewById(android.R.id.content),
-                            "Something went wrong, check again later",
-                            Snackbar.LENGTH_LONG
-                        ).show()
-
-                    }
                 }
-
             }
+            changeLayout()
+        } else {
+            Snackbar.make(
+                requireActivity().findViewById(android.R.id.content),
+                "Check internet to see place details",
+                Snackbar.LENGTH_LONG
+            ).show()
         }
-        changeLayout()
     }
 
     override fun deletePlace(favouritePlace: FavouritePlace) {
