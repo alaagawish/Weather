@@ -159,18 +159,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     lifecycleScope.launch {
                         mutableSharedFlow.emit(p0.toString())
                     }
-//
-
             }
-
 
             override fun afterTextChanged(p0: Editable?) {
 
             }
         })
+
         binding.addToFavButton.setOnClickListener {
             if (intent.getStringExtra(SOURCE) == "fav") {
-                println("hhhhhhhhhhhhh $latLng")
+
                 addPlaceToFav(latLng.latitude, latLng.longitude)
             } else if (intent.getStringExtra(SOURCE) == "mapSettings") {
                 editor.putString(LATITUDE, latLng.latitude.toString())
@@ -183,8 +181,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 editor.putString(LATITUDE, latLng.latitude.toString())
                 editor.putString(LONGITUDE, latLng.longitude.toString())
                 editor.putString(LOCATION, "map")
+                var cityy = getAddress(this, latLng.latitude, latLng.longitude)
+                if (cityy != "") {
+                    cityy = getAddress(this, latLng.latitude, latLng.longitude)
+                }
+                editor.putString(STR_LOCATION, cityy)
 
-                editor.putString(STR_LOCATION, getAddress(this, latLng.latitude, latLng.longitude))
                 editor.apply()
                 startActivity(Intent(this@MapsActivity, MainActivity::class.java))
 

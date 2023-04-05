@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
+
         if (locale != null) {
             Locale.setDefault(locale)
         }

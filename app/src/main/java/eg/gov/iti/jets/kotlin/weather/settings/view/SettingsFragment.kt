@@ -21,6 +21,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.google.android.gms.location.*
 import eg.gov.iti.jets.kotlin.weather.*
 import eg.gov.iti.jets.kotlin.weather.utils.Constants.LANGUAGE
@@ -110,7 +114,6 @@ class SettingsFragment : Fragment() {
                 context?.getString(R.string.arabic) -> editor.putString(LANGUAGE, "ar")
             }
             editor.apply()
-
             val locale = sharedPreferences!!.getString(LANGUAGE, "en")?.let { Locale(it) }
             if (locale != null) {
                 Locale.setDefault(locale)
@@ -121,7 +124,9 @@ class SettingsFragment : Fragment() {
             res.updateConfiguration(configuration, res.displayMetrics)
 
             val mainActivity = activity as MainActivity
-            mainActivity.navController.navigate(R.id.settingsFragment)
+            mainActivity.recreate()
+//            mainActivity.navController.navigate(R.id.settingsFragment)
+
 
         }
         binding.locationRadioGroup.setOnCheckedChangeListener { _, i ->
@@ -197,6 +202,11 @@ class SettingsFragment : Fragment() {
                 requestNewLocation()
             } else {
                 startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                getLocation()
+//                requireActivity().recreate()
+                val mainActivity = activity as MainActivity
+                mainActivity.recreate()
+            mainActivity.navController.navigate(R.id.settingsFragment)
             }
         } else {
             requestPermissions()
@@ -221,7 +231,7 @@ class SettingsFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         Log.d(TAG, "onRequestPermissionsResult: $requestCode")
-        println("done or not kkkkkkkk ")
+
 //        binding.enableNotificationsSwitch.isChecked =
 //            requestCode == 123 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
 
