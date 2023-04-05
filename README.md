@@ -1,4 +1,5 @@
 # WEATHER APP 
+Build.VERSION.SDK_INT 30
 This app contains 
 ## Splash Screen
 ![2023-04-05__24_-removebg-preview](https://user-images.githubusercontent.com/53160167/229951962-4a1fe41b-8430-4b95-a174-90f743cbdfef.png)
